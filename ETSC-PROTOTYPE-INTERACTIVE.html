@@ -318,10 +318,21 @@
             margin-right: 8px;
             font-weight: bold;
             user-select: none;
+            display: inline-block;
         }
 
         .drag-handle:active {
             cursor: grabbing;
+        }
+
+        /* FIXED S351: HTML5 Drag API styling for draggable rows */
+        tr[draggable="true"] {
+            cursor: move;
+        }
+
+        tr.drag-over {
+            background: #e8f4f8;
+            border-top: 2px solid #4da6ff;
         }
 
         .row-actions {
@@ -361,6 +372,10 @@
             border-radius: 4px;
             flex: 1;
             text-align: center;
+            /* FIXED S351: Force consistent text wrapping by defining max-width and word-break */
+            max-width: 100%;
+            word-break: break-word;
+            line-height: 1.4;
         }
 
         .progression-step.active {
@@ -698,15 +713,7 @@
 
         <h2 class="section-title">Goal Definition Wizard</h2>
 
-        <!-- ENHANCED S350: Add tooltip icons to all step indicators -->
-        <div class="step-indicator">
-            <div class="step active">Step 1: Initial Draft <span class="tooltip-icon" title="Submit your initial problem statement">?</span></div>
-            <div class="step">Step 2: AI Analysis <span class="tooltip-icon" title="AI extracts and clarifies your goals">?</span></div>
-            <div class="step">Step 3: Core Confirmation <span class="tooltip-icon" title="Confirm and lock the core problem">?</span></div>
-            <div class="step">Step 4: Scope Settings <span class="tooltip-icon" title="Define timeline and budget">?</span></div>
-            <div class="step">Step 5: Bundle Recommendation <span class="tooltip-icon" title="AI recommends the best team">?</span></div>
-            <div class="step">Step 6: Review & Create <span class="tooltip-icon" title="Final review and goal creation">?</span></div>
-        </div>
+        <!-- FIXED S351: Removed duplicate step indicators. Kept only section-level step indicators below. -->
         <!-- UPDATED S350: Add visual step progression with explicit flow indicators -->
         <div class="step-progression">
             <div class="progression-step active">Define Goal</div>
@@ -1718,10 +1725,59 @@
         }
     }
 
+    // FIXED S351: HTML5 Drag API implementation for table rows
+    let draggedRow = null;
+
+    function enableDragAndDrop(tableId) {
+        const table = document.getElementById(tableId);
+        const rows = table.querySelectorAll('tbody tr, tr:not(:first-child)');
+
+        rows.forEach(row => {
+            row.setAttribute('draggable', 'true');
+
+            row.addEventListener('dragstart', function(e) {
+                draggedRow = this;
+                this.style.opacity = '0.5';
+                e.dataTransfer.effectAllowed = 'move';
+            });
+
+            row.addEventListener('dragend', function(e) {
+                this.style.opacity = '1';
+                rows.forEach(r => r.classList.remove('drag-over'));
+                draggedRow = null;
+            });
+
+            row.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                if (this !== draggedRow) {
+                    this.classList.add('drag-over');
+                }
+            });
+
+            row.addEventListener('dragleave', function(e) {
+                this.classList.remove('drag-over');
+            });
+
+            row.addEventListener('drop', function(e) {
+                e.preventDefault();
+                if (this !== draggedRow && draggedRow) {
+                    const tbody = table.querySelector('tbody') || table;
+                    tbody.insertBefore(draggedRow, this);
+                    updateRowNumbers(tableId);
+                }
+                this.classList.remove('drag-over');
+            });
+        });
+    }
+
     // ENHANCED S350: Initialize all tables with proper row numbering
     document.addEventListener('DOMContentLoaded', function() {
         updateRowNumbers('participantTable');
         updateRowNumbers('bundleTable');
+        // FIXED S351: Enable drag-and-drop on all tables
+        enableDragAndDrop('participantTable');
+        enableDragAndDrop('bundleTable');
     });
 
     // Tooltip styling (existing functionality preserved)
