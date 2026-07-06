@@ -314,6 +314,35 @@ This section is **not optional**. Every plan includes it.
 
 ---
 
+---
+
+## MECHANICAL ENFORCEMENT VS ADVISORY GOVERNANCE
+
+**Why "Mechanical" Matters:**
+
+Current governance is **advisory** — it suggests rules hoping AI follows:
+- "Here are constraints" (AI can ignore)
+- "Follow these procedures" (AI can skip)
+- "Don't freelance" (AI can choose to anyway)
+- Rules depend on AI cooperation to work
+
+CDS is **mechanical** — rules enforced at execution layer:
+- Pocket scope is hard boundary (cannot exceed)
+- Permission list checked before invocation (cannot call unauthorized skill)
+- Frame validation mandatory before output (cannot forward unverified)
+- Audit trails created automatically (cannot be optional)
+- Rule-breaking is literally impossible, not just discouraged
+
+**Why This Distinction Matters:**
+
+Advisory governance breaks at scale. When billions of decisions are made, some percentage will slip through procedures. Some AI will rationalize breaking rules. Some compliance will be missed.
+
+Mechanical governance doesn't depend on vigilance or cooperation. It makes violations impossible.
+
+CDS doesn't trust AI to follow rules. CDS makes rule-breaking literally impossible.
+
+---
+
 ## CONSTITUTIONAL STATEMENT
 
 This document defines the north star of Platform CDS.
