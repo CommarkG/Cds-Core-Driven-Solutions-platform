@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETSC Goal Definition System - Interactive Wireframe Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: #1a1a1a;
+            color: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        header h1 {
+            margin-bottom: 10px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .nav-tabs button {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .nav-tabs button.active {
+            color: #1a1a1a;
+            border-bottom-color: #1a1a1a;
+        }
+
+        .nav-tabs button:hover {
+            color: #1a1a1a;
+        }
+
+        .screen {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .wireframe-box {
+            border: 2px solid #ccc;
+            padding: 15px;
+            margin: 15px 0;
+            background: #fafafa;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .wireframe-box.input {
+            background: #f0f8ff;
+            border-color: #4da6ff;
+        }
+
+        .wireframe-box.output {
+            background: #f0fff0;
+            border-color: #50c878;
+        }
+
+        .wireframe-box.action {
+            background: #fffaf0;
+            border-color: #ff9800;
+        }
+
+        .wireframe-label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .annotation {
+            background: #fffacd;
+            border-left: 4px solid #ffd700;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+
+        .step {
+            flex: 1;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .step.active {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #333;
+        }
+
+        button.secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        button.secondary:hover {
+            background: #ccc;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .matrix {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .matrix-cell {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+
+        .matrix-header {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .match-high {
+            background: #90EE90;
+        }
+
+        .match-medium {
+            background: #FFD700;
+        }
+
+        .match-low {
+            background: #FFB6C6;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="checkbox"] {
+            cursor: pointer;
+        }
+
+        .data-flow {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .data-flow-box {
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            flex: 1;
+        }
+
+        .arrow {
+            font-size: 18px;
+        }
+
+        .comment-highlight {
+            background: #fff3cd;
+            cursor: pointer;
+            text-decoration: underline dotted;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .note {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 13px;
+            color: #1565c0;
+        }
+
+        .deprecated {
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+
+        @media (max-width: 768px) {
+            .matrix {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>ETSC Goal Definition System - Interactive Wireframe Prototype</h1>
+        <p>Enterprise-grade visual design for iterative approval. Comments embedded in HTML.</p>
+        <!-- ANNOTATION: Header should show "DRAFT - PROTOTYPE" status. Add version/date. -->
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <button class="nav-btn active" data-screen="wizard">Goal Definition Wizard</button>
+        <button class="nav-btn" data-screen="dashboard">Participant Dashboard</button>
+        <button class="nav-btn" data-screen="bundle-config">Bundle Configuration</button>
+        <button class="nav-btn" data-screen="architecture">Architecture Overview</button>
+    </div>
+
+    <!-- SCREEN 1: GOAL DEFINITION WIZARD -->
+    <div class="screen active" id="wizard">
+        <!-- ANNOTATION: Goal Wizard is primary flow. All 6 steps visible on this screen. Steps should be progressive disclosure (show next step when previous locked). Consider: should each step be separate view or all on one scrollable page? -->
+
+        <h2 class="section-title">Goal Definition Wizard</h2>
+
+        <div class="step-indicator">
+            <div class="step active">Step 1: Initial Draft</div>
+            <div class="step">Step 2: AI Analysis</div>
+            <div class="step">Step 3: Core Confirmation</div>
+            <div class="step">Step 4: Scope Settings</div>
+            <div class="step">Step 5: Bundle Recommendation</div>
+            <div class="step">Step 6: Review & Create</div>
+        </div>
+
+        <!-- STEP 1: INITIAL DRAFT -->
+        <div class="wireframe-box input">
+            <!-- ANNOTATION: STEP 1 - Initial Draft Input. Should this be a larger textarea? Should we have character count? Help text? "Describe the problem you want to solve in 2-3 sentences"? -->
+            <div class="wireframe-label">STEP 1: Tell us about your goal</div>
+            <div class="form-group">
+                <label>Initial Draft Description (Required)</label>
+                <textarea placeholder="Describe the goal, problem, or opportunity you want to address. Be specific about what's not working or what you want to achieve.">We need to improve our API response time. Currently averaging 5 seconds, causing user frustration and potential revenue loss. We think caching and database optimization could help.</textarea>
+                <!-- ANNOTATION: Should have character counter? Min/max length? Real-time feedback? -->
+            </div>
+            <div class="annotation">
+                <!-- ANNOTATION: DESIGN - Is this the right UX for capturing initial draft? Should we offer examples? Pre-fill options? Upload document? -->
+                COMMENT: Text area for initial draft. Should show help text: "Include: what's broken/missing, why it matters, any constraints."
+            </div>
+            <button onclick="goToStep(2)">Submit Draft</button>
+        </div>
+
+        <!-- STEP 2: AI ANALYSIS & CLARIFYING QUESTIONS -->
+        <div class="wireframe-box output" style="margin-top: 40px;">
+            <!-- ANNOTATION: STEP 2 - AI Analysis. Show what AI extracted from draft. Then show clarifying questions. Should this be multi-step (show analysis, then Q&A separately) or combined? -->
+            <div class="wireframe-label">STEP 2: AI Analysis & Clarifying Questions</div>
+
+            <div style="background: #f0fff0; padding: 15px; border-radius: 4px; margin: 15px 0;">
+                <strong>AI Analysis of Your Draft:</strong>
+                <!-- ANNOTATION: DESIGN - How should AI analysis be presented? Bullet points? Highlighted extraction? Color-coded problem/solution/constraint? -->
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li><span class="comment-highlight">Problem: API response slow (5s)</span></li>
+                    <li><span class="comment-highlight">Impact: User frustration, revenue loss</span></li>
+                    <li><span class="comment-highlight">Constraint: Unspecified budget/timeline</span></li>
+                    <li><span class="comment-highlight">Proposed approach: Caching + DB optimization</span></li>
+                </ul>
+                <!-- ANNOTATION: Should extracted elements be editable inline? Or show as read-only and provide "refine" button? -->
+            </div>
+
+            <div style="background: #f0f8ff; padding: 15px; border-radius: 4px; margin: 15px 0;">
+                <strong>Clarifying Questions:</strong>
+                <!-- ANNOTATION: DESIGN - How many questions should we ask at once? Should they be presented all at once or progressively? Can user skip a question? -->
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Q1: What's the business impact if this isn't fixed? (Revenue loss? User churn? Operational risk?)</label>
+                    <textarea placeholder="Your answer..."></textarea>
+                    <!-- ANNOTATION: Should questions have helper text, examples, or tooltips? -->
+                </div>
+                <div class="form-group">
+                    <label>Q2: What's your timeline? (Urgent/weeks/months/ongoing?)</label>
+                    <select>
+                        <option>-- Select --</option>
+                        <option>Urgent (this week)</option>
+                        <option>Weeks (1-4)</option>
+                        <option>Months (1-3)</option>
+                        <option>Ongoing</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Q3: Do you have a budget constraint?</label>
+                    <input type="text" placeholder="e.g., $50k, no budget, TBD">
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="secondary" onclick="goToStep(1)">Back</button>
+                <button onclick="goToStep(3)">Refine Core</button>
+            </div>
+        </div>
+
+        <!-- STEP 3: CORE CONFIRMATION -->
+        <div class="wireframe-box output" style="margin-top: 40px;">
+            <!-- ANNOTATION: STEP 3 - Core is locked here. Show refined version. User can confirm or iterate. -->
+            <div class="wireframe-label">STEP 3: Core Problem & Solution (Locked)</div>
+
+            <div style="background: #f0f0f0; padding: 15px; border-radius: 4px; margin: 15px 0;">
+                <strong>Refined Core:</strong>
+                <div style="margin-top: 10px;">
+                    <p><strong>Problem:</strong> API response time averaging 5s is causing user frustration and estimated $50k/month revenue loss.</p>
+                    <!-- ANNOTATION: DESIGN - Should core be editable here? Or must user go back to refine? Current design: locked. Is this right? -->
+                    <p><strong>Root Cause:</strong> Lack of caching + inefficient database queries.</p>
+                    <p><strong>Solution Approach:</strong> Implement caching layer + optimize top 10 slow queries.</p>
+                    <p><strong>Business Impact:</strong> Reduce API response to <1s, recover lost users.</p>
+                    <p><strong>Success Criteria:</strong> 95% of API calls respond in <1s.</p>
+                </div>
+            </div>
+
+            <div class="annotation">
+                COMMENT: Once core is locked, move to scope. This is the transition point where "what & why" is complete, now present "how & who".
+            </div>
+
+            <div class="button-group">
+                <button class="secondary" onclick="goToStep(2)">Back to Questions</button>
+                <button onclick="goToStep(4)">Lock Core & Continue to Scope</button>
+            </div>
+        </div>
+
+        <!-- STEP 4: SCOPE SETTINGS -->
+        <div class="wireframe-box action" style="margin-top: 40px;">
+            <!-- ANNOTATION: STEP 4 - Scope presentation. Presented ONLY after core locked. Shows timeline, budget, goal type recommendation. -->
+            <div class="wireframe-label">STEP 4: Scope & Goal Type (Presented After Core Locked)</div>
+
+            <div class="form-group">
+                <label>Expected Timeline:</label>
+                <select>
+                    <option>-- Select --</option>
+                    <option selected>2-4 weeks (Standard)</option>
+                    <option>1-2 weeks (Urgent)</option>
+                    <option>1-3 months (Long-term)</option>
+                </select>
+                <!-- ANNOTATION: Should timeline be linked to bundle recommendation? E.g., "Standard timeline recommends Bundle A"? -->
+            </div>
+
+            <div class="form-group">
+                <label>Budget (Optional):</label>
+                <input type="number" placeholder="e.g., 50000" value="50000">
+            </div>
+
+            <div style="background: #f0fff0; padding: 15px; border-radius: 4px; margin: 15px 0;">
+                <strong>AI Recommended Goal Type:</strong>
+                <p style="margin-top: 10px;">Based on your core, we recommend: <strong style="color: #2d7f2d;">Performance Optimization</strong></p>
+                <!-- ANNOTATION: DESIGN - Should goal type be editable or recommended-only? Current design: recommended. Rationale: AI classifies based on core. -->
+            </div>
+
+            <div class="button-group">
+                <button class="secondary" onclick="goToStep(3)">Back</button>
+                <button onclick="goToStep(5)">View Bundle Recommendations</button>
+            </div>
+        </div>
+
+        <!-- STEP 5: BUNDLE RECOMMENDATION -->
+        <div class="wireframe-box output" style="margin-top: 40px;">
+            <!-- ANNOTATION: STEP 5 - Bundle recommendation. Show top 3 options with matching matrix + reasoning. User can accept default or choose alternative. -->
+            <div class="wireframe-label">STEP 5: Participant Bundle Recommendation</div>
+
+            <div style="background: #fffaf0; padding: 15px; border-radius: 4px; margin: 15px 0;">
+                <strong>Matching Analysis:</strong>
+                <!-- ANNOTATION: DESIGN - Visual matching matrix. Should show: Goal requirements vs Participant strengths. Color-coded. Show match % score. -->
+                <div class="matrix">
+                    <div class="matrix-cell matrix-header">Goal Requirement</div>
+                    <div class="matrix-cell matrix-header">CSP</div>
+                    <div class="matrix-cell matrix-header">CSPS</div>
+                    <div class="matrix-cell matrix-header">Base44</div>
+                    <div class="matrix-cell matrix-header">Lovable</div>
+
+                    <div class="matrix-cell">API Performance</div>
+                    <div class="matrix-cell match-high">████ (95%)</div>
+                    <div class="matrix-cell match-low">██ (40%)</div>
+                    <div class="matrix-cell match-low">█ (20%)</div>
+                    <div class="matrix-cell match-medium">███ (60%)</div>
+
+                    <div class="matrix-cell">Database Optimization</div>
+                    <div class="matrix-cell match-high">████ (90%)</div>
+                    <div class="matrix-cell match-medium">███ (70%)</div>
+                    <div class="matrix-cell match-low">█ (15%)</div>
+                    <div class="matrix-cell match-low">██ (45%)</div>
+
+                    <div class="matrix-cell">Architecture Review</div>
+                    <div class="matrix-cell match-medium">███ (75%)</div>
+                    <div class="matrix-cell match-high">████ (85%)</div>
+                    <div class="matrix-cell match-low">█ (10%)</div>
+                    <div class="matrix-cell match-medium">██ (50%)</div>
+                </div>
+                <!-- ANNOTATION: Matrix shows matching. Alternative: should we show current load/capacity here too? E.g., "CSP: 3/5 capacity"? -->
+            </div>
+
+            <div style="background: #f0f8ff; padding: 15px; border-radius: 4px; margin: 15px 0;">
+                <strong>🌟 PRIMARY RECOMMENDATION: "Performance & Architecture" Bundle [CSP, CSPS]</strong>
+                <!-- ANNOTATION: DESIGN - How should recommendation be highlighted? Star icon? Bold? Separate card? -->
+                <p style="margin-top: 10px;">
+                    <strong>Why this bundle:</strong> Your goal requires both performance optimization expertise (CSP specialty, 95% match) and architectural review capability (CSPS specialty, 85% match). This combination ensures both quick fixes and long-term architecture improvement.
+                </p>
+                <p>
+                    <strong>Current capacity:</strong> CSP has 3/5 slots, CSPS has 1/3 slots. Both available for 2-4 week engagement.
+                </p>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="radio" name="bundle" value="perf-arch" checked>
+                        <label>Accept Recommendation</label>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #f0fff0; padding: 15px; border-radius: 4px; margin: 15px 0;">
+                <strong>Alternative Options:</strong>
+                <!-- ANNOTATION: DESIGN - Should alternatives be shown collapsed/expanded? As full cards or compact list? -->
+                <div style="margin-top: 10px;">
+                    <p><strong>Option B: "Full Team" Bundle [CSP, CSPS, Base44, Lovable]</strong> - Maximum perspectives, 6-week timeline, all participants available.</p>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" name="bundle" value="full-team">
+                            <label>Choose this</label>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <p><strong>Option C: "Quick Turnaround" Bundle [CSP only]</strong> - Focused scope, 1-2 weeks, lower cost, narrower expertise.</p>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" name="bundle" value="quick">
+                            <label>Choose this</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="secondary" onclick="goToStep(4)">Back</button>
+                <button onclick="goToStep(6)">Confirm & Review</button>
+            </div>
+        </div>
+
+        <!-- STEP 6: REVIEW & CREATE -->
+        <div class="wireframe-box action" style="margin-top: 40px;">
+            <!-- ANNOTATION: STEP 6 - Final review. Show all locked decisions. User can confirm (creates in decision-log) or go back. -->
+            <div class="wireframe-label">STEP 6: Review & Create Goal</div>
+
+            <div style="background: #f5f5f5; padding: 15px; border-radius: 4px; margin: 15px 0;">
+                <strong>Goal Summary (Review):</strong>
+                <div style="margin-top: 10px;">
+                    <p><strong>Goal:</strong> Improve API Performance</p>
+                    <p><strong>Core Problem:</strong> API response time averaging 5s is causing user frustration and $50k/month revenue loss.</p>
+                    <p><strong>Solution:</strong> Implement caching layer + optimize database queries.</p>
+                    <p><strong>Timeline:</strong> 2-4 weeks (Standard)</p>
+                    <p><strong>Goal Type:</strong> Performance Optimization</p>
+                    <p><strong>Bundle:</strong> Performance & Architecture [CSP, CSPS]</p>
+                    <p><strong>Participants:</strong> CSP (API/DB expert), CSPS (Architecture expert)</p>
+                </div>
+                <!-- ANNOTATION: DESIGN - Should user be able to edit any field from this review page? Or must they go back? Current design: Go back to change. Is this right? -->
+            </div>
+
+            <div class="note">
+                <strong>Note:</strong> Once created, this goal becomes immutable in the decision log. Participants will be notified. You can track progress on the dashboard.
+            </div>
+
+            <div class="button-group">
+                <button class="secondary" onclick="goToStep(5)">Back to Bundle Options</button>
+                <button>✓ Create Goal (Immutable)</button>
+                <!-- ANNOTATION: DESIGN - Button text/action. Should it be "Create" or "Finalize" or "Lock & Create"? Should it show confirmation dialog? -->
+            </div>
+        </div>
+
+        <!-- ANNOTATION: OVERALL WIZARD FEEDBACK -->
+        <div class="annotation" style="margin-top: 40px;">
+            <strong>PROTOTYPE ANNOTATION - Goal Definition Wizard:</strong>
+            <ul style="margin-top: 10px; margin-left: 20px;">
+                <li>Flow is linear (Step 1→2→3→4→5→6). Should users be able to jump between steps or only go forward/back?</li>
+                <li>AI analysis shown in Step 2. Should it be more interactive (inline edits)? Or is read-only + refine loop right?</li>
+                <li>Core locked in Step 3. Is this right? Should user be able to edit core later?</li>
+                <li>Scope presented AFTER core. Correct pattern?</li>
+                <li>Bundle recommendation shows 3 options. Should show more? Fewer?</li>
+                <li>Step 6 review is read-only. Should allow edits, or force going back?</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: PARTICIPANT DASHBOARD -->
+    <div class="screen" id="dashboard">
+        <!-- ANNOTATION: Participant Dashboard manages all participants + their capabilities. Admins add/edit profiles. Participants can fill uniform prompt. Shows current load. -->
+
+        <h2 class="section-title">Participant Capability Dashboard</h2>
+
+        <div class="note">
+            Dashboard shows all participants with their strengths, weaknesses, current load, and capacity. Admin can edit profiles. Participants can fill self-assessment prompt.
+        </div>
+
+        <!-- SECTION 1: PARTICIPANT LIST -->
+        <div class="wireframe-box output">
+            <div class="wireframe-label">Participant List (4 Total)</div>
+            <!-- ANNOTATION: DESIGN - Table vs Cards? Current: Table for desktop, could switch to cards for mobile. Should table be sortable/filterable? -->
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Participant</th>
+                        <th>Status</th>
+                        <th>Load</th>
+                        <th>Capacity</th>
+                        <th>Efficiency</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <td><strong>CSP</strong></td>
+                        <td>Active</td>
+                        <td>3 active goals</td>
+                        <td style="color: #ff6b6b;">3/5 (60%)</td>
+                        <td>0.95</td>
+                        <td><button onclick="editParticipant('CSP')" style="padding: 5px 10px; font-size: 12px;">Edit</button></td>
+                    </tr>
+                    <tr>
+                        <td><strong>CSPS</strong></td>
+                        <td>Active</td>
+                        <td>1 active goal</td>
+                        <td style="color: #51cf66;">1/3 (33%)</td>
+                        <td>0.78</td>
+                        <td><button onclick="editParticipant('CSPS')" style="padding: 5px 10px; font-size: 12px;">Edit</button></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Base44</strong></td>
+                        <td>Active</td>
+                        <td>2 active goals</td>
+                        <td style="color: #ffa500;">2/4 (50%)</td>
+                        <td>0.82</td>
+                        <td><button onclick="editParticipant('Base44')" style="padding: 5px 10px; font-size: 12px;">Edit</button></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lovable</strong></td>
+                        <td>Active</td>
+                        <td>4 active goals</td>
+                        <td style="color: #ff6b6b;">4/5 (80%)</td>
+                        <td>0.88</td>
+                        <td><button onclick="editParticipant('Lovable')" style="padding: 5px 10px; font-size: 12px;">Edit</button></td>
+                    </tr>
+                </table>
+            </div>
+            <!-- ANNOTATION: Capacity shown with color indicator. Red=high load, Yellow=medium, Green=low. Right? Should it show auto-adjust timer status? -->
+        </div>
+
+        <!-- SECTION 2: EDIT PARTICIPANT MODAL -->
+        <div class="wireframe-box input" style="margin-top: 30px;">
+            <div class="wireframe-label">Edit Participant Profile: CSP (Modal-style)</div>
+            <!-- ANNOTATION: This would open in a modal popup. Showing full form here for prototype. -->
+
+            <div class="form-group">
+                <label>Participant Name:</label>
+                <input type="text" value="CSP" disabled>
+            </div>
+
+            <div class="form-group">
+                <label>Strengths (comma-separated):</label>
+                <textarea>API design, Database optimization, Performance testing, Scalability, Security architecture</textarea>
+                <!-- ANNOTATION: DESIGN - Comma-separated text or tag input? Tag input is more modern/UX-friendly. Should we use that? -->
+            </div>
+
+            <div class="form-group">
+                <label>Weaknesses (comma-separated):</label>
+                <textarea>Mobile UI, Frontend frameworks, Designer collaboration, Business domain expertise</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Specializations (select multiple):</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <label>API Design</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <label>Database Optimization</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <label>Performance Tuning</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox">
+                        <label>Frontend</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox">
+                        <label>Infrastructure</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Token Efficiency (0-1, where 1 = perfect):</label>
+                <input type="number" step="0.01" min="0" max="1" value="0.95">
+                <!-- ANNOTATION: Should have tooltip explaining token efficiency? "% of tokens that are useful vs wasted"? -->
+            </div>
+
+            <div class="form-group">
+                <label>Response SLA (hours):</label>
+                <input type="number" value="24">
+            </div>
+
+            <div class="form-group">
+                <label>Verification Threshold (0-100, required confidence%):</label>
+                <input type="number" min="0" max="100" value="90">
+            </div>
+
+            <div class="form-group">
+                <label>Max Concurrent Goals:</label>
+                <input type="number" value="5">
+            </div>
+
+            <div style="background: #f0f8ff; padding: 15px; border-radius: 4px; margin: 15px 0;">
+                <strong>Auto-Adjust Settings:</strong>
+                <div class="form-group" style="margin-top: 10px;">
+                    <div class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <label>Enable auto-adjust when overloaded</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Auto-adjust after (days overloaded):</label>
+                    <input type="number" value="3">
+                    <!-- ANNOTATION: DESIGN - If participant overloaded for 3+ days, auto-adjust. What does "adjust" mean? Extend timeline? Suggest bundle change? Default action should be configurable. -->
+                </div>
+                <div class="form-group">
+                    <label>Action on trigger:</label>
+                    <select>
+                        <option selected>Warn only (manual review required)</option>
+                        <option>Auto-extend timeline by 1 week</option>
+                        <option>Auto-remove from new assignments</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="secondary">Cancel</button>
+                <button>Save Profile</button>
+            </div>
+
+            <div class="annotation">
+                COMMENT: Are all these fields needed on first edit? Should we break into tabs (Basic Info / Strengths / Settings)? Or this is right for enterprise context?
+            </div>
+        </div>
+
+        <!-- SECTION 3: SEND UNIFORM PROMPT -->
+        <div class="wireframe-box action" style="margin-top: 30px;">
+            <div class="wireframe-label">Send Uniform Self-Assessment Prompt to Participant</div>
+            <!-- ANNOTATION: DESIGN - Admin can send a standardized prompt. Participant fills it. Admin reviews and imports to profile. -->
+
+            <div class="form-group">
+                <label>Send Prompt To:</label>
+                <select>
+                    <option>-- Select Participant --</option>
+                    <option>CSP</option>
+                    <option>CSPS</option>
+                    <option>Base44</option>
+                    <option>Lovable</option>
+                </select>
+            </div>
+
+            <div style="background: #f0fff0; padding: 15px; border-radius: 4px; margin: 15px 0;">
+                <strong>Uniform Prompt (Standard for all participants):</strong>
+                <div style="margin-top: 10px; font-family: monospace; font-size: 12px; line-height: 1.8;">
+                    <p>--- PARTICIPANT SELF-ASSESSMENT PROMPT ---</p>
+                    <p>Thank you for being part of our consulting network. To help us match you with the right goals, please answer these questions about your capabilities:</p>
+                    <p><strong>Q1: What are your 5 core strengths?</strong><br/>
+                    (e.g., API design, database optimization, frontend development)</p>
+                    <p><strong>Q2: What are your 3-5 limitations or weaknesses?</strong><br/>
+                    (e.g., mobile UI, business domain knowledge)</p>
+                    <p><strong>Q3: In what domains/technologies are you most expert?</strong><br/>
+                    (e.g., Python backend, React frontend, AWS infrastructure)</p>
+                    <p><strong>Q4: How many concurrent projects can you handle?</strong><br/>
+                    (e.g., "max 3 at once", "4-5 comfortable")</p>
+                    <p><strong>Q5: What's your typical response time?</strong><br/>
+                    (e.g., "24 hours", "48 hours")</p>
+                    <p><strong>Q6: What confidence level do you need before you're satisfied with your work (0-100)?</strong><br/>
+                    (e.g., "90%", "95%")</p>
+                    <p><strong>Q7: How efficiently do you use your tokens (0-1, where 1 is perfect)?</strong><br/>
+                    (e.g., "0.85", "0.95")</p>
+                </div>
+                <!-- ANNOTATION: Is this prompt format right? Should it be longer? Shorter? Different questions? This is standardized across all participants. -->
+            </div>
+
+            <div class="button-group">
+                <button class="secondary">Cancel</button>
+                <button>Send Prompt (via Email/Dashboard)</button>
+            </div>
+        </div>
+
+        <!-- ANNOTATION: OVERALL DASHBOARD FEEDBACK -->
+        <div class="annotation" style="margin-top: 40px;">
+            <strong>PROTOTYPE ANNOTATION - Participant Dashboard:</strong>
+            <ul style="margin-top: 10px; margin-left: 20px;">
+                <li>Should participant list be grouped by status (Active/Archived)?</li>
+                <li>Should capacity color (red/yellow/green) be clickable to show history?</li>
+                <li>Auto-adjust settings - should this be participant-specific or global default?</li>
+                <li>Uniform prompt - should participants be able to update their answers anytime?</li>
+                <li>Should we show "next available slot" date for overloaded participants?</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: BUNDLE CONFIGURATION -->
+    <div class="screen" id="bundle-config">
+        <!-- ANNOTATION: Bundle Configuration where admin defines/edits bundles and wires them to goal types. -->
+
+        <h2 class="section-title">Bundle Configuration</h2>
+
+        <div class="note">
+            Define participant bundles and wire them to goal types. Each bundle specifies who should work together for specific goal types.
+        </div>
+
+        <!-- SECTION 1: BUNDLE LIST -->
+        <div class="wireframe-box output">
+            <div class="wireframe-label">Defined Bundles (4 Total)</div>
+            <!-- ANNOTATION: DESIGN - List of bundles with their wiring, default status, and actions. Should this be table or cards? -->
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Bundle Name</th>
+                        <th>Participants</th>
+                        <th>Wired Goal Types</th>
+                        <th>Default</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr style="background: #f0fff0;">
+                        <td><strong>Performance & Architecture</strong></td>
+                        <td>CSP, CSPS</td>
+                        <td>Performance Optimization, Architecture Redesign</td>
+                        <td>✓ Default for Performance</td>
+                        <td><button style="padding: 5px 10px; font-size: 12px;">Edit</button> <button style="padding: 5px 10px; font-size: 12px;">Delete</button></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Frontend & Backend</strong></td>
+                        <td>Base44, CSP</td>
+                        <td>Feature Development</td>
+                        <td>✓ Default for Features</td>
+                        <td><button style="padding: 5px 10px; font-size: 12px;">Edit</button> <button style="padding: 5px 10px; font-size: 12px;">Delete</button></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Full Team Consultation</strong></td>
+                        <td>CSP, CSPS, Base44, Lovable</td>
+                        <td>Strategic Planning, Architecture Redesign</td>
+                        <td>-</td>
+                        <td><button style="padding: 5px 10px; font-size: 12px;">Edit</button> <button style="padding: 5px 10px; font-size: 12px;">Delete</button></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Quick Turnaround</strong></td>
+                        <td>CSP</td>
+                        <td>Problem Solving</td>
+                        <td>✓ Default for Problems</td>
+                        <td><button style="padding: 5px 10px; font-size: 12px;">Edit</button> <button style="padding: 5px 10px; font-size: 12px;">Delete</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 2: EDIT BUNDLE -->
+        <div class="wireframe-box input" style="margin-top: 30px;">
+            <div class="wireframe-label">Edit Bundle: Performance & Architecture</div>
+            <!-- ANNOTATION: Admin edits bundle. Can change name, participants, wiring, and set as default for specific goal types. -->
+
+            <div class="form-group">
+                <label>Bundle Name:</label>
+                <input type="text" value="Performance & Architecture">
+            </div>
+
+            <div class="form-group">
+                <label>Description:</label>
+                <textarea placeholder="Why does this bundle exist? When should it be recommended?">Combines performance optimization expertise (CSP) with architectural perspective (CSPS). Best for goals that require both quick fixes and long-term architecture improvements.</textarea>
+            </div>
+
+            <div style="background: #f0f8ff; padding: 15px; border-radius: 4px; margin: 15px 0;">
+                <strong>Select Participants:</strong>
+                <!-- ANNOTATION: DESIGN - Checkboxes for participant selection. Should show capacity info next to each? -->
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <label>CSP (API/DB Expert) - Current load: 3/5</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <label>CSPS (Architecture Expert) - Current load: 1/3</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox">
+                        <label>Base44 (Frontend Expert) - Current load: 2/4</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox">
+                        <label>Lovable (Full-Stack Expert) - Current load: 4/5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #f0fff0; padding: 15px; border-radius: 4px; margin: 15px 0;">
+                <strong>Wire to Goal Types (which goals should use this bundle?):</strong>
+                <!-- ANNOTATION: DESIGN - Multi-select checkboxes for goal types. Should there be a "primary" vs "secondary" wiring? -->
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <label>📌 Performance Optimization (PRIMARY default)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <label>Architecture Redesign (SECONDARY option)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox">
+                        <label>Feature Development</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox">
+                        <label>Problem Solving</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox">
+                        <label>Learning & Exploration</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox">
+                        <label>Strategic Planning</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Expected Timeline (days):</label>
+                <input type="number" value="28">
+            </div>
+
+            <div class="form-group">
+                <label>Process Style:</label>
+                <select>
+                    <option selected>Parallel (both work simultaneously)</option>
+                    <option>Sequential (CSP first, then CSPS)</option>
+                    <option>Hybrid (overlapping phases)</option>
+                </select>
+            </div>
+
+            <div class="button-group">
+                <button class="secondary">Cancel</button>
+                <button>Save Bundle</button>
+            </div>
+        </div>
+
+        <!-- SECTION 3: BUNDLE PREVIEW (MATCHING MATRIX) -->
+        <div class="wireframe-box output" style="margin-top: 30px;">
+            <div class="wireframe-label">Bundle Preview: Matching Matrix</div>
+            <!-- ANNOTATION: Show how this bundle matches to different goal types. Visual representation of strength. -->
+
+            <p style="font-size: 13px; color: #666; margin-bottom: 15px;">
+                Shows how well this bundle matches to each goal type. Helps admin decide if wiring is optimal.
+            </p>
+
+            <div class="matrix">
+                <div class="matrix-cell matrix-header">Goal Type</div>
+                <div class="matrix-cell matrix-header">Match %</div>
+                <div class="matrix-cell matrix-header">Status</div>
+                <div class="matrix-cell matrix-header">Capacity</div>
+                <div class="matrix-cell matrix-header">Recommendation</div>
+
+                <div class="matrix-cell">Performance Optimization</div>
+                <div class="matrix-cell match-high">94%</div>
+                <div class="matrix-cell">✓ Wired</div>
+                <div class="matrix-cell match-medium">Available</div>
+                <div class="matrix-cell">✓ PRIMARY</div>
+
+                <div class="matrix-cell">Architecture Redesign</div>
+                <div class="matrix-cell match-high">88%</div>
+                <div class="matrix-cell">✓ Wired</div>
+                <div class="matrix-cell match-medium">Available</div>
+                <div class="matrix-cell">✓ SECONDARY</div>
+
+                <div class="matrix-cell">Feature Development</div>
+                <div class="matrix-cell match-medium">72%</div>
+                <div class="matrix-cell">✗ Not Wired</div>
+                <div class="matrix-cell match-medium">Available</div>
+                <div class="matrix-cell">Optional</div>
+
+                <div class="matrix-cell">Problem Solving</div>
+                <div class="matrix-cell match-low">45%</div>
+                <div class="matrix-cell">✗ Not Wired</div>
+                <div class="matrix-cell match-high">Full</div>
+                <div class="matrix-cell">Not Recommended</div>
+
+                <div class="matrix-cell">Learning & Exploration</div>
+                <div class="matrix-cell match-medium">68%</div>
+                <div class="matrix-cell">✗ Not Wired</div>
+                <div class="matrix-cell match-medium">Available</div>
+                <div class="matrix-cell">Optional</div>
+
+                <div class="matrix-cell">Strategic Planning</div>
+                <div class="matrix-cell match-high">81%</div>
+                <div class="matrix-cell">✗ Not Wired</div>
+                <div class="matrix-cell match-medium">Available</div>
+                <div class="matrix-cell">Consider</div>
+            </div>
+            <!-- ANNOTATION: Should admin be able to make wiring changes directly from this preview? Or only from edit form above? -->
+        </div>
+
+        <!-- ANNOTATION: OVERALL BUNDLE CONFIG FEEDBACK -->
+        <div class="annotation" style="margin-top: 40px;">
+            <strong>PROTOTYPE ANNOTATION - Bundle Configuration:</strong>
+            <ul style="margin-top: 10px; margin-left: 20px;">
+                <li>Can admin create custom bundles on the fly, or only pre-defined bundles?</li>
+                <li>Should wiring show "PRIMARY" (default) vs "SECONDARY" (alternative) vs "OPTIONAL"?</li>
+                <li>Matching matrix - should it be auto-calculated or manually entered?</li>
+                <li>Should admin be able to temporarily disable a bundle without deleting it?</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- SCREEN 4: ARCHITECTURE OVERVIEW -->
+    <div class="screen" id="architecture">
+        <h2 class="section-title">System Architecture Overview</h2>
+
+        <div class="wireframe-box">
+            <div class="wireframe-label">Data Flow & Integration with Phase 0</div>
+
+            <div style="font-size: 12px; color: #666; margin: 15px 0;">
+                <p><strong>Goal Creation Flow:</strong></p>
+                <div class="data-flow">
+                    <div class="data-flow-box">Admin enters draft</div>
+                    <div class="arrow">→</div>
+                    <div class="data-flow-box">AI refines core</div>
+                    <div class="arrow">→</div>
+                    <div class="data-flow-box">Core locked</div>
+                    <div class="arrow">→</div>
+                    <div class="data-flow-box">Scope presented</div>
+                </div>
+                <div class="data-flow">
+                    <div class="data-flow-box">Bundle recommendation</div>
+                    <div class="arrow">→</div>
+                    <div class="data-flow-box">Admin confirms</div>
+                    <div class="arrow">→</div>
+                    <div class="data-flow-box">Goal created in decision-log</div>
+                    <div class="arrow">→</div>
+                    <div class="data-flow-box">Immutable audit trail</div>
+                </div>
+            </div>
+
+            <!-- ANNOTATION: System Architecture showing integration points. -->
+            <div style="background: #f5f5f5; padding: 15px; border-radius: 4px; margin: 15px 0; font-size: 12px;">
+                <p><strong>Backend Integration Points:</strong></p>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li><strong>Phase 0 Decision Log:</strong> Goal creation → immutable entry in decision-log.ts</li>
+                    <li><strong>Identity Gate:</strong> Admin authentication required (ADMIN tier only)</li>
+                    <li><strong>Authority Matrix:</strong> Permission checks (who can create goals, edit bundles)</li>
+                    <li><strong>Schema Checksum:</strong> Validate goal type + bundle + participants exist + match schema</li>
+                    <li><strong>Participant Profiles:</strong> Load from database, show capacity in UI</li>
+                    <li><strong>Recommendation Engine:</strong> Backend API calculates matching, suggests bundle</li>
+                </ul>
+            </div>
+
+            <!-- ANNOTATION: Schema Alignment -->
+            <div style="background: #f0f8ff; padding: 15px; border-radius: 4px; margin: 15px 0; font-size: 12px;">
+                <p><strong>Schema Alignment:</strong></p>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>Goal Type: Maps to canonical schema node (SCHEMA-GOAL-PERF-001, etc.)</li>
+                    <li>Participants: Maps to canonical schema node (SCHEMA-PART-CSP-001, etc.)</li>
+                    <li>Bundle: Maps to canonical schema node (SCHEMA-BUNDLE-PERF-ARCH-001, etc.)</li>
+                    <li>Vocabulary: All references use glossary canonical names (no aliases in form)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ANNOTATION: OVERALL SYSTEM FEEDBACK -->
+        <div class="annotation">
+            <strong>PROTOTYPE ANNOTATION - Overall System:</strong>
+            <ul style="margin-top: 10px; margin-left: 20px;">
+                <li>Should the 3 systems (Wizard, Dashboard, Config) be separate tabs or separate pages?</li>
+                <li>Should there be a "Dashboard" home screen that shows current goals, active participants, pending approvals?</li>
+                <li>Should admin be able to view all goals created (with status, participants, progress)?</li>
+                <li>Should participant see their assignments? How do they access assigned goals?</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- JAVASCRIPT FOR INTERACTIVITY -->
+<script>
+    // Navigation between tabs
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const screenId = this.getAttribute('data-screen');
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            this.classList.add('active');
+        });
+    });
+
+    // Step navigation in wizard
+    function goToStep(stepNum) {
+        console.log('Navigating to step ' + stepNum);
+        alert('Step ' + stepNum + ' - [In production, this would navigate to the next step or process the input]');
+    }
+
+    function editParticipant(name) {
+        alert('Editing participant: ' + name);
+    }
+
+    // Tooltip on hover
+    document.querySelectorAll('.comment-highlight').forEach(el => {
+        el.addEventListener('mouseover', function() {
+            this.style.backgroundColor = '#fff3cd';
+        });
+    });
+</script>
+
+</body>
+</html>
