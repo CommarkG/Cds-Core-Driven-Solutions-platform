@@ -286,6 +286,129 @@
             font-size: 18px;
         }
 
+        /* UPDATED S350: Tooltip styling for metric fields */
+        .metric-tooltip {
+            cursor: help;
+            text-decoration: underline dotted;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .metric-label {
+            display: inline-block;
+        }
+
+        /* UPDATED S350: Action button styling for add buttons */
+        .add-button {
+            background: #50c878;
+            color: white;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .add-button:hover {
+            background: #3ca860;
+        }
+
+        /* UPDATED S350: Drag handle and reorder affordances */
+        .drag-handle {
+            cursor: grab;
+            color: #999;
+            margin-right: 8px;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .row-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .move-arrow {
+            cursor: pointer;
+            color: #666;
+            font-size: 14px;
+            padding: 4px 6px;
+            border-radius: 3px;
+            background: #f0f0f0;
+            transition: all 0.2s;
+        }
+
+        .move-arrow:hover {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        /* UPDATED S350: Step progression visualization */
+        .step-progression {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .progression-step {
+            padding: 8px 12px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .progression-step.active {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .progression-arrow {
+            font-size: 16px;
+            color: #999;
+        }
+
+        /* UPDATED S350: Post-creation success state */
+        .success-state {
+            background: #f0fff0;
+            border: 2px solid #50c878;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .success-step {
+            padding: 10px;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-step.completed {
+            color: #2d7f2d;
+            font-weight: 500;
+        }
+
+        .success-step.pending {
+            color: #ff9800;
+        }
+
+        .reorder-hint {
+            font-size: 11px;
+            color: #999;
+            font-style: italic;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: #f9f9f9;
+            border-radius: 3px;
+        }
+
         .comment-highlight {
             background: #fff3cd;
             cursor: pointer;
@@ -355,6 +478,18 @@
             <div class="step">Step 4: Scope Settings</div>
             <div class="step">Step 5: Bundle Recommendation</div>
             <div class="step">Step 6: Review & Create</div>
+        </div>
+        <!-- UPDATED S350: Add visual step progression with explicit flow indicators -->
+        <div class="step-progression">
+            <div class="progression-step active">Define Goal</div>
+            <div class="progression-arrow">→</div>
+            <div class="progression-step">Refine Core</div>
+            <div class="progression-arrow">→</div>
+            <div class="progression-step">Set Scope</div>
+            <div class="progression-arrow">→</div>
+            <div class="progression-step">Assign Team</div>
+            <div class="progression-arrow">→</div>
+            <div class="progression-step">Finalize</div>
         </div>
 
         <!-- STEP 1: INITIAL DRAFT -->
@@ -433,7 +568,8 @@
                     <p><strong>Root Cause:</strong> Lack of caching + inefficient database queries.</p>
                     <p><strong>Solution Approach:</strong> Implement caching layer + optimize top 10 slow queries.</p>
                     <p><strong>Business Impact:</strong> Reduce API response to <1s, recover lost users.</p>
-                    <p><strong>Success Criteria:</strong> 95% of API calls respond in <1s.</p>
+                    <!-- UPDATED S350: Add tooltip for Success Criteria field -->
+                    <p><strong><span class="metric-tooltip" title="Measurable outcome that indicates goal is complete">Success Criteria (?)</span>:</strong> 95% of API calls respond in <1s.</p>
                 </div>
             </div>
 
@@ -592,6 +728,27 @@
             </div>
         </div>
 
+        <!-- UPDATED S350: Add post-creation success state showing what happens after Step 6 -->
+        <div class="wireframe-box output" style="margin-top: 40px;">
+            <div class="wireframe-label">STEP 7 (Post-Creation): Goal Activation Flow</div>
+            <!-- UPDATED S350: Visual representation of what happens immediately after goal creation -->
+            <p style="font-size: 13px; color: #666; margin-bottom: 15px;">
+                When you click "Create Goal", the system will automatically execute this post-creation flow:
+            </p>
+
+            <div class="success-state">
+                <div class="success-step completed">✓ Goal created in decision-log (immutable audit trail)</div>
+                <div class="success-step completed">✓ Goal assigned to participants (CSP, CSPS)</div>
+                <div class="success-step pending">⧖ Participants notified (email sent to team)</div>
+                <div class="success-step pending">⧖ Goal visible in dashboard (live update)</div>
+                <div class="success-step pending">⧖ Timeline countdown starts (2-4 weeks)</div>
+            </div>
+
+            <div class="annotation">
+                COMMENT: "Completed" items happen immediately on creation. "Pending" items happen within minutes. Participants can see their assignment and track progress.
+            </div>
+        </div>
+
         <!-- ANNOTATION: OVERALL WIZARD FEEDBACK -->
         <div class="annotation" style="margin-top: 40px;">
             <strong>PROTOTYPE ANNOTATION - Goal Definition Wizard:</strong>
@@ -620,46 +777,61 @@
         <div class="wireframe-box output">
             <div class="wireframe-label">Participant List (4 Total)</div>
             <!-- ANNOTATION: DESIGN - Table vs Cards? Current: Table for desktop, could switch to cards for mobile. Should table be sortable/filterable? -->
+            <!-- UPDATED S350: Add "+ Add Participant" button before table -->
+            <button class="add-button" onclick="addParticipant()">+ Add Participant</button>
             <div class="table-wrapper">
+                <!-- UPDATED S350: Add reordering hint and drag handles -->
+            <div class="reorder-hint">Drag to reorder items or use arrows to move up/down</div>
+            <!-- UPDATED S350: Add tooltips to metric column headers -->
                 <table>
                     <tr>
+                        <th style="width: 30px;"></th>
                         <th>Participant</th>
-                        <th>Status</th>
-                        <th>Load</th>
-                        <th>Capacity</th>
-                        <th>Efficiency</th>
+                        <th><span class="metric-tooltip" title="Participant availability status (Active/Inactive/OnLeave)">Status (?)</span></th>
+                        <th><span class="metric-tooltip" title="Number of active goals currently assigned">Load (?)</span></th>
+                        <th><span class="metric-tooltip" title="Current active goals / Maximum concurrent goals">Capacity (?)</span></th>
+                        <th><span class="metric-tooltip" title="Token efficiency ratio (0-1 scale, higher is better)">Efficiency (?)</span></th>
+                        <th style="width: 80px;">Reorder</th>
                         <th>Actions</th>
                     </tr>
                     <tr>
+                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
                         <td><strong>CSP</strong></td>
-                        <td>Active</td>
-                        <td>3 active goals</td>
-                        <td style="color: #ff6b6b;">3/5 (60%)</td>
-                        <td>0.95</td>
+                        <td><span title="Participant availability status (Active/Inactive/OnLeave)">Active</span></td>
+                        <td><span title="Number of active goals currently assigned">3 active goals</span></td>
+                        <td style="color: #ff6b6b;" title="Current active goals / Maximum concurrent goals"><span class="metric-tooltip">3/5 (60%)</span></td>
+                        <td><span class="metric-tooltip" title="Token efficiency ratio (0-1 scale, higher is better)">0.95</span></td>
+                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
                         <td><button onclick="editParticipant('CSP')" style="padding: 5px 10px; font-size: 12px;">Edit</button></td>
                     </tr>
                     <tr>
+                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
                         <td><strong>CSPS</strong></td>
-                        <td>Active</td>
-                        <td>1 active goal</td>
-                        <td style="color: #51cf66;">1/3 (33%)</td>
-                        <td>0.78</td>
+                        <td><span title="Participant availability status (Active/Inactive/OnLeave)">Active</span></td>
+                        <td><span title="Number of active goals currently assigned">1 active goal</span></td>
+                        <td style="color: #51cf66;" title="Current active goals / Maximum concurrent goals"><span class="metric-tooltip">1/3 (33%)</span></td>
+                        <td><span class="metric-tooltip" title="Token efficiency ratio (0-1 scale, higher is better)">0.78</span></td>
+                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
                         <td><button onclick="editParticipant('CSPS')" style="padding: 5px 10px; font-size: 12px;">Edit</button></td>
                     </tr>
                     <tr>
+                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
                         <td><strong>Base44</strong></td>
-                        <td>Active</td>
-                        <td>2 active goals</td>
-                        <td style="color: #ffa500;">2/4 (50%)</td>
-                        <td>0.82</td>
+                        <td><span title="Participant availability status (Active/Inactive/OnLeave)">Active</span></td>
+                        <td><span title="Number of active goals currently assigned">2 active goals</span></td>
+                        <td style="color: #ffa500;" title="Current active goals / Maximum concurrent goals"><span class="metric-tooltip">2/4 (50%)</span></td>
+                        <td><span class="metric-tooltip" title="Token efficiency ratio (0-1 scale, higher is better)">0.82</span></td>
+                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
                         <td><button onclick="editParticipant('Base44')" style="padding: 5px 10px; font-size: 12px;">Edit</button></td>
                     </tr>
                     <tr>
+                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
                         <td><strong>Lovable</strong></td>
-                        <td>Active</td>
-                        <td>4 active goals</td>
-                        <td style="color: #ff6b6b;">4/5 (80%)</td>
-                        <td>0.88</td>
+                        <td><span title="Participant availability status (Active/Inactive/OnLeave)">Active</span></td>
+                        <td><span title="Number of active goals currently assigned">4 active goals</span></td>
+                        <td style="color: #ff6b6b;" title="Current active goals / Maximum concurrent goals"><span class="metric-tooltip">4/5 (80%)</span></td>
+                        <td><span class="metric-tooltip" title="Token efficiency ratio (0-1 scale, higher is better)">0.88</span></td>
+                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
                         <td><button onclick="editParticipant('Lovable')" style="padding: 5px 10px; font-size: 12px;">Edit</button></td>
                     </tr>
                 </table>
@@ -714,10 +886,10 @@
                 </div>
             </div>
 
+            <!-- UPDATED S350: Add tooltip to Efficiency field -->
             <div class="form-group">
-                <label>Token Efficiency (0-1, where 1 = perfect):</label>
-                <input type="number" step="0.01" min="0" max="1" value="0.95">
-                <!-- ANNOTATION: Should have tooltip explaining token efficiency? "% of tokens that are useful vs wasted"? -->
+                <label><span class="metric-tooltip" title="Token efficiency ratio (0-1 scale, higher is better)">Efficiency (?)</span></label>
+                <input type="number" step="0.01" min="0" max="1" value="0.95" title="Token efficiency ratio (0-1 scale, higher is better)">
             </div>
 
             <div class="form-group">
@@ -725,14 +897,16 @@
                 <input type="number" value="24">
             </div>
 
+            <!-- UPDATED S350: Add tooltip to Verification Threshold field -->
             <div class="form-group">
-                <label>Verification Threshold (0-100, required confidence%):</label>
-                <input type="number" min="0" max="100" value="90">
+                <label><span class="metric-tooltip" title="Confidence level required (0-100%)">Verification Threshold (?)</span></label>
+                <input type="number" min="0" max="100" value="90" title="Confidence level required (0-100%)">
             </div>
 
+            <!-- UPDATED S350: Add tooltip to Capacity field -->
             <div class="form-group">
-                <label>Max Concurrent Goals:</label>
-                <input type="number" value="5">
+                <label><span class="metric-tooltip" title="Current active goals / Maximum concurrent goals">Capacity (?)</span></label>
+                <input type="number" value="5" title="Current active goals / Maximum concurrent goals">
             </div>
 
             <div style="background: #f0f8ff; padding: 15px; border-radius: 4px; margin: 15px 0;">
@@ -840,41 +1014,55 @@
         <div class="wireframe-box output">
             <div class="wireframe-label">Defined Bundles (4 Total)</div>
             <!-- ANNOTATION: DESIGN - List of bundles with their wiring, default status, and actions. Should this be table or cards? -->
+            <!-- UPDATED S350: Add "+ Create New Bundle" button before table -->
+            <button class="add-button" onclick="createNewBundle()">+ Create New Bundle</button>
+            <!-- UPDATED S350: Add reordering hint for bundles -->
+            <div class="reorder-hint">Drag to reorder bundles or use arrows to move up/down</div>
             <div class="table-wrapper">
                 <table>
                     <tr>
+                        <th style="width: 30px;"></th>
                         <th>Bundle Name</th>
                         <th>Participants</th>
                         <th>Wired Goal Types</th>
                         <th>Default</th>
+                        <th style="width: 80px;">Reorder</th>
                         <th>Actions</th>
                     </tr>
                     <tr style="background: #f0fff0;">
+                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
                         <td><strong>Performance & Architecture</strong></td>
                         <td>CSP, CSPS</td>
                         <td>Performance Optimization, Architecture Redesign</td>
                         <td>✓ Default for Performance</td>
+                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
                         <td><button style="padding: 5px 10px; font-size: 12px;">Edit</button> <button style="padding: 5px 10px; font-size: 12px;">Delete</button></td>
                     </tr>
                     <tr>
+                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
                         <td><strong>Frontend & Backend</strong></td>
                         <td>Base44, CSP</td>
                         <td>Feature Development</td>
                         <td>✓ Default for Features</td>
+                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
                         <td><button style="padding: 5px 10px; font-size: 12px;">Edit</button> <button style="padding: 5px 10px; font-size: 12px;">Delete</button></td>
                     </tr>
                     <tr>
+                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
                         <td><strong>Full Team Consultation</strong></td>
                         <td>CSP, CSPS, Base44, Lovable</td>
                         <td>Strategic Planning, Architecture Redesign</td>
                         <td>-</td>
+                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
                         <td><button style="padding: 5px 10px; font-size: 12px;">Edit</button> <button style="padding: 5px 10px; font-size: 12px;">Delete</button></td>
                     </tr>
                     <tr>
+                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
                         <td><strong>Quick Turnaround</strong></td>
                         <td>CSP</td>
                         <td>Problem Solving</td>
                         <td>✓ Default for Problems</td>
+                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
                         <td><button style="padding: 5px 10px; font-size: 12px;">Edit</button> <button style="padding: 5px 10px; font-size: 12px;">Delete</button></td>
                     </tr>
                 </table>
@@ -1125,6 +1313,31 @@
 
     function editParticipant(name) {
         alert('Editing participant: ' + name);
+    }
+
+    // UPDATED S350: Add handler for adding new participant
+    function addParticipant() {
+        alert('[In production] Open modal to add new participant with capability form.');
+    }
+
+    // UPDATED S350: Add handler for creating new bundle
+    function createNewBundle() {
+        alert('[In production] Open modal to create and configure new bundle.');
+    }
+
+    // UPDATED S350: Add handlers for moving rows up/down
+    function moveUp(el) {
+        var row = el.closest('tr');
+        if (row.previousElementSibling && row.previousElementSibling.tagName === 'TR') {
+            row.parentNode.insertBefore(row, row.previousElementSibling);
+        }
+    }
+
+    function moveDown(el) {
+        var row = el.closest('tr');
+        if (row.nextElementSibling && row.nextElementSibling.tagName === 'TR') {
+            row.parentNode.insertBefore(row.nextElementSibling, row);
+        }
     }
 
     // Tooltip on hover
