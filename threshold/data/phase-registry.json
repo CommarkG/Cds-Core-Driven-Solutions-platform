@@ -1,0 +1,27 @@
+{
+  "entries": [
+    {
+      "phase_number": 0,
+      "audit_status": "ZF_COMPLETE",
+      "build_completed_at": "2026-07-05T21:17:42.488Z",
+      "audit_opened_at": "2026-07-05T21:17:42.488Z",
+      "audit_completed_at": "2026-07-05T21:17:45.385Z",
+      "unresolved_findings": 0,
+      "_auto_opened": true,
+      "findings_summary": null,
+      "decision_count": 0
+    },
+    {
+      "phase_number": 1,
+      "audit_status": "ZF_COMPLETE",
+      "build_completed_at": "2026-07-05T21:17:50.966Z",
+      "audit_opened_at": "2026-07-05T21:17:50.966Z",
+      "audit_completed_at": "2026-07-05T21:20:57.189Z",
+      "unresolved_findings": 0,
+      "_auto_opened": true,
+      "findings_summary": null,
+      "decision_count": 0
+    }
+  ],
+  "last_modified": "2026-07-05T21:20:57.189Z"
+}

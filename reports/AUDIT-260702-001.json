@@ -1,0 +1,543 @@
+{
+  "audit_id": "AUDIT-260702-001",
+  "session_date": "2026-07-02",
+  "session_type": "PHASE0_FULL_FLEET",
+  "orchestrator": "EXPERT-SONNET-BUILDER",
+  "models_used": ["haiku (scan)", "sonnet (review)"],
+  "audit_target": {
+    "scope": "Phase 0 Threshold — full codebase",
+    "files_audited": [
+      "threshold/src/server.ts",
+      "threshold/src/types.ts",
+      "threshold/src/ice/engine.ts",
+      "threshold/src/gate/rules.ts",
+      "threshold/src/gate/input-adapter.ts",
+      "threshold/src/gate/record-store.ts",
+      "threshold/ui/gate/index.html",
+      "threshold/ui/dashboard/index.html",
+      "threshold/README.md"
+    ],
+    "specs_referenced": ["0210 (ICE)", "0220 (Gate)"]
+  },
+  "experts": [
+    "EXPERT-SYS", "EXPERT-SEC", "EXPERT-GOV", "EXPERT-UX",
+    "EXPERT-PERF", "EXPERT-DATA", "EXPERT-INT", "EXPERT-DOC"
+  ],
+  "severity_summary": {
+    "CRITICAL": 15,
+    "HIGH": 21,
+    "MEDIUM": 22,
+    "LOW": 8
+  },
+  "findings": [
+    {
+      "id": "FINDING-SYS-001", "expert": "SYS", "severity": "CRITICAL",
+      "title": "Missing input validation on /api/clarify and /api/session/open",
+      "detail": "No schema validation before destructuring. Malformed requests cause runtime failures."
+    },
+    {
+      "id": "FINDING-SYS-002", "expert": "SYS", "severity": "HIGH",
+      "title": "Unhandled promise rejection in /api/audit",
+      "detail": "Promise.all() on checkGateHealth() and runAudit() lacks .catch(). Requests hang on rejection."
+    },
+    {
+      "id": "FINDING-SYS-003", "expert": "SYS", "severity": "HIGH",
+      "title": "Hard-coded PORT default and missing configuration schema",
+      "detail": "PORT defaults to 3000 with no .env validation or schema documentation."
+    },
+    {
+      "id": "FINDING-SYS-004", "expert": "SYS", "severity": "HIGH",
+      "title": "Actor context defaults too permissive — no logging of fallback",
+      "detail": "Missing actor_kind silently defaults to external_user/TIER_0 with no audit trail."
+    },
+    {
+      "id": "FINDING-SYS-005", "expert": "SYS", "severity": "MEDIUM",
+      "title": "Source-path-specific required fields not enforced at parse time",
+      "detail": "tenant_api path must have tenant_id — not validated. Type system too loose."
+    },
+    {
+      "id": "FINDING-SYS-006", "expert": "SYS", "severity": "MEDIUM",
+      "title": "LOW confidence handling inconsistent across input types",
+      "detail": "external_input with LOW confidence → QUARANTINE, not NEED_CLARIFICATION. Inconsistent."
+    },
+    {
+      "id": "FINDING-SYS-007", "expert": "SYS", "severity": "MEDIUM",
+      "title": "Injection scan missing on /api/clarify endpoint",
+      "detail": "clarification_response not scanned. Attack vector via clarification round."
+    },
+    {
+      "id": "FINDING-SYS-008", "expert": "SYS", "severity": "MEDIUM",
+      "title": "readFileSync() for UI files has no try/catch",
+      "detail": "Server crashes if gate/index.html or dashboard/index.html is missing."
+    },
+    {
+      "id": "FINDING-SYS-009", "expert": "SYS", "severity": "MEDIUM",
+      "title": "RULE-VOC parsed but validation deferred",
+      "detail": "Vocab terms extracted but not validated against registered set in Phase 0."
+    },
+    {
+      "id": "FINDING-SYS-010", "expert": "SYS", "severity": "MEDIUM",
+      "title": "No rate limiting or DoS protection on /api/classify",
+      "detail": "10MB payloads with no rate limit. Flood attack unmitigated."
+    },
+    {
+      "id": "FINDING-SYS-011", "expert": "SYS", "severity": "LOW",
+      "title": "Clarification question generator hard-codes input type list",
+      "detail": "Adding new InputType requires manual update to clarification generator."
+    },
+    {
+      "id": "FINDING-SYS-012", "expert": "SYS", "severity": "LOW",
+      "title": "Ratification states hard-coded in session/open",
+      "detail": "CS-GOV-001 ratification state is static. Live registry needed."
+    },
+    {
+      "id": "FINDING-SYS-013", "expert": "SYS", "severity": "LOW",
+      "title": "No audit record for blocked/rejected inputs",
+      "detail": "Injection-rejected inputs leave no trace. Security audit gap."
+    },
+    {
+      "id": "FINDING-SYS-014", "expert": "SYS", "severity": "LOW",
+      "title": "Session open output contract undocumented",
+      "detail": "Injected artifact transport mechanism undefined."
+    },
+    {
+      "id": "FINDING-SEC-001", "expert": "SEC", "severity": "HIGH",
+      "title": "Injection scan missing encoding vectors",
+      "detail": "ROT13, hex, homograph attacks bypass the 6-pattern scan."
+    },
+    {
+      "id": "FINDING-SEC-002", "expert": "SEC", "severity": "CRITICAL",
+      "title": "Actor identity self-declared — no authentication",
+      "detail": "x-cds-actor-kind: governor header grants TIER_3 without verification. Privilege escalation trivially possible."
+    },
+    {
+      "id": "FINDING-SEC-003", "expert": "SEC", "severity": "HIGH",
+      "title": "Path traversal risk in getRecord()",
+      "detail": "crId passed directly to path.join(). Escape outside records/ possible via ../ sequences."
+    },
+    {
+      "id": "FINDING-SEC-004", "expert": "SEC", "severity": "MEDIUM",
+      "title": "CR-ID is sequential and predictable",
+      "detail": "CR-YYMMDD-NNN is brute-forceable. Risk escalates if CR-IDs used as capability tokens."
+    },
+    {
+      "id": "FINDING-SEC-005", "expert": "SEC", "severity": "MEDIUM",
+      "title": "Records directory unprotected from external writes",
+      "detail": "No signature verification on stored records. Malicious .json injection poisons dashboard."
+    },
+    {
+      "id": "FINDING-SEC-006", "expert": "SEC", "severity": "MEDIUM",
+      "title": "CORS fully open — cors() with no restrictions",
+      "detail": "All origins allowed. Future credential-based auth would be CSRF-vulnerable."
+    },
+    {
+      "id": "FINDING-SEC-007", "expert": "SEC", "severity": "CRITICAL",
+      "title": "Tier and permission enforcement labeled only — not enforced",
+      "detail": "Tier computed but never checked. Any actor reads /api/records, /api/audit, /dashboard without restriction."
+    },
+    {
+      "id": "FINDING-SEC-008", "expert": "SEC", "severity": "MEDIUM",
+      "title": "ReDoS risk in base64 injection pattern",
+      "detail": "Pattern /^[A-Za-z0-9+/]{100,}={0,2}$/m can cause catastrophic backtracking on crafted input."
+    },
+    {
+      "id": "FINDING-GOV-001", "expert": "GOV", "severity": "CRITICAL",
+      "title": "RULE-PARK is a stub — forced_escalation_exists hardcoded false",
+      "detail": "Swift Implementation can proceed regardless of actual Park Queue state. RULE-PARK not mechanically enforced."
+    },
+    {
+      "id": "FINDING-GOV-002", "expert": "GOV", "severity": "HIGH",
+      "title": "RULE-GOAL validates format only, not registry existence",
+      "detail": "GOV-2026-GOAL-999 passes even if goal never existed. Spoofable."
+    },
+    {
+      "id": "FINDING-GOV-003", "expert": "GOV", "severity": "HIGH",
+      "title": "RULE-VOC uses frozen hardcoded vocabulary set",
+      "detail": "New terms require code deploy. Not linked to CS-GOV-003 live registry."
+    },
+    {
+      "id": "FINDING-GOV-004", "expert": "GOV", "severity": "HIGH",
+      "title": "RULE-RAT validates declared state, not registry truth",
+      "detail": "ratification_state: RATIFIED in payload always passes RULE-RAT. Spoofable."
+    },
+    {
+      "id": "FINDING-GOV-005", "expert": "GOV", "severity": "MEDIUM",
+      "title": "NEED_CLARIFICATION missing AUTO_TAGS and routing in types.ts",
+      "detail": "5th result has no tag set or routing destination defined. Partially wired only."
+    },
+    {
+      "id": "FINDING-GOV-006", "expert": "GOV", "severity": "MEDIUM",
+      "title": "CR-ID not verified at generation, only at re-use",
+      "detail": "generateCrId() not confirmed to match canonical pattern. RULE-CLASS validation catches at re-use only."
+    },
+    {
+      "id": "FINDING-GOV-007", "expert": "GOV", "severity": "MEDIUM",
+      "title": "QUARANTINE only blocks AI session open — not all downstream paths",
+      "detail": "/api/records/:crId serves QUARANTINE records unrestricted. RULE-QUAR enforcement incomplete."
+    },
+    {
+      "id": "FINDING-GOV-008", "expert": "GOV", "severity": "MEDIUM",
+      "title": "External source path always HIGH confidence — blocks NEED_CLARIFICATION for externals",
+      "detail": "external_ai/tenant_api forced to HIGH confidence in Q1. Contradicts Yariv amendment intent."
+    },
+    {
+      "id": "FINDING-GOV-009", "expert": "GOV", "severity": "LOW",
+      "title": "Trust-tier scan calibration computed but ignored",
+      "detail": "trust_tier_note returned but never acted upon in server.ts."
+    },
+    {
+      "id": "FINDING-GOV-010", "expert": "GOV", "severity": "LOW",
+      "title": "Gate health check always returns true",
+      "detail": "checkGateHealth() stubs all checks. Audit Mirror non-functional in Phase 0."
+    },
+    {
+      "id": "FINDING-UX-001", "expert": "UX", "severity": "HIGH",
+      "title": "Step 1 terminology requires governance knowledge",
+      "detail": "Source path, ICE, tier — all jargon. No onboarding. New users blocked at step 1."
+    },
+    {
+      "id": "FINDING-UX-002", "expert": "UX", "severity": "HIGH",
+      "title": "Goal reference path offers no guidance on finding/creating GOV refs",
+      "detail": "New goal checkbox hard to find. No explanation of GOV reference numbering."
+    },
+    {
+      "id": "FINDING-UX-003", "expert": "UX", "severity": "MEDIUM",
+      "title": "Step 3 placeholder uses governance jargon causing cognitive overload",
+      "detail": "Corespine, Q2, ratification audit in placeholder text confuses non-expert users."
+    },
+    {
+      "id": "FINDING-UX-004", "expert": "UX", "severity": "MEDIUM",
+      "title": "Q1 type selection requires affirmative choice to skip — UX antipattern",
+      "detail": "Let ICE Decide requires explicit click. No way to proceed without selecting."
+    },
+    {
+      "id": "FINDING-UX-005", "expert": "UX", "severity": "CRITICAL",
+      "title": "Result card shows classification data but not user next-step",
+      "detail": "BLOCKED gives no fix guidance. HELD gives no timeline. QUARANTINE gives no action. Dashboard read-only — Governors cannot act."
+    },
+    {
+      "id": "FINDING-UX-006", "expert": "UX", "severity": "HIGH",
+      "title": "NEED_CLARIFICATION flow functional but purpose ambiguous",
+      "detail": "No indication of how many rounds allowed. No structured answer guidance."
+    },
+    {
+      "id": "FINDING-UX-007", "expert": "UX", "severity": "MEDIUM",
+      "title": "Light mode toggle not discoverable",
+      "detail": "Small icon top-right. Could be larger / better labeled."
+    },
+    {
+      "id": "FINDING-UX-008", "expert": "UX", "severity": "MEDIUM",
+      "title": "Mobile/responsive layout breaks below 600px",
+      "detail": "Step indicator cramped. Dashboard sidebar fixed 220px. No mobile nav."
+    },
+    {
+      "id": "FINDING-UX-009", "expert": "UX", "severity": "MEDIUM",
+      "title": "Keyboard navigation incomplete",
+      "detail": "Grid cards not tabbable. No visible focus ring. Dashboard drawer not Escape-closable."
+    },
+    {
+      "id": "FINDING-UX-010", "expert": "UX", "severity": "MEDIUM",
+      "title": "ARIA labels and roles missing from interactive elements",
+      "detail": "Cards have no role=button. Loading overlay has no aria-live. Icon buttons have no aria-label."
+    },
+    {
+      "id": "FINDING-UX-011", "expert": "UX", "severity": "HIGH",
+      "title": "Governor Dashboard is read-only — no governance action verbs",
+      "detail": "No Approve, Reject, Clear Quarantine, Annotate buttons. Dashboard observes but cannot govern."
+    },
+    {
+      "id": "FINDING-UX-012", "expert": "UX", "severity": "MEDIUM",
+      "title": "No timeout or error on slow classification",
+      "detail": "Loading overlay stays open indefinitely if server is slow. No user feedback."
+    },
+    {
+      "id": "FINDING-UX-013", "expert": "UX", "severity": "MEDIUM",
+      "title": "Error messages technical, not actionable",
+      "detail": "GATE ERROR shows system message. No What To Do next guidance."
+    },
+    {
+      "id": "FINDING-UX-014", "expert": "UX", "severity": "LOW",
+      "title": "New Input button lacks recovery flow affordance",
+      "detail": "Reset clears all input with no confirmation or save option."
+    },
+    {
+      "id": "FINDING-UX-015", "expert": "UX", "severity": "MEDIUM",
+      "title": "Source path descriptions use undefined governance vocabulary",
+      "detail": "COM-4, corespine, ratification states, ICE — all jargon in UI with no glossary."
+    },
+    {
+      "id": "FINDING-PERF-001", "expert": "PERF", "severity": "CRITICAL",
+      "title": "Unbounded file I/O on every dashboard query",
+      "detail": "listRecords() reads ALL files on every request. Breaks at ~1K records under load."
+    },
+    {
+      "id": "FINDING-PERF-002", "expert": "PERF", "severity": "CRITICAL",
+      "title": "Race condition in CR-ID generation",
+      "detail": "Concurrent classify requests read same max seq → duplicate IDs. No atomic increment."
+    },
+    {
+      "id": "FINDING-PERF-003", "expert": "PERF", "severity": "CRITICAL",
+      "title": "Stats computed on all records per dashboard request",
+      "detail": "computeStats() iterates all records every page load. O(N*M) at scale."
+    },
+    {
+      "id": "FINDING-PERF-004", "expert": "PERF", "severity": "CRITICAL",
+      "title": "Synchronous writeFileSync() on hot classify endpoint",
+      "detail": "Every classify blocks the thread on disk I/O. 10-50ms per write. Thread exhaustion at scale."
+    },
+    {
+      "id": "FINDING-PERF-005", "expert": "PERF", "severity": "HIGH",
+      "title": "runAudit() race with concurrent classify writes",
+      "detail": "Audit reads mid-write state. Concurrent writes + audit = skewed counts."
+    },
+    {
+      "id": "FINDING-PERF-006", "expert": "PERF", "severity": "HIGH",
+      "title": "Regex base64 pattern risks catastrophic backtracking",
+      "detail": "10KB+ crafted payload → exponential regex engine spin → DoS on classify."
+    },
+    {
+      "id": "FINDING-PERF-007", "expert": "PERF", "severity": "MEDIUM",
+      "title": "No rate limiting or connection pooling",
+      "detail": "Unlimited concurrent connections. No backpressure. DoS trivially possible."
+    },
+    {
+      "id": "FINDING-PERF-008", "expert": "PERF", "severity": "MEDIUM",
+      "title": "No response compression",
+      "detail": "5K records JSON = 200KB+ uncompressed. No gzip middleware."
+    },
+    {
+      "id": "FINDING-PERF-009", "expert": "PERF", "severity": "MEDIUM",
+      "title": "Injection scan runs full 6-regex on every request",
+      "detail": "High-trust actors should skip expensive scans. Trust-tier calibration unused."
+    },
+    {
+      "id": "FINDING-PERF-010", "expert": "PERF", "severity": "MEDIUM",
+      "title": "Pagination offset not memory-efficient",
+      "detail": "slice(50000, 50050) allocates 50K elements then discards them. GC pressure."
+    },
+    {
+      "id": "FINDING-PERF-011", "expert": "PERF", "severity": "LOW",
+      "title": "JSON.stringify with pretty-print on every store",
+      "detail": "2-space indent adds ~20% file size. Compact JSON on write, pretty only on read."
+    },
+    {
+      "id": "FINDING-DATA-001", "expert": "DATA", "severity": "CRITICAL",
+      "title": "CR-ID sequence overflow at 999 per day",
+      "detail": "padStart(3) caps at 999. 1000th record in a day generates 4-digit ID, breaking CR-ID format contract."
+    },
+    {
+      "id": "FINDING-DATA-002", "expert": "DATA", "severity": "CRITICAL",
+      "title": "updateRecord() overwrites — audit trail tampering possible",
+      "detail": "Hard overwrite with merge. Post-hoc classification result manipulation possible. Immutability violated."
+    },
+    {
+      "id": "FINDING-DATA-003", "expert": "DATA", "severity": "CRITICAL",
+      "title": "No durable write guarantee — crash mid-write = silent data loss",
+      "detail": "writeFileSync() with no WAL/fsync. Half-written JSON silently returns null on read."
+    },
+    {
+      "id": "FINDING-DATA-004", "expert": "DATA", "severity": "HIGH",
+      "title": "File naming unsafe for future timestamp-format CR-IDs",
+      "detail": "Current dashes safe. Future colons in timestamps would break Windows file naming."
+    },
+    {
+      "id": "FINDING-DATA-005", "expert": "DATA", "severity": "HIGH",
+      "title": "injected_artifact optional but required by 0220 Section 5",
+      "detail": "AI session may receive undefined artifact. Context bundle contract broken."
+    },
+    {
+      "id": "FINDING-DATA-006", "expert": "DATA", "severity": "HIGH",
+      "title": "No soft-delete — hard-delete possible, leaves no tombstone",
+      "detail": "fs.unlinkSync() erases governance records completely. No deletion audit trail."
+    },
+    {
+      "id": "FINDING-DATA-007", "expert": "DATA", "severity": "HIGH",
+      "title": "Data model missing critical Phase 0 fields",
+      "detail": "Missing: version, content_hash, deletion_audit, ratified_by, clarification_response_at, last_modified_by."
+    },
+    {
+      "id": "FINDING-DATA-008", "expert": "DATA", "severity": "MEDIUM",
+      "title": "PostgreSQL migration path doesn't address immutability carryover",
+      "detail": "Supabase default schema with UPDATE enabled recreates the same audit trail vulnerability."
+    },
+    {
+      "id": "FINDING-DATA-009", "expert": "DATA", "severity": "MEDIUM",
+      "title": "Forced escalation not tracked in runAudit()",
+      "detail": "RULE-PARK failures invisible in audit output. Park Queue blind spot."
+    },
+    {
+      "id": "FINDING-DATA-010", "expert": "DATA", "severity": "MEDIUM",
+      "title": "Race condition in nextSequence()",
+      "detail": "Same as PERF-002 — no mutex. Duplicate CR-IDs possible under concurrency."
+    },
+    {
+      "id": "FINDING-INT-001", "expert": "INT", "severity": "CRITICAL",
+      "title": "API versioning absent",
+      "detail": "/api/classify not /api/v1/classify. Breaking changes have no version channel. Downstream consumers have no stability signal."
+    },
+    {
+      "id": "FINDING-INT-002", "expert": "INT", "severity": "CRITICAL",
+      "title": "File record store blocks multi-instance deployment",
+      "detail": "JSON files cannot serve concurrent instances. Phase 0.5 Supabase migration mandatory before scale."
+    },
+    {
+      "id": "FINDING-INT-003", "expert": "INT", "severity": "HIGH",
+      "title": "Injected artifact contains placeholder/empty fields",
+      "detail": "ratification_states hardcoded, vocabulary_alignment empty, priority_assessment all zeros. AI sessions receive hollow context."
+    },
+    {
+      "id": "FINDING-INT-004", "expert": "INT", "severity": "HIGH",
+      "title": "Actor context combinations not validated for logical consistency",
+      "detail": "source_path=developer + actor_kind=governor accepted without check. Downstream receives inconsistent actor context."
+    },
+    {
+      "id": "FINDING-INT-005", "expert": "INT", "severity": "HIGH",
+      "title": "Phase 0.5 stubs return PASS silently — no mock-mode signal",
+      "detail": "All 5 stubs pass unconditionally. Consumers cannot detect stubbed validation. Integration false confidence."
+    },
+    {
+      "id": "FINDING-INT-006", "expert": "INT", "severity": "HIGH",
+      "title": "CORS fully open",
+      "detail": "Production integration requires origin whitelist. Future auth will be CSRF-vulnerable."
+    },
+    {
+      "id": "FINDING-INT-007", "expert": "INT", "severity": "MEDIUM",
+      "title": "CR-ID uniqueness not guaranteed in multi-instance",
+      "detail": "Sequential generation without DB constraint. Collision risk at scale."
+    },
+    {
+      "id": "FINDING-INT-008", "expert": "INT", "severity": "MEDIUM",
+      "title": "Clarification flow doesn't re-run ICE on response",
+      "detail": "Q1-Q5 stale after clarification. Downstream receives outdated corespine/tags/routing."
+    },
+    {
+      "id": "FINDING-INT-009", "expert": "INT", "severity": "MEDIUM",
+      "title": "No cursor-based pagination",
+      "detail": "Offset pagination will degrade at volume. No page_token reserved in response shape."
+    },
+    {
+      "id": "FINDING-INT-010", "expert": "INT", "severity": "MEDIUM",
+      "title": "Health check always operational=true",
+      "detail": "Registry outages invisible to downstream. False health signal."
+    },
+    {
+      "id": "FINDING-INT-011", "expert": "INT", "severity": "MEDIUM",
+      "title": "Injected artifact not persisted to record on session open",
+      "detail": "injected_to_ai_at set but artifact not stored. Audit trail missing exact context injected."
+    },
+    {
+      "id": "FINDING-INT-012", "expert": "INT", "severity": "MEDIUM",
+      "title": "No API version headers in responses",
+      "detail": "No X-CDS-API-Version header. Consumers cannot detect server upgrades."
+    },
+    {
+      "id": "FINDING-INT-013", "expert": "INT", "severity": "MEDIUM",
+      "title": "Tag validation silently drops unregistered tags",
+      "detail": "additionalTags filtered but not flagged. Consumers don't know tags were rejected."
+    },
+    {
+      "id": "FINDING-INT-014", "expert": "INT", "severity": "LOW",
+      "title": "Injection scan shallow in Phase 0",
+      "detail": "Pattern-only. Semantic injection deferred to Phase 1."
+    },
+    {
+      "id": "FINDING-INT-015", "expert": "INT", "severity": "LOW",
+      "title": "raw_input_format not returned in classify response",
+      "detail": "Format detected server-side but not surfaced to caller."
+    },
+    {
+      "id": "FINDING-DOC-001", "expert": "DOC", "severity": "CRITICAL",
+      "title": "Phase 0.5 stubs lack implementation contracts",
+      "detail": "4 TODOs reference registry checks but give no endpoint/schema. Future dev blocked."
+    },
+    {
+      "id": "FINDING-DOC-002", "expert": "DOC", "severity": "HIGH",
+      "title": "6 mechanical rules lack integration examples",
+      "detail": "README shows rules in table but not WHEN they fire or HOW they block. Park Queue undefined."
+    },
+    {
+      "id": "FINDING-DOC-003", "expert": "DOC", "severity": "CRITICAL",
+      "title": "API docs missing error codes and retry semantics",
+      "detail": "Happy path only. 400/422/500 undocumented. NEED_CLARIFICATION→/api/clarify flow missing."
+    },
+    {
+      "id": "FINDING-DOC-004", "expert": "DOC", "severity": "HIGH",
+      "title": "CSPS cleansing table references undefined CSPS concepts",
+      "detail": "Edge Function, EXT-YYYYMMDD-NNN, scan-passed.md — no explanation or governance owner."
+    },
+    {
+      "id": "FINDING-DOC-005", "expert": "DOC", "severity": "HIGH",
+      "title": "Classification result routing underdocumented",
+      "detail": "QUARANTINE references undefined protocol. HELD gives no timeline. /api/clarify not in README."
+    },
+    {
+      "id": "FINDING-DOC-006", "expert": "DOC", "severity": "MEDIUM",
+      "title": "Corespine family and Tag Library not defined in docs",
+      "detail": "API parameter declaredCorespines unusable without external spec context."
+    },
+    {
+      "id": "FINDING-DOC-007", "expert": "DOC", "severity": "CRITICAL",
+      "title": "No ADR for Phase 0 vs Phase 0.5 architecture boundaries",
+      "detail": "No decision log for JSON-first store. No migration plan documented."
+    },
+    {
+      "id": "FINDING-DOC-008", "expert": "DOC", "severity": "MEDIUM",
+      "title": "No changelog or version pinning",
+      "detail": "Session date in README will become stale. No version number on service."
+    },
+    {
+      "id": "FINDING-DOC-009", "expert": "DOC", "severity": "HIGH",
+      "title": "Actor context and permission model undocumented",
+      "detail": "Tier system, actor kind differences, credential issuance — all absent from docs."
+    },
+    {
+      "id": "FINDING-DOC-010", "expert": "DOC", "severity": "MEDIUM",
+      "title": "Input format examples absent",
+      "detail": "Accepts any content type stated, but no examples of plain_text vs json_payload inference behavior."
+    },
+    {
+      "id": "FINDING-DOC-011", "expert": "DOC", "severity": "HIGH",
+      "title": "No deployment guide",
+      "detail": "No env vars documented, no file system permission requirements, no monitoring setup."
+    },
+    {
+      "id": "FINDING-DOC-012", "expert": "DOC", "severity": "MEDIUM",
+      "title": "Code references 0220 spec by section but spec not in codebase",
+      "detail": "Spec-dependent comments. Reader cannot verify compliance without separate spec access."
+    },
+    {
+      "id": "FINDING-DOC-013", "expert": "DOC", "severity": "LOW",
+      "title": "/api/health and /api/audit serve overlapping purposes",
+      "detail": "README should clarify distinction or merge the endpoints."
+    }
+  ],
+  "sonnet_review": {
+    "meta_patterns": [
+      "PATTERN-01: Phase 0 is a functional skeleton with governance labels that are not yet mechanically enforced. The architecture is correct; the enforcement is deferred.",
+      "PATTERN-02: Security model is entirely absent. No auth, no authz. This is the single highest-risk gap.",
+      "PATTERN-03: Data immutability is philosophically committed (README, CSPS cleansing record) but technically violated (updateRecord overwrites).",
+      "PATTERN-04: Performance architecture will collapse before meaningful governance volume. JSON file store is the critical path bottleneck.",
+      "PATTERN-05: UX tells users what the system decided but not what they should do next. The gate closes but doesn't direct."
+    ],
+    "phase_0_verdict": "OPERATIONALLY COMPLETE — GOVERNANCE INCOMPLETE",
+    "enforcement_score": "60% mechanical, 40% convention",
+    "recommended_p05_sequence": [
+      "1. Authentication layer (actor identity verification) — SEC-002 CRITICAL",
+      "2. Authorization middleware (tier enforcement on routes) — SEC-007 CRITICAL",
+      "3. Immutable record store (append-only, content-hash) — DATA-002/003 CRITICAL",
+      "4. PostgreSQL migration (record store + cursor pagination) — PERF-001/002/003/004 CRITICAL",
+      "5. Live registry wires (RULE-VOC, RULE-PARK, RULE-GOAL, RULE-RAT) — GOV-001/002/003/004 HIGH",
+      "6. API versioning + CORS restrict — INT-001/006",
+      "7. Re-run ICE on clarification — INT-008",
+      "8. NEED_CLARIFICATION routing/tags complete — GOV-005",
+      "9. Governor action buttons (Approve/Reject/Clear) — UX-011 HIGH",
+      "10. Rate limiting + compression — PERF-007/008"
+    ]
+  },
+  "weekly_session_angles": {
+    "platform_dna": "Extracted from GOV expert findings: CDS DNA requires mechanical enforcement (not labels), immutable audit trails, and vocabulary governance through live registries. Every finding where a rule 'passes' on convention rather than mechanism is a DNA violation.",
+    "prevention_hardwired": "SEC-002 and SEC-007 show that prevention must be injected at middleware level, not at business logic. Authentication must be the first thing that runs. The injection of tier into request context before any handler is the hardwired prevention pattern.",
+    "post_implementation_check": "For each implementation scope: (1) Does every enforcement point have a test case that tries to bypass it? (2) Is the stub explicitly marked MOCK_MODE in responses? (3) Is there a corresponding audit finding that closes when the stub is replaced?",
+    "audit_evolution": "This first audit establishes 66 findings across 8 expert lenses. Weekly sessions should: track closed findings, add new findings from implementation changes, and check whether prevention patterns from prior findings were hardwired into new code."
+  }
+}

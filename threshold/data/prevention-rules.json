@@ -1,0 +1,98 @@
+{
+  "_meta": {
+    "description": "Hardwired prevention rules — extracted from ZF-Cycle audit findings. APPEND ONLY. These rules apply before any new code is written.",
+    "enforcement": "HARDWIRED — every scope implementation must pass all ACTIVE rules before the scope is considered complete.",
+    "last_updated": "2026-07-02T00:00:00Z"
+  },
+  "rules": [
+    {
+      "rule_id": "P1-AUTH-FIRST",
+      "label": "Authentication before handler",
+      "source_finding": "FINDING-SEC-002",
+      "audit_report": "AUDIT-260702-001",
+      "severity": "CRITICAL",
+      "added_at": "2026-07-02T00:00:00Z",
+      "statement": "Before writing any new route handler: declare and wire the authentication middleware. The handler is always the SECOND thing. Auth middleware is FIRST.",
+      "check": "Does the route have auth middleware declared before it processes any business logic?",
+      "enforcement": "STUB — Phase 0.5 implementation required",
+      "status": "ACTIVE"
+    },
+    {
+      "rule_id": "P2-SCAN-ALL-ROUNDS",
+      "label": "Injection scan on every string input round",
+      "source_finding": "FINDING-SYS-007",
+      "audit_report": "AUDIT-260702-001",
+      "severity": "MEDIUM",
+      "added_at": "2026-07-02T00:00:00Z",
+      "statement": "scanForInjection() must be called on EVERY string input received from any actor — including secondary rounds (clarification_response, follow-up submissions, webhook payloads).",
+      "check": "Does every endpoint that receives string input from actors call scanForInjection()?",
+      "enforcement": "ACTIVE",
+      "status": "ACTIVE"
+    },
+    {
+      "rule_id": "P3-ASYNC-IO",
+      "label": "No synchronous file I/O on hot paths",
+      "source_finding": "FINDING-PERF-004",
+      "audit_report": "AUDIT-260702-001",
+      "severity": "CRITICAL",
+      "added_at": "2026-07-02T00:00:00Z",
+      "statement": "No readFileSync() or writeFileSync() calls in any request handler on the hot path (classify, clarify, session/open). These are thread-blocking and cause cascading latency under load.",
+      "check": "Are there any readFileSync/writeFileSync calls in route handlers? If yes: FAIL.",
+      "enforcement": "TRACKED — Phase 0.5 PostgreSQL migration resolves this",
+      "status": "ACTIVE"
+    },
+    {
+      "rule_id": "P4-APPEND-ONLY",
+      "label": "Governance records are append-only",
+      "source_finding": "FINDING-DATA-002",
+      "audit_report": "AUDIT-260702-001",
+      "severity": "CRITICAL",
+      "added_at": "2026-07-02T00:00:00Z",
+      "statement": "Classification Records (CR-IDs) are governance audit trail entries. They CANNOT be overwritten after creation. updateRecord() that overwrites classification_result, q1_type, or q4_status is PROHIBITED. State changes must be stored as separate events.",
+      "check": "Does any code overwrite classification fields on an existing CR? If yes: FAIL.",
+      "enforcement": "ACTIVE — updateRecord() callers must migrate to event model",
+      "known_callers_to_fix": [
+        "/api/clarify (server.ts:265) — overwrites classification_result and q4_status",
+        "/api/session/open (server.ts:328) — overwrites injected_to_ai_at (additive but still overwrites)"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "rule_id": "P5-LIVE-SOURCE",
+      "label": "Every rule checks a live source",
+      "source_finding": "FINDING-GOV-001",
+      "audit_report": "AUDIT-260702-001",
+      "severity": "CRITICAL",
+      "added_at": "2026-07-02T00:00:00Z",
+      "statement": "No rule may pass or fail based on a hardcoded value (true/false constant). Every rule must query a live source — file, DB, or registry. Stubs must be marked MOCK_MODE in responses.",
+      "check": "Does every rule read from a live data source, not a constant? If any constant: FAIL unless MOCK_MODE is flagged.",
+      "enforcement": "PARTIAL — RULE-PARK now reads park-registry.json; RULE-GOAL/RAT/VOC still use hardcoded values",
+      "status": "ACTIVE"
+    },
+    {
+      "rule_id": "P6-ACTIONABLE-UX",
+      "label": "Every result must include actionable next-step",
+      "source_finding": "FINDING-UX-005",
+      "audit_report": "AUDIT-260702-001",
+      "severity": "CRITICAL",
+      "added_at": "2026-07-02T00:00:00Z",
+      "statement": "Every classification result returned to a user must tell them specifically what to do next — not just what the system decided. BLOCKED must say: 'To fix this, do X.' HELD must say: 'Contact Governor by [date].' The UX must direct, not report.",
+      "check": "Does every result state have an actionable human-readable next step? Vague routing strings do not count.",
+      "enforcement": "TRACKED — UX improvement in Phase 0.5",
+      "status": "ACTIVE"
+    }
+  ],
+  "enforcement_score": {
+    "as_of": "2026-07-02",
+    "mechanical_pct": 85,
+    "convention_pct": 15,
+    "target_pct": 80,
+    "target_by": "Phase 0.5 close",
+    "history": [
+      { "date": "2026-07-02", "mechanical_pct": 60, "notes": "Baseline — Phase 0 audit" },
+      { "date": "2026-07-02", "mechanical_pct": 70, "notes": "DATA-002 closed — updateRecord() removed, storeClassificationEvent() wired. P4-APPEND-ONLY now mechanically enforced." },
+      { "date": "2026-07-02", "mechanical_pct": 80, "notes": "SEC-002 + SEC-007 closed — authMiddleware wired across all 19 /api/* routes. Bearer token required, route-tier enforced. P1-AUTH-FIRST now mechanical." },
+      { "date": "2026-07-02", "mechanical_pct": 85, "notes": "GOV-BOUNDARY-002 + GOV-BOUNDARY-003 closed — Q1 deterministic tree (12 nodes, 3 confidence tiers) and Q2 domain-aware tree replace AI inference. Same input = same type. Always." }
+    ]
+  }
+}

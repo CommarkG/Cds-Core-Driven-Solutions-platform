@@ -1,0 +1,92 @@
+{
+  "_meta": {
+    "description": "Current audit scope — what the next expert fleet sweep must check. Grows as findings reveal new check categories.",
+    "rule": "APPEND ONLY. Each new scope item references the finding that triggered it.",
+    "last_updated": "2026-07-02T00:00:00Z",
+    "current_audit_baseline": "AUDIT-260702-001"
+  },
+  "scope_items": [
+    {
+      "scope_id": "SCOPE-001",
+      "label": "Authentication enforcement check",
+      "triggered_by": "FINDING-SEC-002",
+      "check": "Does every route have auth middleware before the handler?",
+      "added_at": "2026-07-02T00:00:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "scope_id": "SCOPE-002",
+      "label": "Injection scan completeness",
+      "triggered_by": "FINDING-SYS-007",
+      "check": "Is scanForInjection() called on every string input across all endpoints, including secondary rounds?",
+      "added_at": "2026-07-02T00:00:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "scope_id": "SCOPE-003",
+      "label": "Synchronous I/O on hot paths",
+      "triggered_by": "FINDING-PERF-004",
+      "check": "Are there any readFileSync/writeFileSync calls inside request handlers?",
+      "added_at": "2026-07-02T00:00:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "scope_id": "SCOPE-004",
+      "label": "Record immutability check",
+      "triggered_by": "FINDING-DATA-002",
+      "check": "Are classification fields on CR records immutable after creation? No overwrite permitted.",
+      "added_at": "2026-07-02T00:00:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "scope_id": "SCOPE-005",
+      "label": "Live source enforcement per rule",
+      "triggered_by": "FINDING-GOV-001",
+      "check": "Does every gate rule read from a live source, not a constant or stub value?",
+      "added_at": "2026-07-02T00:00:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "scope_id": "SCOPE-006",
+      "label": "User actionable next-step in results",
+      "triggered_by": "FINDING-UX-005",
+      "check": "Does every result state in the gate UI provide a specific actionable next-step for the user?",
+      "added_at": "2026-07-02T00:00:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "scope_id": "SCOPE-007",
+      "label": "MOCK_MODE flag on stub rules",
+      "triggered_by": "FINDING-INT-005",
+      "check": "Do all Phase 0.5 stub rules return a mock_mode: true field in their response? Silent stubs are prohibited.",
+      "added_at": "2026-07-02T00:00:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "scope_id": "SCOPE-008",
+      "label": "CR-ID overflow handling",
+      "triggered_by": "FINDING-DATA-001",
+      "check": "Does generateCrId() handle >999 records per day without silently breaking the format?",
+      "added_at": "2026-07-02T00:00:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "scope_id": "SCOPE-009",
+      "label": "Governor dashboard action verbs",
+      "triggered_by": "FINDING-UX-011",
+      "check": "Does the Governor dashboard have Approve/Reject/Clear Quarantine/Annotate actions, not just read-only display?",
+      "added_at": "2026-07-02T00:00:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "scope_id": "SCOPE-010",
+      "label": "API versioning headers",
+      "triggered_by": "FINDING-INT-001",
+      "check": "Do all /api/* responses include X-CDS-API-Version header?",
+      "added_at": "2026-07-02T00:00:00Z",
+      "status": "ACTIVE"
+    }
+  ],
+  "next_audit_target": "After P1-P6 prevention rules applied to codebase",
+  "enforcement_score_target": 75
+}

@@ -1,0 +1,15 @@
+{
+  "plans": [
+    {
+      "plan_id": "PLAN-001",
+      "p1_closure_criteria": "solver.ts design + Step 1 code tested",
+      "p1_verified_by": "Builder",
+      "p1_verified_at": "2026-07-05T10:00:00Z",
+      "p2_ratified_by": null,
+      "p2_ratified_at": null,
+      "p2_decision_id": null,
+      "p3_measurement_published_at": null,
+      "p3_measurement_source": null
+    }
+  ]
+}

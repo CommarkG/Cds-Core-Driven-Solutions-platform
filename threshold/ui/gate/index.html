@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CDS Threshold — The Only Door</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --border: #1e1e2e;
+      --accent: #6c63ff;
+      --accent-dim: #3d3880;
+      --text: #e8e8f0;
+      --text-dim: #8888a8;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --quarantine: #f97316;
+      --hold: #8b5cf6;
+      --need-clarify: #06b6d4;
+    }
+    [data-theme="light"] {
+      --bg: #f4f4fb;
+      --surface: #ffffff;
+      --border: #dcdce8;
+      --accent: #5a52e0;
+      --accent-dim: #c5c2f5;
+      --text: #1a1a2e;
+      --text-dim: #6060a0;
+      --success: #16a34a;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --quarantine: #ea6c0a;
+      --hold: #7c3aed;
+      --need-clarify: #0891b2;
+    }
+    *, *::before, *::after { transition: background-color 0.2s, border-color 0.2s, color 0.15s; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Header */
+    .gate-header {
+      width: 100%;
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .gate-logo { font-size: 1.1rem; font-weight: 700; letter-spacing: 0.05em; }
+    .gate-logo span { color: var(--accent); }
+    .gate-subtitle { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.2rem; }
+    .nav-link {
+      font-size: 0.8rem; color: var(--text-dim); text-decoration: none;
+      padding: 0.4rem 0.8rem; border: 1px solid var(--border); border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .nav-link:hover { color: var(--text); border-color: var(--accent-dim); }
+    .theme-toggle {
+      background: none; border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); cursor: pointer; font-size: 1rem;
+      padding: 0.35rem 0.6rem; line-height: 1;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover { color: var(--text); border-color: var(--accent-dim); }
+
+    /* Main container */
+    .gate-main {
+      width: 100%;
+      max-width: 780px;
+      padding: 3rem 2rem;
+      flex: 1;
+    }
+
+    /* Step indicator */
+    .steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 3rem;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+    }
+    .step-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 600;
+      transition: all 0.3s;
+      color: var(--text-dim);
+    }
+    .step.active .step-num { border-color: var(--accent); color: var(--accent); background: rgba(108,99,255,0.1); }
+    .step.done .step-num { border-color: var(--success); color: var(--success); background: rgba(34,197,94,0.1); }
+    .step-label { color: var(--text-dim); }
+    .step.active .step-label, .step.done .step-label { color: var(--text); }
+    .step-connector { flex: 1; height: 1px; background: var(--border); margin: 0 0.75rem; min-width: 20px; }
+
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .card-title {
+      font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem;
+    }
+    .card-subtitle {
+      font-size: 0.8rem; color: var(--text-dim); margin-bottom: 1.5rem; line-height: 1.5;
+    }
+
+    /* Source path selector */
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+    .source-card {
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .source-card:hover { border-color: var(--accent-dim); background: rgba(108,99,255,0.05); }
+    .source-card.selected { border-color: var(--accent); background: rgba(108,99,255,0.1); }
+    .source-card-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .source-card-desc { font-size: 0.72rem; color: var(--text-dim); line-height: 1.4; }
+    .source-card-badge {
+      display: inline-block;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.05em;
+      padding: 0.2rem 0.5rem; border-radius: 4px;
+      background: var(--accent-dim); color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Input type cards (Q1) */
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 0.75rem;
+    }
+    .input-card {
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .input-card:hover { border-color: var(--accent-dim); }
+    .input-card.selected { border-color: var(--accent); background: rgba(108,99,255,0.1); }
+    .input-card-emoji { font-size: 1.5rem; margin-bottom: 0.4rem; }
+    .input-card-title { font-size: 0.82rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .input-card-desc { font-size: 0.7rem; color: var(--text-dim); line-height: 1.4; }
+
+    /* Textarea */
+    .input-label {
+      display: block; font-size: 0.82rem; color: var(--text-dim);
+      margin-bottom: 0.5rem; font-weight: 500;
+    }
+    textarea, input[type="text"], input[type="password"], select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.88rem;
+      padding: 0.75rem 1rem;
+      transition: border-color 0.2s;
+      outline: none;
+      resize: vertical;
+    }
+    textarea:focus, input[type="text"]:focus, input[type="password"]:focus, select:focus {
+      border-color: var(--accent);
+    }
+    textarea { min-height: 160px; }
+
+    /* Goal ref input */
+    .goal-row {
+      display: flex; gap: 0.75rem; align-items: flex-end;
+    }
+    .goal-row .field { flex: 1; }
+    .goal-ref-status {
+      font-size: 0.75rem; padding: 0.4rem 0.75rem;
+      border-radius: 6px; white-space: nowrap;
+      background: var(--border); color: var(--text-dim);
+    }
+    .goal-ref-status.valid { background: rgba(34,197,94,0.15); color: var(--success); }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.9rem; font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #5a52e0; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-ghost { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); border-color: var(--accent-dim); }
+    .btn-row { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+    /* Result card */
+    .result-card {
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .result-card.classified  { border: 2px solid var(--success); background: rgba(34,197,94,0.07); }
+    .result-card.blocked     { border: 2px solid var(--danger);  background: rgba(239,68,68,0.07); }
+    .result-card.quarantine  { border: 2px solid var(--quarantine); background: rgba(249,115,22,0.07); }
+    .result-card.held        { border: 2px solid var(--hold);    background: rgba(139,92,246,0.07); }
+    .result-card.need_clarification { border: 2px solid var(--need-clarify); background: rgba(6,182,212,0.07); }
+
+    .result-badge {
+      display: inline-block; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em;
+      padding: 0.3rem 0.75rem; border-radius: 6px; margin-bottom: 1rem;
+    }
+    .result-badge.classified  { background: rgba(34,197,94,0.2);    color: var(--success); }
+    .result-badge.blocked     { background: rgba(239,68,68,0.2);    color: var(--danger); }
+    .result-badge.quarantine  { background: rgba(249,115,22,0.2);   color: var(--quarantine); }
+    .result-badge.held        { background: rgba(139,92,246,0.2);   color: var(--hold); }
+    .result-badge.need_clarification { background: rgba(6,182,212,0.2); color: var(--need-clarify); }
+
+    .result-cr-id {
+      font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; font-family: monospace;
+    }
+    .result-field { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 0.35rem; }
+    .result-field strong { color: var(--text); }
+    .result-divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+    .rule-list { list-style: none; margin-top: 0.75rem; }
+    .rule-item {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      font-size: 0.78rem; padding: 0.35rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .rule-dot {
+      width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0;
+    }
+    .rule-dot.PASS           { background: var(--success); }
+    .rule-dot.FAIL           { background: var(--danger); }
+    .rule-dot.NOT_APPLICABLE { background: var(--border); }
+
+    .open-session-btn {
+      margin-top: 1.25rem; width: 100%;
+    }
+
+    /* Hidden steps */
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+
+    /* Loading */
+    .loading-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center; justify-content: center; flex-direction: column; gap: 1rem;
+    }
+    .loading-overlay.active { display: flex; }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 0.9rem; color: var(--text-dim); }
+
+    /* Tags display */
+    .tag-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+    .tag {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em;
+      padding: 0.25rem 0.6rem; border-radius: 4px;
+      background: rgba(108,99,255,0.15); color: var(--accent);
+      border: 1px solid rgba(108,99,255,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Classifying input…</div>
+</div>
+
+<header class="gate-header">
+  <div>
+    <div class="gate-logo">CDS <span>Threshold</span></div>
+    <div class="gate-subtitle">The only door into the platform</div>
+  </div>
+  <div style="display:flex;gap:0.5rem;align-items:center;">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark">🌙</button>
+    <a href="/dashboard" class="nav-link">→ Governor Dashboard</a>
+  </div>
+</header>
+
+<main class="gate-main">
+
+  <!-- Step indicator -->
+  <div class="steps" id="stepIndicator">
+    <div class="step active" id="step-ind-1">
+      <div class="step-num">1</div>
+      <div class="step-label">Source</div>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step" id="step-ind-2">
+      <div class="step-num">2</div>
+      <div class="step-label">Goal</div>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step" id="step-ind-3">
+      <div class="step-num">3</div>
+      <div class="step-label">Input</div>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step" id="step-ind-4">
+      <div class="step-num">4</div>
+      <div class="step-label">Type (Q1)</div>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step" id="step-ind-5">
+      <div class="step-num">5</div>
+      <div class="step-label">Result</div>
+    </div>
+  </div>
+
+  <!-- STEP 1: Source path -->
+  <div class="step-panel active" id="panel-1">
+    <div class="card">
+      <div class="card-title">Who are you?</div>
+      <div class="card-subtitle">Declare your source path. This sets your authority level and which classification routes are available to you.</div>
+      <div class="source-grid">
+        <div class="source-card" onclick="selectSource('human_user', 'external_user', 'TIER_0', this)">
+          <div class="source-card-badge">PATH 1</div>
+          <div class="source-card-title">Human User</div>
+          <div class="source-card-desc">Interactive ICE wizard. Any input type. Guided classification.</div>
+        </div>
+        <div class="source-card" onclick="selectSource('developer', 'developer', 'TIER_2', this)">
+          <div class="source-card-badge">PATH 2</div>
+          <div class="source-card-title">Developer</div>
+          <div class="source-card-desc">Element declarations, protocol proposals, sprint deliverables. Shows ratification states.</div>
+        </div>
+        <div class="source-card" onclick="selectSource('external_ai', 'external_user', 'TIER_0', this)">
+          <div class="source-card-badge">PATH 3</div>
+          <div class="source-card-title">External AI</div>
+          <div class="source-card-desc">Structured API payload. Auto-quarantined. Vocabulary translation applied.</div>
+        </div>
+        <div class="source-card" onclick="selectSource('tenant_api', 'tenant_admin', 'TIER_1', this)">
+          <div class="source-card-badge">PATH 4</div>
+          <div class="source-card-title">Tenant API</div>
+          <div class="source-card-desc">Tenant SaaS integration. Scope checked against Tenant Registry.</div>
+        </div>
+        <div class="source-card" onclick="selectSource('internal_agent', 'system_agent', 'TIER_2', this)">
+          <div class="source-card-badge">PATH 5</div>
+          <div class="source-card-title">Internal Agent</div>
+          <div class="source-card-desc">COM-4 format. Agent Registry verification. Authority level checked.</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 1rem;">
+      <label class="input-label">Your identity (name / agent ID / tenant ID)</label>
+      <input type="text" id="actorIdentity" placeholder="Yariv Fink  |  AG-GOV-001  |  TNT-001" />
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goStep(2)" id="btn-step1" disabled>Continue →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Goal reference -->
+  <div class="step-panel" id="panel-2">
+    <div class="card">
+      <div class="card-title">What goal does this relate to?</div>
+      <div class="card-subtitle">Every input must anchor to a ratified goal. Enter the GOV-[YEAR]-GOAL-[SEQUENCE] reference, or flag this as a new goal proposal.</div>
+      <div class="goal-row">
+        <div class="field">
+          <label class="input-label">Goal Reference</label>
+          <input type="text" id="goalRef" placeholder="GOV-2026-GOAL-001" oninput="validateGoalRef(this.value)" />
+        </div>
+        <div class="goal-ref-status" id="goalRefStatus">Not entered</div>
+      </div>
+      <div style="margin-top: 1rem;">
+        <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.83rem; color:var(--text-dim);">
+          <input type="checkbox" id="isNewGoal" onchange="toggleNewGoal()" style="width:auto;" />
+          This is a new goal (no existing GOV reference)
+        </label>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goStep(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(3)" id="btn-step2">Continue →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Content input (any type) -->
+  <div class="step-panel" id="panel-3">
+    <div class="card">
+      <div class="card-title">What are you bringing to the platform?</div>
+      <div class="card-subtitle">Enter any content — free text, paste a document, describe a goal, declare an element, report a finding. The gate accepts everything.</div>
+      <label class="input-label">Content</label>
+      <textarea id="rawContent" placeholder="Type or paste anything here…&#10;&#10;Examples:&#10;• I need users to see their progress without asking for it.&#10;• Declaring new agent AG-GOV-003 for ratification audit.&#10;• Finding: inheritance break between 0110 and 0120 — Q2 corespine assignment missing.&#10;• External research from Brain about Phase 0 architecture..."></textarea>
+      <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+        <div style="flex:1;">
+          <label class="input-label">Content format (optional — gate will detect)</label>
+          <select id="contentFormat">
+            <option value="">Auto-detect</option>
+            <option value="plain_text">Plain text</option>
+            <option value="json_payload">JSON payload</option>
+            <option value="document_paste">Document paste</option>
+            <option value="form_fields">Form fields</option>
+            <option value="com4_format">COM-4 format (agents)</option>
+            <option value="external_api">External API payload</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goStep(2)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(4)" id="btn-step3">Continue →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Explicit type declaration (optional) -->
+  <div class="step-panel" id="panel-4">
+    <div class="card">
+      <div class="card-title">Q1 — What type of thing is this? (optional)</div>
+      <div class="card-subtitle">If you know the type, select it. If not, the ICE will infer it. Explicit selection overrides inference and gives HIGH confidence classification.</div>
+      <div class="input-grid">
+        <div class="input-card" onclick="selectType('goal', this)">
+          <div class="input-card-emoji">🎯</div>
+          <div class="input-card-title">Goal</div>
+          <div class="input-card-desc">A felt need with an observable resolution signal</div>
+        </div>
+        <div class="input-card" onclick="selectType('element', this)">
+          <div class="input-card-emoji">🧱</div>
+          <div class="input-card-title">Element</div>
+          <div class="input-card-desc">Platform component needing schema placement</div>
+        </div>
+        <div class="input-card" onclick="selectType('finding', this)">
+          <div class="input-card-emoji">🔍</div>
+          <div class="input-card-title">Finding</div>
+          <div class="input-card-desc">Gap, misalignment, or insight from audit/GPOW</div>
+        </div>
+        <div class="input-card" onclick="selectType('obligation', this)">
+          <div class="input-card-emoji">📋</div>
+          <div class="input-card-title">Obligation</div>
+          <div class="input-card-desc">Open accountability item or parked work</div>
+        </div>
+        <div class="input-card" onclick="selectType('improvement', this)">
+          <div class="input-card-emoji">⚡</div>
+          <div class="input-card-title">Improvement</div>
+          <div class="input-card-desc">Confirmed fix to existing element needing propagation</div>
+        </div>
+        <div class="input-card" onclick="selectType('insight', this)">
+          <div class="input-card-emoji">💡</div>
+          <div class="input-card-title">Insight</div>
+          <div class="input-card-desc">Learning, pattern, or principle extracted from an event</div>
+        </div>
+        <div class="input-card" onclick="selectType('external_input', this)">
+          <div class="input-card-emoji">🌐</div>
+          <div class="input-card-title">External Input</div>
+          <div class="input-card-desc">Content from outside platform boundary — auto-quarantined</div>
+        </div>
+        <div class="input-card" onclick="selectType('', this)" id="type-auto">
+          <div class="input-card-emoji">🤖</div>
+          <div class="input-card-title">Let ICE Decide</div>
+          <div class="input-card-desc">ICE will infer type from your content (may result in NEED_CLARIFICATION if uncertain)</div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goStep(3)">← Back</button>
+      <button class="btn btn-primary" onclick="submitClassification()" id="btn-classify">Classify & Enter Platform →</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: Result -->
+  <div class="step-panel" id="panel-5">
+    <div id="resultDisplay"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="resetGate()">← New Input</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// State
+const state = {
+  sourcePath: null,
+  actorKind: null,
+  tier: null,
+  identity: '',
+  goalRef: null,
+  isNewGoal: false,
+  rawContent: '',
+  contentFormat: '',
+  declaredType: null,
+  currentStep: 1,
+};
+
+// Step navigation
+function goStep(n) {
+  if (n === 1) { /* always allowed */ }
+  else if (n === 2 && !state.sourcePath) return;
+  else if (n === 3 && !goalIsOk()) return;
+  else if (n === 4) {
+    state.rawContent = document.getElementById('rawContent').value.trim();
+    if (!state.rawContent) return;
+    state.contentFormat = document.getElementById('contentFormat').value;
+  }
+
+  // Update indicators
+  for (let i = 1; i <= 5; i++) {
+    const ind = document.getElementById(`step-ind-${i}`);
+    const panel = document.getElementById(`panel-${i}`);
+    ind.className = 'step';
+    panel.className = 'step-panel';
+    if (i < n) ind.classList.add('done');
+    else if (i === n) { ind.classList.add('active'); panel.classList.add('active'); }
+  }
+  state.currentStep = n;
+  window.scrollTo(0, 0);
+}
+
+function selectSource(sourcePath, actorKind, tier, el) {
+  document.querySelectorAll('.source-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.sourcePath = sourcePath;
+  state.actorKind = actorKind;
+  state.tier = tier;
+  document.getElementById('btn-step1').disabled = false;
+}
+
+function selectType(type, el) {
+  document.querySelectorAll('.input-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.declaredType = type || null;
+}
+
+function validateGoalRef(val) {
+  const pattern = /^GOV-\d{4}-GOAL-\d{3,}$/;
+  const status = document.getElementById('goalRefStatus');
+  if (pattern.test(val)) {
+    status.textContent = '✓ Valid format';
+    status.className = 'goal-ref-status valid';
+    state.goalRef = val;
+  } else if (val) {
+    status.textContent = 'Format: GOV-YYYY-GOAL-NNN';
+    status.className = 'goal-ref-status';
+    state.goalRef = null;
+  } else {
+    status.textContent = 'Not entered';
+    status.className = 'goal-ref-status';
+    state.goalRef = null;
+  }
+  updateStep2Btn();
+}
+
+function toggleNewGoal() {
+  state.isNewGoal = document.getElementById('isNewGoal').checked;
+  updateStep2Btn();
+}
+
+function updateStep2Btn() {
+  const btn = document.getElementById('btn-step2');
+  btn.disabled = !(state.goalRef || state.isNewGoal);
+}
+
+function goalIsOk() {
+  return state.goalRef || state.isNewGoal;
+}
+
+async function submitClassification() {
+  const content = document.getElementById('rawContent').value.trim();
+  if (!content) return;
+
+  state.rawContent = content;
+  state.identity = document.getElementById('actorIdentity').value || 'anonymous';
+
+  document.getElementById('loadingOverlay').classList.add('active');
+
+  try {
+    const headers = {
+      'Content-Type': state.contentFormat === 'json_payload' ? 'application/json' : 'text/plain',
+      'x-cds-source-path': state.sourcePath,
+      'x-cds-actor-kind': state.actorKind,
+      'x-cds-identity': state.identity,
+      'x-cds-format': state.contentFormat || '',
+    };
+    if (state.goalRef) headers['x-cds-goal-ref'] = state.goalRef;
+
+    let body = content;
+    if (state.declaredType) {
+      // Wrap with declared type if JSON
+      if (state.contentFormat === 'json_payload') {
+        try {
+          const parsed = JSON.parse(content);
+          body = JSON.stringify({ ...parsed, declared_type: state.declaredType });
+        } catch {
+          body = JSON.stringify({ content, declared_type: state.declaredType });
+          headers['Content-Type'] = 'application/json';
+        }
+      }
+    }
+
+    const resp = await fetch('/api/classify', { method: 'POST', headers, body });
+    const data = await resp.json();
+
+    renderResult(data);
+    goStep(5);
+  } catch (err) {
+    renderError(String(err));
+    goStep(5);
+  } finally {
+    document.getElementById('loadingOverlay').classList.remove('active');
+  }
+}
+
+function renderResult(data) {
+  const el = document.getElementById('resultDisplay');
+
+  if (!data.ok && !data.cr_id) {
+    el.innerHTML = `
+      <div class="result-card blocked">
+        <div class="result-badge blocked">GATE ERROR</div>
+        <div class="result-field"><strong>${data.error}</strong></div>
+        <div class="result-field">${data.detail ?? ''}</div>
+      </div>`;
+    return;
+  }
+
+  const rec = data.classification_record;
+  const result = data.classification_result;
+  const resultClass = result?.toLowerCase().replace('_', '-') ?? 'held';
+
+  const ruleRows = (rec?.rules_applied ?? []).map(r => `
+    <li class="rule-item">
+      <div class="rule-dot ${r.outcome}"></div>
+      <div>
+        <strong style="font-size:0.75rem;">${r.rule_id}</strong>
+        <div style="color:var(--text-dim);font-size:0.72rem;margin-top:0.1rem;">${r.detail}</div>
+      </div>
+    </li>`).join('');
+
+  const tagHtml = (rec?.q3_tags ?? []).map(t => `<span class="tag">${t}</span>`).join('');
+
+  const sessionBtn = (result === 'CLASSIFIED')
+    ? `<button class="btn btn-primary open-session-btn" onclick="openSession('${data.cr_id}')">
+         Open Native AI Session →
+       </button>`
+    : '';
+
+  const clarifySection = (result === 'NEED_CLARIFICATION')
+    ? `<hr class="result-divider">
+       <div style="font-size:0.82rem; color:var(--need-clarify); margin-bottom:0.75rem;">
+         <strong>Clarification needed:</strong> ${data.clarification_question}
+       </div>
+       <textarea id="clarifyResponse" placeholder="Your clarification…" style="min-height:80px;"></textarea>
+       <button class="btn btn-primary" style="margin-top:0.75rem;" onclick="submitClarification('${data.cr_id}')">
+         Submit Clarification →
+       </button>`
+    : '';
+
+  el.innerHTML = `
+    <div class="result-card ${resultClass}">
+      <div class="result-badge ${resultClass}">${result ?? 'ERROR'}</div>
+      <div class="result-cr-id">${data.cr_id ?? '—'}</div>
+      <hr class="result-divider">
+      <div class="result-field"><strong>Type (Q1):</strong> ${rec?.q1_type ?? '—'}</div>
+      <div class="result-field"><strong>Corespines (Q2):</strong> ${(rec?.q2_corespine_families ?? []).join(', ')}</div>
+      <div class="result-field"><strong>Status (Q4):</strong> ${rec?.q4_status ?? '—'}</div>
+      <div class="result-field"><strong>Confidence:</strong> ${rec?.classification_confidence ?? '—'}</div>
+      <div class="result-field"><strong>Routing (Q5):</strong> ${rec?.q5_routing_primary ?? '—'}</div>
+      ${rec?.q3_tags?.length ? `<div class="result-field" style="margin-top:0.5rem;"><strong>Tags (Q3):</strong><div class="tag-list">${tagHtml}</div></div>` : ''}
+      <hr class="result-divider">
+      <div style="font-size:0.8rem; font-weight:600; margin-bottom:0.5rem;">6 Mechanical Rules</div>
+      <ul class="rule-list">${ruleRows}</ul>
+      <hr class="result-divider">
+      <div class="result-field"><strong>Next action:</strong> ${rec?.next_action ?? data.detail ?? '—'}</div>
+      ${clarifySection}
+      ${sessionBtn}
+    </div>`;
+}
+
+function renderError(msg) {
+  document.getElementById('resultDisplay').innerHTML = `
+    <div class="result-card blocked">
+      <div class="result-badge blocked">THRESHOLD ERROR</div>
+      <div class="result-field">${msg}</div>
+    </div>`;
+}
+
+async function openSession(crId) {
+  const resp = await fetch('/api/session/open', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cr_id: crId }),
+  });
+  const data = await resp.json();
+
+  if (data.ok) {
+    alert(`✓ Native AI session authorized.\nCR: ${crId}\nOpened at: ${data.session_opened_at}\n\nContext bundle ready for injection.`);
+  } else {
+    alert(`Session blocked:\n${data.detail}`);
+  }
+}
+
+async function submitClarification(crId) {
+  const response = document.getElementById('clarifyResponse')?.value?.trim();
+  if (!response) return;
+
+  const resp = await fetch('/api/clarify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cr_id: crId, clarification_response: response }),
+  });
+  const data = await resp.json();
+
+  if (data.ok) {
+    renderResult({ ok: true, cr_id: crId, classification_result: 'CLASSIFIED', classification_record: data.updated_record });
+  } else {
+    alert(`Clarification failed: ${data.error}`);
+  }
+}
+
+function resetGate() {
+  Object.assign(state, {
+    sourcePath: null, actorKind: null, tier: null, identity: '',
+    goalRef: null, isNewGoal: false, rawContent: '', contentFormat: '', declaredType: null,
+  });
+  document.querySelectorAll('.source-card, .input-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('actorIdentity').value = '';
+  document.getElementById('goalRef').value = '';
+  document.getElementById('rawContent').value = '';
+  document.getElementById('isNewGoal').checked = false;
+  document.getElementById('btn-step1').disabled = true;
+  document.getElementById('btn-step2').disabled = true;
+  document.getElementById('resultDisplay').innerHTML = '';
+  goStep(1);
+}
+
+// Init
+updateStep2Btn();
+
+// Theme
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('themeToggle').textContent = theme === 'light' ? '🌙' : '☀️';
+  localStorage.setItem('cds-theme', theme);
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current === 'light' ? 'dark' : 'light');
+}
+applyTheme(localStorage.getItem('cds-theme') ?? 'dark');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,365 @@
+{
+  "_meta": {
+    "registry_id": "CDS-PARK-REGISTRY-001",
+    "version": "2.0",
+    "last_updated": "2026-07-02T00:00:00Z",
+    "note": "Live registry — queried by RULE-PARK at classification time. Phase 0.5: replace readFileSync with DB query."
+  },
+  "entries": [
+    {
+      "park_id": "PARK-020726-003",
+      "title": "Update CDS-AUDIT-ORCHESTRATOR-001 — change Orchestrator model from Opus to Sonnet",
+      "description": "Per Yariv instruction: no Opus as orchestrator. Sonnet is the orchestrator model for all audit runs.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-02T00:00:00Z",
+      "session_target": "2026-W28",
+      "finding_ref": null,
+      "tags": [
+        "CTX:AUDIT",
+        "CTX:ORCHESTRATOR"
+      ]
+    },
+    {
+      "park_id": "PARK-020726-004",
+      "title": "Add 24-hour BLOCKING hold to Orchestrator spec",
+      "description": "After each audit run, a 24-hour review hold must be in place before any new build scope opens.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-02T00:00:00Z",
+      "session_target": "2026-W28",
+      "finding_ref": null,
+      "tags": [
+        "CTX:AUDIT",
+        "CTX:GOVERNANCE"
+      ]
+    },
+    {
+      "park_id": "PARK-020726-007",
+      "title": "Spec-to-enforcement delta — close remaining gaps",
+      "description": "Phase 0 PARTIALLY CLOSED this. RULE-GOAL/RAT/VOC validate format only, not registry. Remaining delta: live registry wires.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-02T00:00:00Z",
+      "session_target": "2026-W28",
+      "finding_ref": "FINDING-GOV-002",
+      "tags": [
+        "CTX:ENFORCEMENT",
+        "CTX:PHASE-05"
+      ]
+    },
+    {
+      "park_id": "PARK-020726-008",
+      "title": "COMPETITION-002 formal ESC- record",
+      "description": "Pending formal ESC- competition record creation in CDS governance.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-02T00:00:00Z",
+      "session_target": "2026-W28",
+      "finding_ref": null,
+      "tags": [
+        "CTX:COMPETITION"
+      ]
+    },
+    {
+      "park_id": "PARK-020726-009",
+      "title": "CDS-DOCUMENT-REGISTRY-001 — master document index",
+      "description": "Single registry of all CDS governing documents. Needed before Drive becomes unnavigable.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-02T00:00:00Z",
+      "session_target": "2026-W28",
+      "finding_ref": null,
+      "tags": [
+        "CTX:DOCUMENTS"
+      ]
+    },
+    {
+      "park_id": "PARK-020726-010",
+      "title": "Yariv's CSPS definition + cleansing rule — append to registry",
+      "description": "Yariv's governing definition of CSPS and the cleansing rule not yet formally appended to CDS corespine registry.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-02T00:00:00Z",
+      "session_target": "2026-W28",
+      "finding_ref": null,
+      "tags": [
+        "CTX:CSPS",
+        "CTX:CLEANSING"
+      ]
+    },
+    {
+      "park_id": "PARK-020726-011",
+      "title": "ZF-Cycle Improvement Session Loop — dedicated recurring session",
+      "description": "Weekly session where each finding from audit reports is run through ZF-Cycle phases. Haiku scans, Sonnet reviews, Opus triggered when 3+ CRITICAL in domain. Insights injected into all gate targets. This park ensures the session recurs and is never skipped.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-02T00:00:00Z",
+      "session_target": "recurring — every Sunday 18:00 Asia/Jerusalem",
+      "finding_ref": null,
+      "tags": [
+        "CTX:IMPROVEMENT",
+        "CTX:ZF-CYCLE"
+      ],
+      "cycle_agenda": [
+        "1. Run generate-weekly.ts to pull all new findings",
+        "2. POST /api/zf/cycle for each CRITICAL finding not yet in ZF cycle",
+        "3. Review Phase 2 (Sonnet) outputs — select injections",
+        "4. POST /api/zf/inject for each approved insight",
+        "5. Trigger Opus holistic if 3+ CRITICAL in same domain",
+        "6. Update AUDIT-INDEX.md enforcement score"
+      ]
+    },
+    {
+      "park_id": "PARK-020726-012",
+      "title": "CDS-AI-NAV-AGENT-001 — Goal-Oriented Navigation Agent spec",
+      "description": "Flagged from CDS-OSSOT-DASHBOARD-001 (Brain File 3). AI Assistant on dashboards is NOT a chatbot — it is a Goal-Oriented Navigation Agent with cross-dashboard awareness. Requires dedicated design session before build.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-02T00:00:00Z",
+      "session_target": "Phase 3",
+      "finding_ref": null,
+      "tags": [
+        "CTX:AI-AGENT",
+        "CTX:DASHBOARD",
+        "CTX:PHASE-3"
+      ]
+    },
+    {
+      "park_id": "PARK-020726-016",
+      "title": "Research as Mandatory Pre-Planning Step — Governance Design",
+      "description": "Content to resolve: (1) What do we already have about making research a mandatory step before planning? (2) Where is research optimally positioned in the CDS build sequence and for which categories of decisions? (3) What governance mechanism makes research a DEFAULT step, not an optional one — so that 'planning something' automatically triggers a research gate rather than depending on Builder discipline. The goal is to make research a HUMBLE STEP embedded in the process, not a choice made each time. Without this, planning happens with incomplete information by default. Design session needed. Candidate placement: before any new scope opens, before any corespine design, before any new rule ratification. Candidate form: POST /api/research/declare (must file a research record before planning gate opens).",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-02T00:00:00Z",
+      "session_target": "CTX:PHASE_05_BUILD",
+      "finding_ref": null,
+      "tags": [
+        "CTX:PHASE_05_BUILD",
+        "CTX:METHODOLOGY",
+        "CTX:GOVERNANCE",
+        "CTX:RESEARCH-GATE"
+      ]
+    },
+    {
+      "park_id": "PARK-020726-015",
+      "title": "Chicken-and-Egg Design Method — Three-Draft Pattern for Circular Dependencies",
+      "description": "When facing circular design dependencies (schema needs wizard, wizard needs schema, gate needs contract, contract needs gate), the method is: (1) create three draft documents — schema, wizard, and a third governing doc — intentionally lightweight, explicitly deletable. (2) Spread the logic out of your head and into documents — even rough documents. (3) Once spread out, review all three with expert personas (Yariv top-expert review). Interesting cross-document insights emerge that are invisible when the logic stays internal. (4) Modify or delete freely — the drafts are not commitments. Governor note: 'allow ourselves not to be so heavy.' This method applies to any CDS design session where the root of the next feature can't be determined without a prototype of the feature itself.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-02T00:00:00Z",
+      "session_target": "CTX:DESIGN_METHOD — apply when circular dependency detected",
+      "finding_ref": null,
+      "tags": [
+        "CTX:DESIGN-METHOD",
+        "CTX:GOVERNANCE",
+        "CTX:METHODOLOGY"
+      ]
+    },
+    {
+      "park_id": "PARK-020726-013",
+      "title": "GOV-OPEN-013 — R7 Dispatch Contract elevated to next-session priority",
+      "description": "Governor confirmed: R7 (dispatch contract) is next-session priority. R8 (VERIFY-GATE tiers) is built but not executable without R7 as the vessel. Must surface at next session open — do not let this slip another session.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-02T00:00:00Z",
+      "session_target": "CTX:NEXT_SESSION",
+      "finding_ref": null,
+      "tags": [
+        "CTX:NEXT_SESSION",
+        "CTX:DISPATCH-CONTRACT",
+        "CTX:R7"
+      ]
+    },
+    {
+      "park_id": "PARK-020726-014",
+      "title": "GOV-OPEN-012 — R2 DNA inheritance: build-admission validator, NOT Threshold RULE 10",
+      "description": "Governor decided: R2 (DNA inheritance enforcement) uses a dedicated build-admission validator that fires at element creation time — not a new Threshold runtime rule. The Threshold governs request processing. DNA inheritance is a structural property checked at creation. These are different enforcement points. Do not re-open this question at Phase 0.5 build start.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-02T00:00:00Z",
+      "session_target": "CTX:PHASE_05_BUILD",
+      "finding_ref": null,
+      "tags": [
+        "CTX:PHASE_05_BUILD",
+        "CTX:DNA-INHERITANCE",
+        "CTX:R2",
+        "CTX:BUILD-ADMISSION"
+      ]
+    },
+    {
+      "park_id": "PARK-040726-017",
+      "title": "GOV-TEMPLATE-001 — RATIFIED — CS-TEMPLATE as new corespine family",
+      "description": "RATIFIED 2026-07-05 — Governor approval recorded. CS-TEMPLATE established as a constitutional corespine family in the CONSTRUCTION TIER, between CS-META/CS-GOVERNANCE and CS-STRUCTURE. THREE MANDATORY BUILD PREREQUISITES remain (hard gates, not optional): (1) solver.ts design doc — satisfiability solver built and tested in isolation, complexity bound proven on 50 fields/20 cross-field rules, type system constrained to what solver can handle. (2) CS-TEMPLATE genesis block (CS-TEMPLATE-GENESIS-001.md) authored and Governor-ratified — Layer 0 founding document, self-amendment procedure defined. (3) 80% measurement published — concrete case study from existing CDS dashboard (X of Y fields inherited = Z%). These prerequisites must close before build opens. R1-R8 package adoption required (PARK-040726-018, ratified). Phase 1 Build opens when all prerequisites close.",
+      "status": "RATIFIED",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-04T00:00:00Z",
+      "ratified_at": "2026-07-05T00:00:00Z",
+      "session_target": "CTX:PHASE_1_BUILD",
+      "finding_ref": null,
+      "tags": [
+        "CTX:TEMPLATE-HUB",
+        "CTX:RATIFICATION",
+        "CTX:GOV-TEMPLATE-001",
+        "CTX:PHASE_1_BUILD"
+      ]
+    },
+    {
+      "park_id": "PARK-040726-018",
+      "title": "GOV-TEMPLATE-002 — RATIFIED — R1-R8 architecture package (NON-PIECEMEAL)",
+      "description": "RATIFIED 2026-07-05 — Governor approval recorded. Eight recommendations (R1-R7 original + R8 from CSPS review) adopted as a PACKAGE — explicitly non-piecemeal. R1 (watermark-versioned RTM snapshots, FIRST LINE OF CODE), R2 (satisfiability with conflicting-locks detection), R3 (Phase Machine 0-4), R4 (variant cohesion enforcement), R5 (semantic resolvers), R6 (cascade saga), R7 (lifecycle state machine), R8 (cross-RTM satisfiability). Governor Trigger Map (governor-trigger-map.json) required — finite escalation table only, not judgment criteria. All R1-R8 hardwired to threshold/src/ files. CRITICAL: R1 and R2 cannot be deferred. Corespine architecture (CS-TEMPLATE slot, CS-IDENTITY priority, CS-INTERFACE roadmap) approved in parallel. Phase 1 Type Library approved (PARK-040726-023). Build sequence approved (PARK-040726-024).",
+      "status": "RATIFIED",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-04T00:00:00Z",
+      "ratified_at": "2026-07-05T00:00:00Z",
+      "session_target": "CTX:PHASE_1_BUILD",
+      "finding_ref": null,
+      "tags": [
+        "CTX:TEMPLATE-HUB",
+        "CTX:RATIFICATION",
+        "CTX:GOV-TEMPLATE-002",
+        "CTX:ARCHITECTURE",
+        "CTX:PHASE_1_BUILD"
+      ]
+    },
+    {
+      "park_id": "PARK-040726-023",
+      "title": "GOV-TEMPLATE-003 — RATIFIED — Phase 1 Type Library (CS-TEMPLATE-DASHBOARD only)",
+      "description": "RATIFIED 2026-07-05 — Governor approval recorded. Phase 1 Type Library consists of ONE type (CS-TEMPLATE-DASHBOARD), TWO variants (GOVERNANCE, ANALYTICS), ONE initial instance (end of Phase 1). This narrow scope is justified by the 80% measurement requirement. All other types are stubs until their own measurements justify them. Variants deferred to Phase 2: MONITORING, EXECUTIVE. Type Library expansion blocked until Phase 1 instance proves the machinery. First instance: CDS Governor Dashboard mapped to DASHBOARD/GOVERNANCE variant — empirical validation of the 80% inheritance claim.",
+      "status": "RATIFIED",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-05T00:00:00Z",
+      "ratified_at": "2026-07-05T00:00:00Z",
+      "session_target": "CTX:PHASE_1_BUILD",
+      "finding_ref": null,
+      "tags": [
+        "CTX:TYPE-LIBRARY",
+        "CTX:RATIFICATION",
+        "CTX:GOV-TEMPLATE-003",
+        "CTX:PHASE_1_BUILD"
+      ]
+    },
+    {
+      "park_id": "PARK-040726-024",
+      "title": "GOV-TEMPLATE-004 — RATIFIED — Build Sequence Steps 0-13 (Phase 1 plan)",
+      "description": "RATIFIED 2026-07-05 — Governor approval recorded. Ordered build sequence for Phase 1: Step 0 (genesis block + ratification), Step 1 (solver.ts standalone), Step 2 (rtm-store.ts, R1), Step 3 (solver wired to RTM, R2), Step 4 (Type definitions L1-L3), Step 5 (lifecycle.ts, R7), Step 6 (governor-trigger-map.json + ratification), Step 7 (phase-machine.ts, R3), Step 8 (gate rules, R4), Step 9 (cascade-saga.ts, R6), Step 10 (classificationTree NODE-13, ICE integration), Step 11 (R8 joint satisfiability), Step 12 (API endpoints), Step 13 (first declared instance). Sequencing invariant: isolation → decision → governed structure → state → orchestration → enforcement → propagation → entry. Never reverse two adjacent steps. Build begins when all three prerequisites close (P1: solver design, P2: genesis block, P3: 80% measurement).",
+      "status": "RATIFIED",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-05T00:00:00Z",
+      "ratified_at": "2026-07-05T00:00:00Z",
+      "session_target": "CTX:PHASE_1_BUILD",
+      "finding_ref": null,
+      "tags": [
+        "CTX:BUILD-SEQUENCE",
+        "CTX:RATIFICATION",
+        "CTX:GOV-TEMPLATE-004",
+        "CTX:PHASE_1_BUILD"
+      ]
+    },
+    {
+      "park_id": "PARK-040726-019",
+      "title": "Haiku Run Protocol v2 — Add 3 Missing Expert Agents + Context-Assembler step",
+      "description": "The current Haiku Run (5 agents) is missing 3 expert lenses and a grounding step. Required additions: (1) CONTEXT-ASSEMBLER (Step 0): Sonnet orchestrator reads all relevant CDS files before any agent runs and produces a 'what_exists' package that all agents receive. This prevents agents from running blind. (2) HAIKU-OSSOT-STABILITY: Expert in One Source of Truth, consolidation, and stability. Reads OSSOT doc + append-only records + existing constitutional docs. Checks: does this proposal create duplicate sources? Does it maintain OSSOT where it already exists? Does it violate append-only? (3) HAIKU-CDS-COMPATIBILITY (MOST CRITICAL): Reads actual codebase files (types.ts, rules.ts, engine.ts, constitutionals) and checks the proposal against what actually exists in code. Not a conceptual review — a code-level compatibility check. Outputs: what types need to be added? what rules would conflict? what gate changes are required? (4) HAIKU-SYNERGY: Runs AFTER all other Haiku agents complete. Reads all agent outputs. Finds cross-cutting connections, missed synergies, and enhancements that no single lens spotted. This is the pre-Opus consolidation step. Full protocol: STEP-0 (Context-Assembler) → STEP-1 (all Haiku in parallel, each receiving what_exists package) → STEP-1b (HAIKU-SYNERGY reads all STEP-1 outputs) → STEP-2 (Opus holistic) → STEP-3 (Builder MD).",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-04T00:00:00Z",
+      "session_target": "CTX:NEXT_SESSION",
+      "finding_ref": null,
+      "tags": [
+        "CTX:HAIKU-RUN",
+        "CTX:AGENT-PROTOCOL",
+        "CTX:OSSOT",
+        "CTX:CDS-COMPATIBILITY",
+        "CTX:SYNERGY",
+        "CTX:NEXT_SESSION"
+      ]
+    },
+    {
+      "park_id": "PARK-040726-020",
+      "title": "Core Council Corespine — Design Session Required",
+      "description": "Concept: A permanent, structured governance council that integrates AI expert agents + external advisors + the Governor into a single decision-making body for architectural reviews. Components to design: (1) CS-COUNCIL family (or function under CS-GOVERNANCE): governing the council's operating rules. (2) Member Registry: AI expert agents by domain (STABILITY, SCALABILITY, GOVERNANCE, EFFICIENCY, STRUCTURAL, OSSOT, CDS-COMPATIBILITY, SYNERGY) + external advisors by name/domain. (3) Orchestrator Policy: predefined rules for when to convene (decision types, trigger thresholds), how to weight different inputs, aggregation rules for conflicting signals. (4) Dashboard: all council runs, findings, dispositions, GOV decisions made from council input — one source of truth for all expert guidance received. (5) Audit trail: which advisor reviewed what, their recommendation, the Governor's response, and the ratification outcome. The council is NOT a chatbot or ad-hoc AI run — it is a constitutional governance mechanism with predictable, policy-governed behavior. Design questions: Does it live under CS-GOVERNANCE or as its own corespine? Who can trigger a council run (Governor only? Builder can request?)? How does external advisor input enter the platform (QUARANTINE first for translation, then classification)? Candidate session: Phase 1 design, before external advisor onboarding begins.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-04T00:00:00Z",
+      "session_target": "CTX:PHASE_1_DESIGN",
+      "finding_ref": null,
+      "tags": [
+        "CTX:CORE-COUNCIL",
+        "CTX:GOVERNANCE",
+        "CTX:AGENT-PROTOCOL",
+        "CTX:DASHBOARD",
+        "CTX:PHASE_1_DESIGN"
+      ]
+    },
+    {
+      "park_id": "PARK-040726-021",
+      "title": "CS-TEMPLATE Semantic Guards — Phase 2 artifact (CSP input absorbed)",
+      "description": "From CSP OPUS review: R2 (satisfiability check) gives syntactic soundness but cannot catch semantic drift under syntactic soundness. Example: Layer 2 changes audit_trail schema in a way that passes R2 (still REQUIRED, still valid) but removes ratification_id — breaking every GOVERNANCE instance's downstream intent. Solution: semantic guards — invariants that downstream instances register as dependencies ('I depend on the semantic meaning of audit_trail.ratification_id being present'). Any ancestor change that violates a registered guard produces a HELD finding. This is a Phase 2 artifact. Do NOT block Phase 1 on it. Phase 1: R2 gives syntactic soundness. Phase 2: semantic guard registry gives semantic soundness. Design session needed: schema for the guard registry, how guards register, how they integrate with the ratification gate, lifecycle of a guard when the instance it protects is deprecated.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-04T00:00:00Z",
+      "session_target": "CTX:PHASE_2_DESIGN",
+      "finding_ref": null,
+      "tags": [
+        "CTX:CS-TEMPLATE",
+        "CTX:PHASE_2_DESIGN",
+        "CTX:SEMANTIC-GUARDS",
+        "CTX:CSP-INPUT"
+      ]
+    },
+    {
+      "park_id": "PARK-040726-022",
+      "title": "CS-TEMPLATE Lazy Instance Materialization — Design Session (CSPS suggestion vs CDS DNA conflict)",
+      "description": "CSPS Opus-25 suggested: treat Layer 4 instances as lazy projections materialized on-demand rather than registered, declared objects. Benefits: reduces cascade surface, gives Governor more intervention time, defers resolution to latest possible moment. CONFLICT WITH CDS DNA: CDS requires every element to receive a CR-ID at classification time (append-only record model). Lazy instances have no CR-ID until materialization — this is a governance identity conflict. The question is not whether lazy materialization is useful (it is) but how it reconciles with: (1) the classification gate requirement that every element is classified before it exists, (2) the append-only CR-ID model that creates a record at classification, (3) RULE-CLASS which requires all inputs to be classified before they reach the platform. Design session needed to decide: (a) are template instances classified at declaration time or at materialization time? (b) if at declaration, is the lazy projection just an optimization for storage (the CR-ID exists, the RTM is generated lazily)? (c) if at materialization, how does RULE-CLASS apply? This is a Phase 1 design question — must be answered before instance registration endpoint is built.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-04T00:00:00Z",
+      "session_target": "CTX:PHASE_1_DESIGN",
+      "finding_ref": null,
+      "tags": [
+        "CTX:CS-TEMPLATE",
+        "CTX:PHASE_1_DESIGN",
+        "CTX:LAZY-MATERIALIZATION",
+        "CTX:CSPS-INPUT",
+        "CTX:DNA-CONFLICT"
+      ]
+    },
+    {
+      "park_id": "PARK-050726-025",
+      "title": "OPUS HOLISTIC REVIEW — COMPLETED 2026-07-05",
+      "description": "COMPLETED: Opus holistic review of CDS-TEMPLATE-IMPLEMENTATION-PLAN-001.md executed with full ZF cycle (iteration through all findings). Verdict: YELLOW CONDITIONAL → GREEN. Three clarifications approved by Governor and integrated into plan: (1) P1 closure criterion clarified (design doc + Step 1 code together, not design doc alone). (2) P3 baseline specification published (CDS Governor Dashboard: 147 total fields, 118 inherited, 80.3% rate). (3) Governor Trigger Map design session scheduled as Phase 1 task (Step 6), target: first week completion. Opus confirmed: R1-R8 hardwiring complete, sequencing invariant honored, Phase Machine sound, no architectural inversions. Five core improvements extracted for future plans: Three-Gate Prerequisite Model, Sequencing Invariant Enforcement, Phase Machine 0-4 Template, Non-Piecemeal Ratification, Prerequisite Escape Route. DELIVERABLE: Full Opus review report saved in tool-results. COMPLETION: Phase 1 build OPEN. Three clarification tasks run in parallel with Steps 0-5.",
+      "status": "COMPLETED",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-05T00:00:00Z",
+      "completed_at": "2026-07-05T00:00:00Z",
+      "session_target": "ACTIVE_PHASE_1_BUILD",
+      "finding_ref": null,
+      "tags": [
+        "CTX:OPUS-REVIEW",
+        "CTX:PHASE-1-REVIEW",
+        "CTX:HOLISTIC-REVIEW",
+        "CTX:PHASE_1_BUILD",
+        "CTX:RATIFIED"
+      ]
+    },
+    {
+      "park_id": "PARK-050726-026",
+      "title": "Governor Trigger Map Design Session — Phase 1 Task (Step 6 prerequisite)",
+      "description": "CRITICAL TASK: Design and finalize `threshold/data/governor-trigger-map.json` (finite, enumerated escalation table for Phase Machine Phase 2 governance review). This is Step 6 of the Phase 1 build sequence. Must be completed before Step 7 (phase-machine.ts) can be ratified. R3 (Phase Machine) ratification depends on this. Opus review identifies candidate triggers: (1) Retroactive change to a LOCKED field in a ratified ancestor, (2) New corespine boundary crossing, (3) Variant ceiling expansion request, (4) Deliberate suspension of a mechanical gate, (5) Novel precedent with no prior ratification in registry. Design session to finalize: add decision criteria for each trigger (not judgment criteria, but clear mechanical conditions). Attendees: Governor, Arch Lead, external reviewer (CSP or CSPS). TIMELINE: Run in parallel with Phase 1 Steps 0-5. Target completion: end of first week (before Step 6 ratification request). DELIVERABLE: `threshold/data/governor-trigger-map.json` ratified by Governor with timestamp.",
+      "status": "OPEN",
+      "is_forced_escalation": false,
+      "created_at": "2026-07-05T00:00:00Z",
+      "session_target": "CTX:PHASE_1_BUILD — parallel with Steps 0-5",
+      "finding_ref": null,
+      "tags": [
+        "CTX:DESIGN-SESSION",
+        "CTX:GOVERNANCE",
+        "CTX:PHASE-MACHINE",
+        "CTX:R3",
+        "CTX:PHASE_1_BUILD",
+        "CTX:CRITICAL"
+      ]
+    }
+  ],
+  "last_escalation_run": "2026-07-06T00:00:00.011Z"
+}

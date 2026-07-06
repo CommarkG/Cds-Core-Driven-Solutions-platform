@@ -1,0 +1,175 @@
+{
+  "_meta": {
+    "description": "All gates and checks that receive injected insights from ZF-Cycle Phase 4.",
+    "rule": "Injection always APPENDS to injected_rules[] — never overwrites. Each entry is dated and finding-linked.",
+    "last_updated": "2026-07-02T00:00:00Z"
+  },
+  "targets": [
+    {
+      "id": "GATE-AUTH",
+      "label": "Authentication Middleware Gate",
+      "file": "src/gate/middleware/auth.ts",
+      "type": "creation_gate",
+      "phase": "Phase 0.5",
+      "description": "Every new route must pass through auth middleware before handler. Hardwired prevention for SEC-002.",
+      "injected_rules": [
+        {
+          "rule_id": "P1-AUTH-FIRST",
+          "source_finding": "FINDING-SEC-002",
+          "injected_at": "2026-07-02T00:00:00Z",
+          "rule": "Every route handler must verify actor identity before processing. Self-declared actor_kind is not authentication. Phase 0.5: token validation required.",
+          "enforcement": "STUB — file not yet created; wire in Phase 0.5"
+        }
+      ]
+    },
+    {
+      "id": "GATE-SCHEMA",
+      "label": "Schema Validation Middleware Gate",
+      "file": "src/gate/middleware/schema.ts",
+      "type": "creation_gate",
+      "phase": "Phase 0.5",
+      "description": "Every endpoint validates request body schema before destructuring. Closes SYS-001.",
+      "injected_rules": [
+        {
+          "rule_id": "P1-SCHEMA-FIRST",
+          "source_finding": "FINDING-SYS-001",
+          "injected_at": "2026-07-02T00:00:00Z",
+          "rule": "Every endpoint must validate request body schema before destructuring fields. Missing cr_id, malformed types, null fields must be caught at middleware layer.",
+          "enforcement": "STUB — file not yet created; wire in Phase 0.5"
+        }
+      ]
+    },
+    {
+      "id": "GATE-INJECTION",
+      "label": "Injection Scan Gate (all endpoints)",
+      "file": "src/gate/input-adapter.ts",
+      "type": "creation_gate",
+      "phase": "Phase 0",
+      "description": "Injection scan must run on ALL string inputs, including secondary rounds like clarification_response. Closes SYS-007.",
+      "injected_rules": [
+        {
+          "rule_id": "P2-SCAN-ALL-ROUNDS",
+          "source_finding": "FINDING-SYS-007",
+          "injected_at": "2026-07-02T00:00:00Z",
+          "rule": "scanForInjection() must be called on clarification_response in /api/clarify and on all future secondary input rounds. Prevention is not selective.",
+          "enforcement": "ACTIVE — apply to /api/clarify next"
+        }
+      ]
+    },
+    {
+      "id": "CHECK-IMPL",
+      "label": "Pre-Implementation Checklist",
+      "file": "src/zf-cycle/impl-checklist.ts",
+      "type": "impl_milestone",
+      "phase": "Phase 0",
+      "description": "6 prevention rules that must PASS before any new route or feature is coded.",
+      "injected_rules": [
+        {
+          "rule_id": "P1-AUTH-FIRST",
+          "source_finding": "FINDING-SEC-002",
+          "injected_at": "2026-07-02T00:00:00Z",
+          "rule": "Auth middleware declared before writing any handler.",
+          "enforcement": "ACTIVE"
+        },
+        {
+          "rule_id": "P2-SCAN-ALL-ROUNDS",
+          "source_finding": "FINDING-SYS-007",
+          "injected_at": "2026-07-02T00:00:00Z",
+          "rule": "Injection scan wired to every string input, not just primary classification.",
+          "enforcement": "ACTIVE"
+        },
+        {
+          "rule_id": "P3-ASYNC-IO",
+          "source_finding": "FINDING-PERF-004",
+          "injected_at": "2026-07-02T00:00:00Z",
+          "rule": "No readFileSync/writeFileSync on hot paths. Hot path = any endpoint that handles classification.",
+          "enforcement": "TRACKED — migration to PostgreSQL in Phase 0.5"
+        },
+        {
+          "rule_id": "P4-APPEND-ONLY",
+          "source_finding": "FINDING-DATA-002",
+          "injected_at": "2026-07-02T00:00:00Z",
+          "rule": "Governance records are append-only. updateRecord() that overwrites classification fields is PROHIBITED. Callers: /api/clarify and /api/session/open — both must migrate to event model.",
+          "enforcement": "ACTIVE — migration required"
+        },
+        {
+          "rule_id": "P5-LIVE-SOURCE",
+          "source_finding": "FINDING-GOV-001",
+          "injected_at": "2026-07-02T00:00:00Z",
+          "rule": "Every rule must check a live source, not a hardcoded value. RULE-PARK now reads park-registry.json. RULE-GOAL/RAT/VOC: Phase 0.5 registry wires.",
+          "enforcement": "PARTIAL — RULE-PARK now live; others deferred"
+        },
+        {
+          "rule_id": "P6-ACTIONABLE-UX",
+          "source_finding": "FINDING-UX-005",
+          "injected_at": "2026-07-02T00:00:00Z",
+          "rule": "Every result returned to a user must include an actionable next-step, not just classification data. BLOCKED must say what to fix. HELD must give a timeline.",
+          "enforcement": "TRACKED — UX improvement in Phase 0.5"
+        }
+      ]
+    },
+    {
+      "id": "CHECK-POST",
+      "label": "Post-Implementation Verification Suite",
+      "file": "src/zf-cycle/post-check.ts",
+      "type": "post_impl_check",
+      "phase": "Phase 0",
+      "description": "5 checks that verify a completed implementation scope didn't introduce the known failure patterns.",
+      "injected_rules": [
+        {
+          "rule_id": "CHECK-01-AUTH",
+          "source_finding": "FINDING-SEC-002",
+          "injected_at": "2026-07-02T00:00:00Z",
+          "rule": "After any new route: verify auth middleware is present and called before handler (not just imported).",
+          "enforcement": "ACTIVE"
+        },
+        {
+          "rule_id": "CHECK-02-SYNC-IO",
+          "source_finding": "FINDING-PERF-004",
+          "injected_at": "2026-07-02T00:00:00Z",
+          "rule": "After any file I/O: grep for readFileSync/writeFileSync in request handlers. Any found = fail.",
+          "enforcement": "ACTIVE"
+        },
+        {
+          "rule_id": "CHECK-03-LIVE-RULE",
+          "source_finding": "FINDING-GOV-001",
+          "injected_at": "2026-07-02T00:00:00Z",
+          "rule": "After any rule implementation: verify the rule checks a live source, not a hardcoded boolean or value.",
+          "enforcement": "ACTIVE"
+        },
+        {
+          "rule_id": "CHECK-04-APPEND-ONLY",
+          "source_finding": "FINDING-DATA-002",
+          "injected_at": "2026-07-02T00:00:00Z",
+          "rule": "After any data write: verify classification fields on governance records cannot be overwritten. Only event appends permitted.",
+          "enforcement": "ACTIVE"
+        },
+        {
+          "rule_id": "CHECK-05-UX-NEXT-STEP",
+          "source_finding": "FINDING-UX-005",
+          "injected_at": "2026-07-02T00:00:00Z",
+          "rule": "After any UI change: verify every result state has an actionable next-step visible to the user.",
+          "enforcement": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "id": "PREVENT-RULES",
+      "label": "Prevention Rules Registry",
+      "file": "data/prevention-rules.json",
+      "type": "prevention",
+      "phase": "Phase 0",
+      "description": "Canonical, extensible list of hardwired prevention rules. Grows with each ZF cycle injection.",
+      "injected_rules": []
+    },
+    {
+      "id": "AUDIT-SCOPE",
+      "label": "Audit Scope Registry",
+      "file": "data/audit-scope.json",
+      "type": "audit_evolution",
+      "phase": "Phase 0",
+      "description": "Defines what the next audit fleet sweep must check. Grows as new patterns are found.",
+      "injected_rules": []
+    }
+  ]
+}
