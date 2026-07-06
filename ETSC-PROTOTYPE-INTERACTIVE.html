@@ -437,6 +437,221 @@
             text-decoration: line-through;
         }
 
+        /* ENHANCED S350: Tooltip icon styling */
+        .tooltip-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            background: #d0d0d0;
+            color: white;
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: help;
+            margin-left: 6px;
+            transition: all 0.2s;
+            vertical-align: middle;
+        }
+
+        .tooltip-icon:hover {
+            background: #999;
+            transform: scale(1.1);
+        }
+
+        /* ENHANCED S350: Sortable header styling */
+        .sortable-header {
+            cursor: pointer;
+            user-select: none;
+            padding-right: 8px;
+            position: relative;
+        }
+
+        .sortable-header:hover {
+            text-decoration: underline;
+            color: #1a1a1a;
+        }
+
+        .sort-indicator {
+            display: inline-block;
+            margin-left: 4px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* ENHANCED S350: Reorder dropdown styling */
+        .reorder-dropdown {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .reorder-dropdown:hover {
+            border-color: #999;
+            background: #f9f9f9;
+        }
+
+        /* ENHANCED S350: Comment field styling */
+        .comment-field {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 12px;
+            width: 150px;
+            font-family: inherit;
+        }
+
+        .comment-field:focus {
+            outline: none;
+            border-color: #1a1a1a;
+            box-shadow: 0 0 4px rgba(26, 26, 26, 0.2);
+        }
+
+        /* ENHANCED S350: Create Group/Subgroup button styling */
+        .create-group-btn,
+        .create-subgroup-btn {
+            background: #50c878;
+            color: white;
+            padding: 8px 12px;
+            margin: 5px 0;
+            font-size: 13px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .create-group-btn:hover,
+        .create-subgroup-btn:hover {
+            background: #3ca860;
+        }
+
+        /* ENHANCED S350: Export button styling */
+        .export-btn {
+            background: #4da6ff;
+            color: white;
+            padding: 6px 10px;
+            font-size: 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 4px;
+        }
+
+        .export-btn:hover {
+            background: #2d7fd9;
+        }
+
+        /* ENHANCED S350: Row number column styling */
+        .row-number {
+            width: 40px;
+            text-align: right;
+            color: #999;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* ENHANCED S350: Delete button styling */
+        .delete-btn {
+            background: #ff6b6b;
+            color: white;
+            padding: 6px 10px;
+            font-size: 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #cc5555;
+        }
+
+        /* ENHANCED S350: Group/Subgroup hierarchy styling */
+        .group-header {
+            background: #f0f0f0;
+            padding: 12px;
+            margin: 10px 0 0 0;
+            border-left: 4px solid #1a1a1a;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 3px;
+        }
+
+        .group-header:hover {
+            background: #e8e8e8;
+        }
+
+        .group-header.collapsed::before {
+            content: "▶ ";
+        }
+
+        .group-header.expanded::before {
+            content: "▼ ";
+        }
+
+        .group-content {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+
+        .group-content.hidden {
+            display: none;
+        }
+
+        .subgroup-header {
+            background: #fafafa;
+            padding: 10px;
+            margin: 8px 0 0 0;
+            border-left: 3px solid #999;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+
+        .subgroup-header:hover {
+            background: #f5f5f5;
+        }
+
+        .subgroup-header.collapsed::before {
+            content: "▶ ";
+        }
+
+        .subgroup-header.expanded::before {
+            content: "▼ ";
+        }
+
+        .subgroup-content {
+            padding-left: 20px;
+            margin: 6px 0;
+        }
+
+        .subgroup-content.hidden {
+            display: none;
+        }
+
+        /* ENHANCED S350: Edit mode for inline fields */
+        .editable-field {
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        .editable-field:hover {
+            background: #f0f0f0;
+        }
+
         @media (max-width: 768px) {
             .matrix {
                 grid-template-columns: repeat(3, 1fr);
@@ -444,6 +659,18 @@
 
             .nav-tabs {
                 flex-wrap: wrap;
+            }
+
+            .comment-field {
+                width: 100px;
+            }
+
+            .table-wrapper {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px;
             }
         }
     </style>
@@ -471,13 +698,14 @@
 
         <h2 class="section-title">Goal Definition Wizard</h2>
 
+        <!-- ENHANCED S350: Add tooltip icons to all step indicators -->
         <div class="step-indicator">
-            <div class="step active">Step 1: Initial Draft</div>
-            <div class="step">Step 2: AI Analysis</div>
-            <div class="step">Step 3: Core Confirmation</div>
-            <div class="step">Step 4: Scope Settings</div>
-            <div class="step">Step 5: Bundle Recommendation</div>
-            <div class="step">Step 6: Review & Create</div>
+            <div class="step active">Step 1: Initial Draft <span class="tooltip-icon" title="Submit your initial problem statement">?</span></div>
+            <div class="step">Step 2: AI Analysis <span class="tooltip-icon" title="AI extracts and clarifies your goals">?</span></div>
+            <div class="step">Step 3: Core Confirmation <span class="tooltip-icon" title="Confirm and lock the core problem">?</span></div>
+            <div class="step">Step 4: Scope Settings <span class="tooltip-icon" title="Define timeline and budget">?</span></div>
+            <div class="step">Step 5: Bundle Recommendation <span class="tooltip-icon" title="AI recommends the best team">?</span></div>
+            <div class="step">Step 6: Review & Create <span class="tooltip-icon" title="Final review and goal creation">?</span></div>
         </div>
         <!-- UPDATED S350: Add visual step progression with explicit flow indicators -->
         <div class="step-progression">
@@ -494,10 +722,10 @@
 
         <!-- STEP 1: INITIAL DRAFT -->
         <div class="wireframe-box input">
-            <!-- ANNOTATION: STEP 1 - Initial Draft Input. Should this be a larger textarea? Should we have character count? Help text? "Describe the problem you want to solve in 2-3 sentences"? -->
-            <div class="wireframe-label">STEP 1: Tell us about your goal</div>
+            <!-- ENHANCED S350: STEP 1 - Add tooltip to step heading -->
+            <div class="wireframe-label">STEP 1: Tell us about your goal <span class="tooltip-icon" title="Describe your problem, goal, or opportunity">?</span></div>
             <div class="form-group">
-                <label>Initial Draft Description (Required)</label>
+                <label>Initial Draft Description <span class="tooltip-icon" title="Required: 2-3 sentences describing your goal">?</span></label>
                 <textarea placeholder="Describe the goal, problem, or opportunity you want to address. Be specific about what's not working or what you want to achieve.">We need to improve our API response time. Currently averaging 5 seconds, causing user frustration and potential revenue loss. We think caching and database optimization could help.</textarea>
                 <!-- ANNOTATION: Should have character counter? Min/max length? Real-time feedback? -->
             </div>
@@ -510,8 +738,8 @@
 
         <!-- STEP 2: AI ANALYSIS & CLARIFYING QUESTIONS -->
         <div class="wireframe-box output" style="margin-top: 40px;">
-            <!-- ANNOTATION: STEP 2 - AI Analysis. Show what AI extracted from draft. Then show clarifying questions. Should this be multi-step (show analysis, then Q&A separately) or combined? -->
-            <div class="wireframe-label">STEP 2: AI Analysis & Clarifying Questions</div>
+            <!-- ENHANCED S350: STEP 2 - Add tooltip to step heading -->
+            <div class="wireframe-label">STEP 2: AI Analysis & Clarifying Questions <span class="tooltip-icon" title="AI extracts and refines your goals through guided questions">?</span></div>
 
             <div style="background: #f0fff0; padding: 15px; border-radius: 4px; margin: 15px 0;">
                 <strong>AI Analysis of Your Draft:</strong>
@@ -557,8 +785,8 @@
 
         <!-- STEP 3: CORE CONFIRMATION -->
         <div class="wireframe-box output" style="margin-top: 40px;">
-            <!-- ANNOTATION: STEP 3 - Core is locked here. Show refined version. User can confirm or iterate. -->
-            <div class="wireframe-label">STEP 3: Core Problem & Solution (Locked)</div>
+            <!-- ENHANCED S350: STEP 3 - Add tooltip to step heading -->
+            <div class="wireframe-label">STEP 3: Core Problem & Solution (Locked) <span class="tooltip-icon" title="Confirm the core problem and solution - locked for consistency">?</span></div>
 
             <div style="background: #f0f0f0; padding: 15px; border-radius: 4px; margin: 15px 0;">
                 <strong>Refined Core:</strong>
@@ -585,11 +813,11 @@
 
         <!-- STEP 4: SCOPE SETTINGS -->
         <div class="wireframe-box action" style="margin-top: 40px;">
-            <!-- ANNOTATION: STEP 4 - Scope presentation. Presented ONLY after core locked. Shows timeline, budget, goal type recommendation. -->
-            <div class="wireframe-label">STEP 4: Scope & Goal Type (Presented After Core Locked)</div>
+            <!-- ENHANCED S350: STEP 4 - Add tooltip to step heading -->
+            <div class="wireframe-label">STEP 4: Scope & Goal Type <span class="tooltip-icon" title="Define timeline, budget, and goal classification">?</span></div>
 
             <div class="form-group">
-                <label>Expected Timeline:</label>
+                <label>Expected Timeline <span class="tooltip-icon" title="How long should this goal take?">?</span></label>
                 <select>
                     <option>-- Select --</option>
                     <option selected>2-4 weeks (Standard)</option>
@@ -600,7 +828,7 @@
             </div>
 
             <div class="form-group">
-                <label>Budget (Optional):</label>
+                <label>Budget <span class="tooltip-icon" title="Optional: budget allocation for this goal">?</span></label>
                 <input type="number" placeholder="e.g., 50000" value="50000">
             </div>
 
@@ -618,8 +846,8 @@
 
         <!-- STEP 5: BUNDLE RECOMMENDATION -->
         <div class="wireframe-box output" style="margin-top: 40px;">
-            <!-- ANNOTATION: STEP 5 - Bundle recommendation. Show top 3 options with matching matrix + reasoning. User can accept default or choose alternative. -->
-            <div class="wireframe-label">STEP 5: Participant Bundle Recommendation</div>
+            <!-- ENHANCED S350: STEP 5 - Add tooltip to step heading -->
+            <div class="wireframe-label">STEP 5: Participant Bundle Recommendation <span class="tooltip-icon" title="AI recommends the best team combination for your goal">?</span></div>
 
             <div style="background: #fffaf0; padding: 15px; border-radius: 4px; margin: 15px 0;">
                 <strong>Matching Analysis:</strong>
@@ -700,8 +928,8 @@
 
         <!-- STEP 6: REVIEW & CREATE -->
         <div class="wireframe-box action" style="margin-top: 40px;">
-            <!-- ANNOTATION: STEP 6 - Final review. Show all locked decisions. User can confirm (creates in decision-log) or go back. -->
-            <div class="wireframe-label">STEP 6: Review & Create Goal</div>
+            <!-- ENHANCED S350: STEP 6 - Add tooltip to step heading -->
+            <div class="wireframe-label">STEP 6: Review & Create Goal <span class="tooltip-icon" title="Final review before creating the immutable goal">?</span></div>
 
             <div style="background: #f5f5f5; padding: 15px; border-radius: 4px; margin: 15px 0;">
                 <strong>Goal Summary (Review):</strong>
@@ -775,68 +1003,77 @@
 
         <!-- SECTION 1: PARTICIPANT LIST -->
         <div class="wireframe-box output">
-            <div class="wireframe-label">Participant List (4 Total)</div>
-            <!-- ANNOTATION: DESIGN - Table vs Cards? Current: Table for desktop, could switch to cards for mobile. Should table be sortable/filterable? -->
-            <!-- UPDATED S350: Add "+ Add Participant" button before table -->
-            <button class="add-button" onclick="addParticipant()">+ Add Participant</button>
+            <div class="wireframe-label">Participant List (4 Total) <span class="tooltip-icon" title="Manage all participants and their capabilities">?</span></div>
+            <!-- ENHANCED S350: Add "+ Add Participant" button and group buttons -->
+            <div style="margin-bottom: 15px;">
+                <button class="add-button" onclick="addParticipant()">+ Add Participant</button>
+                <button class="create-group-btn" onclick="createGroup('Participant Dashboard')">+ Create Group</button>
+                <button class="export-btn" onclick="exportTable('participants', 'all')">Export All</button>
+            </div>
             <div class="table-wrapper">
-                <!-- UPDATED S350: Add reordering hint and drag handles -->
-            <div class="reorder-hint">Drag to reorder items or use arrows to move up/down</div>
-            <!-- UPDATED S350: Add tooltips to metric column headers -->
-                <table>
+                <!-- ENHANCED S350: Updated reordering hint and instructions -->
+                <div class="reorder-hint">Use position dropdown or arrows to reorder items. Add comments, export at any level, or delete rows.</div>
+                <!-- ENHANCED S350: Add sortable headers, row numbers, and all new features -->
+                <table id="participantTable">
                     <tr>
-                        <th style="width: 30px;"></th>
-                        <th>Participant</th>
-                        <th><span class="metric-tooltip" title="Participant availability status (Active/Inactive/OnLeave)">Status (?)</span></th>
-                        <th><span class="metric-tooltip" title="Number of active goals currently assigned">Load (?)</span></th>
-                        <th><span class="metric-tooltip" title="Current active goals / Maximum concurrent goals">Capacity (?)</span></th>
-                        <th><span class="metric-tooltip" title="Token efficiency ratio (0-1 scale, higher is better)">Efficiency (?)</span></th>
-                        <th style="width: 80px;">Reorder</th>
-                        <th>Actions</th>
+                        <th style="width: 40px;" class="row-number">#</th>
+                        <th class="sortable-header" onclick="sortTable(this, 'participants')">Participant <span class="sort-indicator"></span></th>
+                        <th class="sortable-header" onclick="sortTable(this, 'participants')"><span class="tooltip-icon" title="Participant availability status">Status (?)</span><span class="sort-indicator"></span></th>
+                        <th class="sortable-header" onclick="sortTable(this, 'participants')"><span class="tooltip-icon" title="Number of active goals currently assigned">Load (?)</span><span class="sort-indicator"></span></th>
+                        <th class="sortable-header" onclick="sortTable(this, 'participants')"><span class="tooltip-icon" title="Current active goals / Maximum concurrent goals">Capacity (?)</span><span class="sort-indicator"></span></th>
+                        <th class="sortable-header" onclick="sortTable(this, 'participants')"><span class="tooltip-icon" title="Token efficiency ratio (0-1 scale)">Efficiency (?)</span><span class="sort-indicator"></span></th>
+                        <th style="width: 100px;">Position</th>
+                        <th style="width: 120px;">Comments</th>
+                        <th style="width: 100px;">Actions</th>
                     </tr>
-                    <tr>
-                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
+                    <!-- ENHANCED S350: Update each row with row number, reorder dropdown, comment field, delete button, and export -->
+                    <tr data-row-index="0">
+                        <td class="row-number">1</td>
                         <td><strong>CSP</strong></td>
-                        <td><span title="Participant availability status (Active/Inactive/OnLeave)">Active</span></td>
-                        <td><span title="Number of active goals currently assigned">3 active goals</span></td>
-                        <td style="color: #ff6b6b;" title="Current active goals / Maximum concurrent goals"><span class="metric-tooltip">3/5 (60%)</span></td>
-                        <td><span class="metric-tooltip" title="Token efficiency ratio (0-1 scale, higher is better)">0.95</span></td>
-                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
-                        <td><button onclick="editParticipant('CSP')" style="padding: 5px 10px; font-size: 12px;">Edit</button></td>
+                        <td>Active</td>
+                        <td>3 active goals</td>
+                        <td style="color: #ff6b6b;"><span class="tooltip-icon" title="60% capacity used">3/5 (60%)</span></td>
+                        <td>0.95</td>
+                        <td><select class="reorder-dropdown" onchange="reorderRow(this, 'participantTable')"><option>Position 1</option><option>Position 2</option><option>Position 3</option><option>Position 4</option></select></td>
+                        <td><input type="text" class="comment-field" placeholder="Add comment..." value="High performer"></td>
+                        <td><button onclick="editParticipant('CSP')" style="padding: 5px 8px; font-size: 12px;">Edit</button> <button class="delete-btn" onclick="deleteRow(this)">Delete</button> <button class="export-btn" onclick="exportTable('participants', 'row', this)">Export</button></td>
                     </tr>
-                    <tr>
-                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
+                    <tr data-row-index="1">
+                        <td class="row-number">2</td>
                         <td><strong>CSPS</strong></td>
-                        <td><span title="Participant availability status (Active/Inactive/OnLeave)">Active</span></td>
-                        <td><span title="Number of active goals currently assigned">1 active goal</span></td>
-                        <td style="color: #51cf66;" title="Current active goals / Maximum concurrent goals"><span class="metric-tooltip">1/3 (33%)</span></td>
-                        <td><span class="metric-tooltip" title="Token efficiency ratio (0-1 scale, higher is better)">0.78</span></td>
-                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
-                        <td><button onclick="editParticipant('CSPS')" style="padding: 5px 10px; font-size: 12px;">Edit</button></td>
+                        <td>Active</td>
+                        <td>1 active goal</td>
+                        <td style="color: #51cf66;"><span class="tooltip-icon" title="33% capacity used">1/3 (33%)</span></td>
+                        <td>0.78</td>
+                        <td><select class="reorder-dropdown" onchange="reorderRow(this, 'participantTable')"><option>Position 1</option><option selected>Position 2</option><option>Position 3</option><option>Position 4</option></select></td>
+                        <td><input type="text" class="comment-field" placeholder="Add comment..." value="Architecture specialist"></td>
+                        <td><button onclick="editParticipant('CSPS')" style="padding: 5px 8px; font-size: 12px;">Edit</button> <button class="delete-btn" onclick="deleteRow(this)">Delete</button> <button class="export-btn" onclick="exportTable('participants', 'row', this)">Export</button></td>
                     </tr>
-                    <tr>
-                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
+                    <tr data-row-index="2">
+                        <td class="row-number">3</td>
                         <td><strong>Base44</strong></td>
-                        <td><span title="Participant availability status (Active/Inactive/OnLeave)">Active</span></td>
-                        <td><span title="Number of active goals currently assigned">2 active goals</span></td>
-                        <td style="color: #ffa500;" title="Current active goals / Maximum concurrent goals"><span class="metric-tooltip">2/4 (50%)</span></td>
-                        <td><span class="metric-tooltip" title="Token efficiency ratio (0-1 scale, higher is better)">0.82</span></td>
-                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
-                        <td><button onclick="editParticipant('Base44')" style="padding: 5px 10px; font-size: 12px;">Edit</button></td>
+                        <td>Active</td>
+                        <td>2 active goals</td>
+                        <td style="color: #ffa500;"><span class="tooltip-icon" title="50% capacity used">2/4 (50%)</span></td>
+                        <td>0.82</td>
+                        <td><select class="reorder-dropdown" onchange="reorderRow(this, 'participantTable')"><option>Position 1</option><option>Position 2</option><option selected>Position 3</option><option>Position 4</option></select></td>
+                        <td><input type="text" class="comment-field" placeholder="Add comment..." value="Frontend expert"></td>
+                        <td><button onclick="editParticipant('Base44')" style="padding: 5px 8px; font-size: 12px;">Edit</button> <button class="delete-btn" onclick="deleteRow(this)">Delete</button> <button class="export-btn" onclick="exportTable('participants', 'row', this)">Export</button></td>
                     </tr>
-                    <tr>
-                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
+                    <tr data-row-index="3">
+                        <td class="row-number">4</td>
                         <td><strong>Lovable</strong></td>
-                        <td><span title="Participant availability status (Active/Inactive/OnLeave)">Active</span></td>
-                        <td><span title="Number of active goals currently assigned">4 active goals</span></td>
-                        <td style="color: #ff6b6b;" title="Current active goals / Maximum concurrent goals"><span class="metric-tooltip">4/5 (80%)</span></td>
-                        <td><span class="metric-tooltip" title="Token efficiency ratio (0-1 scale, higher is better)">0.88</span></td>
-                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
-                        <td><button onclick="editParticipant('Lovable')" style="padding: 5px 10px; font-size: 12px;">Edit</button></td>
+                        <td>Active</td>
+                        <td>4 active goals</td>
+                        <td style="color: #ff6b6b;"><span class="tooltip-icon" title="80% capacity used">4/5 (80%)</span></td>
+                        <td>0.88</td>
+                        <td><select class="reorder-dropdown" onchange="reorderRow(this, 'participantTable')"><option>Position 1</option><option>Position 2</option><option>Position 3</option><option selected>Position 4</option></select></td>
+                        <td><input type="text" class="comment-field" placeholder="Add comment..." value="Full-stack capable"></td>
+                        <td><button onclick="editParticipant('Lovable')" style="padding: 5px 8px; font-size: 12px;">Edit</button> <button class="delete-btn" onclick="deleteRow(this)">Delete</button> <button class="export-btn" onclick="exportTable('participants', 'row', this)">Export</button></td>
                     </tr>
                 </table>
             </div>
-            <!-- ANNOTATION: Capacity shown with color indicator. Red=high load, Yellow=medium, Green=low. Right? Should it show auto-adjust timer status? -->
+            <!-- ANNOTATION: Capacity shown with color indicator. Red=high load, Yellow=medium, Green=low. -->
         </div>
 
         <!-- SECTION 2: EDIT PARTICIPANT MODAL -->
@@ -1012,58 +1249,68 @@
 
         <!-- SECTION 1: BUNDLE LIST -->
         <div class="wireframe-box output">
-            <div class="wireframe-label">Defined Bundles (4 Total)</div>
-            <!-- ANNOTATION: DESIGN - List of bundles with their wiring, default status, and actions. Should this be table or cards? -->
-            <!-- UPDATED S350: Add "+ Create New Bundle" button before table -->
-            <button class="add-button" onclick="createNewBundle()">+ Create New Bundle</button>
-            <!-- UPDATED S350: Add reordering hint for bundles -->
-            <div class="reorder-hint">Drag to reorder bundles or use arrows to move up/down</div>
+            <div class="wireframe-label">Defined Bundles (4 Total) <span class="tooltip-icon" title="Manage participant bundles and goal type wiring">?</span></div>
+            <!-- ENHANCED S350: Add buttons for bundle management -->
+            <div style="margin-bottom: 15px;">
+                <button class="add-button" onclick="createNewBundle()">+ Create New Bundle</button>
+                <button class="create-group-btn" onclick="createGroup('Bundle Configuration')">+ Create Group</button>
+                <button class="export-btn" onclick="exportTable('bundles', 'all')">Export All</button>
+            </div>
+            <!-- ENHANCED S350: Update reordering hint -->
+            <div class="reorder-hint">Use position dropdown or arrows to reorder bundles. Add comments, export at any level, or delete.</div>
             <div class="table-wrapper">
-                <table>
+                <!-- ENHANCED S350: Add sortable headers, row numbers, and new features -->
+                <table id="bundleTable">
                     <tr>
-                        <th style="width: 30px;"></th>
-                        <th>Bundle Name</th>
-                        <th>Participants</th>
-                        <th>Wired Goal Types</th>
-                        <th>Default</th>
-                        <th style="width: 80px;">Reorder</th>
-                        <th>Actions</th>
+                        <th style="width: 40px;" class="row-number">#</th>
+                        <th class="sortable-header" onclick="sortTable(this, 'bundles')">Bundle Name <span class="sort-indicator"></span></th>
+                        <th class="sortable-header" onclick="sortTable(this, 'bundles')">Participants <span class="sort-indicator"></span></th>
+                        <th class="sortable-header" onclick="sortTable(this, 'bundles')">Wired Goal Types <span class="sort-indicator"></span></th>
+                        <th class="sortable-header" onclick="sortTable(this, 'bundles')"><span class="tooltip-icon" title="Primary or alternative default">Default (?)</span><span class="sort-indicator"></span></th>
+                        <th style="width: 100px;">Position</th>
+                        <th style="width: 120px;">Comments</th>
+                        <th style="width: 140px;">Actions</th>
                     </tr>
-                    <tr style="background: #f0fff0;">
-                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
+                    <!-- ENHANCED S350: Update each row with row number, position dropdown, comment field, delete button, and export -->
+                    <tr style="background: #f0fff0;" data-row-index="0">
+                        <td class="row-number">1</td>
                         <td><strong>Performance & Architecture</strong></td>
                         <td>CSP, CSPS</td>
                         <td>Performance Optimization, Architecture Redesign</td>
-                        <td>✓ Default for Performance</td>
-                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
-                        <td><button style="padding: 5px 10px; font-size: 12px;">Edit</button> <button style="padding: 5px 10px; font-size: 12px;">Delete</button></td>
+                        <td><span class="tooltip-icon" title="Primary default for performance goals">✓ PRIMARY</span></td>
+                        <td><select class="reorder-dropdown" onchange="reorderRow(this, 'bundleTable')"><option>Position 1</option><option>Position 2</option><option>Position 3</option><option>Position 4</option></select></td>
+                        <td><input type="text" class="comment-field" placeholder="Add comment..." value="Top choice"></td>
+                        <td><button onclick="editBundle(this)" style="padding: 5px 8px; font-size: 12px;">Edit</button> <button class="delete-btn" onclick="deleteRow(this)">Delete</button> <button class="export-btn" onclick="exportTable('bundles', 'row', this)">Export</button></td>
                     </tr>
-                    <tr>
-                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
+                    <tr data-row-index="1">
+                        <td class="row-number">2</td>
                         <td><strong>Frontend & Backend</strong></td>
                         <td>Base44, CSP</td>
                         <td>Feature Development</td>
-                        <td>✓ Default for Features</td>
-                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
-                        <td><button style="padding: 5px 10px; font-size: 12px;">Edit</button> <button style="padding: 5px 10px; font-size: 12px;">Delete</button></td>
+                        <td><span class="tooltip-icon" title="Primary default for feature goals">✓ PRIMARY</span></td>
+                        <td><select class="reorder-dropdown" onchange="reorderRow(this, 'bundleTable')"><option>Position 1</option><option selected>Position 2</option><option>Position 3</option><option>Position 4</option></select></td>
+                        <td><input type="text" class="comment-field" placeholder="Add comment..." value="Standard pairing"></td>
+                        <td><button onclick="editBundle(this)" style="padding: 5px 8px; font-size: 12px;">Edit</button> <button class="delete-btn" onclick="deleteRow(this)">Delete</button> <button class="export-btn" onclick="exportTable('bundles', 'row', this)">Export</button></td>
                     </tr>
-                    <tr>
-                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
+                    <tr data-row-index="2">
+                        <td class="row-number">3</td>
                         <td><strong>Full Team Consultation</strong></td>
                         <td>CSP, CSPS, Base44, Lovable</td>
                         <td>Strategic Planning, Architecture Redesign</td>
                         <td>-</td>
-                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
-                        <td><button style="padding: 5px 10px; font-size: 12px;">Edit</button> <button style="padding: 5px 10px; font-size: 12px;">Delete</button></td>
+                        <td><select class="reorder-dropdown" onchange="reorderRow(this, 'bundleTable')"><option>Position 1</option><option>Position 2</option><option selected>Position 3</option><option>Position 4</option></select></td>
+                        <td><input type="text" class="comment-field" placeholder="Add comment..." value="Premium option"></td>
+                        <td><button onclick="editBundle(this)" style="padding: 5px 8px; font-size: 12px;">Edit</button> <button class="delete-btn" onclick="deleteRow(this)">Delete</button> <button class="export-btn" onclick="exportTable('bundles', 'row', this)">Export</button></td>
                     </tr>
-                    <tr>
-                        <td><span class="drag-handle" title="Drag to reorder">≡</span></td>
+                    <tr data-row-index="3">
+                        <td class="row-number">4</td>
                         <td><strong>Quick Turnaround</strong></td>
                         <td>CSP</td>
                         <td>Problem Solving</td>
-                        <td>✓ Default for Problems</td>
-                        <td><div class="row-actions"><span class="move-arrow" onclick="moveUp(this)" title="Move up">↑</span><span class="move-arrow" onclick="moveDown(this)" title="Move down">↓</span></div></td>
-                        <td><button style="padding: 5px 10px; font-size: 12px;">Edit</button> <button style="padding: 5px 10px; font-size: 12px;">Delete</button></td>
+                        <td><span class="tooltip-icon" title="Primary default for problem-solving goals">✓ PRIMARY</span></td>
+                        <td><select class="reorder-dropdown" onchange="reorderRow(this, 'bundleTable')"><option>Position 1</option><option>Position 2</option><option>Position 3</option><option selected>Position 4</option></select></td>
+                        <td><input type="text" class="comment-field" placeholder="Add comment..." value="Fast & focused"></td>
+                        <td><button onclick="editBundle(this)" style="padding: 5px 8px; font-size: 12px;">Edit</button> <button class="delete-btn" onclick="deleteRow(this)">Delete</button> <button class="export-btn" onclick="exportTable('bundles', 'row', this)">Export</button></td>
                     </tr>
                 </table>
             </div>
@@ -1227,10 +1474,10 @@
 
     <!-- SCREEN 4: ARCHITECTURE OVERVIEW -->
     <div class="screen" id="architecture">
-        <h2 class="section-title">System Architecture Overview</h2>
+        <h2 class="section-title">System Architecture Overview <span class="tooltip-icon" title="View system design and integration points">?</span></h2>
 
         <div class="wireframe-box">
-            <div class="wireframe-label">Data Flow & Integration with Phase 0</div>
+            <div class="wireframe-label">Data Flow & Integration with Phase 0 <span class="tooltip-icon" title="How goals flow through the system">?</span></div>
 
             <div style="font-size: 12px; color: #666; margin: 15px 0;">
                 <p><strong>Goal Creation Flow:</strong></p>
@@ -1254,9 +1501,9 @@
                 </div>
             </div>
 
-            <!-- ANNOTATION: System Architecture showing integration points. -->
+            <!-- ENHANCED S350: System Architecture showing integration points with tooltips. -->
             <div style="background: #f5f5f5; padding: 15px; border-radius: 4px; margin: 15px 0; font-size: 12px;">
-                <p><strong>Backend Integration Points:</strong></p>
+                <p><strong>Backend Integration Points <span class="tooltip-icon" title="System components and their connections">?</span></strong></p>
                 <ul style="margin: 10px 0 0 20px;">
                     <li><strong>Phase 0 Decision Log:</strong> Goal creation → immutable entry in decision-log.ts</li>
                     <li><strong>Identity Gate:</strong> Admin authentication required (ADMIN tier only)</li>
@@ -1315,32 +1562,169 @@
         alert('Editing participant: ' + name);
     }
 
-    // UPDATED S350: Add handler for adding new participant
+    // ENHANCED S350: Add handler for editing bundles
+    function editBundle(el) {
+        alert('[In production] Open modal to edit bundle configuration.');
+    }
+
+    // ENHANCED S350: Add handler for adding new participant
     function addParticipant() {
         alert('[In production] Open modal to add new participant with capability form.');
     }
 
-    // UPDATED S350: Add handler for creating new bundle
+    // ENHANCED S350: Add handler for creating new bundle
     function createNewBundle() {
         alert('[In production] Open modal to create and configure new bundle.');
     }
 
-    // UPDATED S350: Add handlers for moving rows up/down
-    function moveUp(el) {
-        var row = el.closest('tr');
-        if (row.previousElementSibling && row.previousElementSibling.tagName === 'TR') {
-            row.parentNode.insertBefore(row, row.previousElementSibling);
+    // ENHANCED S350: Add handler for creating groups
+    function createGroup(context) {
+        const groupName = prompt('Enter group name:', 'New Group');
+        if (groupName) {
+            alert('[In production] Group "' + groupName + '" created in ' + context + '. Update UI to show group hierarchy.');
         }
     }
 
-    function moveDown(el) {
-        var row = el.closest('tr');
-        if (row.nextElementSibling && row.nextElementSibling.tagName === 'TR') {
-            row.parentNode.insertBefore(row.nextElementSibling, row);
+    // ENHANCED S350: Sort table by column
+    function sortTable(headerEl, tableType) {
+        const table = tableType === 'participants' ? document.getElementById('participantTable') :
+                     tableType === 'bundles' ? document.getElementById('bundleTable') : null;
+        if (!table) return;
+
+        const headerText = headerEl.textContent.toLowerCase();
+        const rows = Array.from(table.querySelectorAll('tbody tr, tr:not(:first-child)'));
+        const isAsc = headerEl.getAttribute('data-sort') === 'asc';
+
+        // Toggle sort direction
+        document.querySelectorAll('.sortable-header').forEach(h => {
+            h.removeAttribute('data-sort');
+            h.querySelector('.sort-indicator').textContent = '';
+        });
+
+        headerEl.setAttribute('data-sort', isAsc ? 'desc' : 'asc');
+        headerEl.querySelector('.sort-indicator').textContent = isAsc ? ' ↓' : ' ↑';
+
+        rows.sort((a, b) => {
+            const aText = a.cells[1].textContent.toLowerCase();
+            const bText = b.cells[1].textContent.toLowerCase();
+            const comparison = aText.localeCompare(bText);
+            return isAsc ? -comparison : comparison;
+        });
+
+        // Reorder DOM and update row numbers
+        rows.forEach((row, idx) => {
+            table.appendChild(row);
+            row.querySelector('.row-number').textContent = idx + 1;
+        });
+    }
+
+    // ENHANCED S350: Reorder row based on dropdown selection
+    function reorderRow(selectEl, tableId) {
+        const table = document.getElementById(tableId);
+        const row = selectEl.closest('tr');
+        const targetPosition = parseInt(selectEl.value.match(/\d+/)[0]);
+        const tbody = table.querySelector('tbody') || table;
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        // Remove current row from array
+        const currentIndex = rows.indexOf(row);
+        rows.splice(currentIndex, 1);
+
+        // Insert at new position
+        if (targetPosition <= rows.length) {
+            tbody.insertBefore(row, rows[targetPosition - 1]);
+        } else {
+            tbody.appendChild(row);
+        }
+
+        // Update all row numbers
+        updateRowNumbers(tableId);
+    }
+
+    // ENHANCED S350: Update row numbers after reordering
+    function updateRowNumbers(tableId) {
+        const table = document.getElementById(tableId);
+        const rows = table.querySelectorAll('tbody tr, tr:not(:first-child)');
+        rows.forEach((row, idx) => {
+            const rowNumCell = row.querySelector('.row-number');
+            if (rowNumCell) {
+                rowNumCell.textContent = idx + 1;
+            }
+        });
+    }
+
+    // ENHANCED S350: Delete row from table
+    function deleteRow(buttonEl) {
+        if (confirm('Are you sure you want to delete this row?')) {
+            const row = buttonEl.closest('tr');
+            const tableId = row.closest('table').id;
+            row.remove();
+            updateRowNumbers(tableId);
+            alert('[In production] Row deleted and backend updated.');
         }
     }
 
-    // Tooltip on hover
+    // ENHANCED S350: Export table data as CSV
+    function exportTable(tableType, scope, buttonEl) {
+        let data = [];
+        let fileName = '';
+
+        if (tableType === 'participants') {
+            if (scope === 'all') {
+                fileName = 'participants-all.csv';
+                const table = document.getElementById('participantTable');
+                const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent.replace(/\n/g, ' ').trim());
+                data.push(headers.join(','));
+                table.querySelectorAll('tbody tr, tr:not(:first-child)').forEach(row => {
+                    const cells = Array.from(row.querySelectorAll('td')).map(td => '"' + td.textContent.trim() + '"');
+                    data.push(cells.join(','));
+                });
+            } else if (scope === 'row') {
+                fileName = 'participant-row.csv';
+                const row = buttonEl.closest('tr');
+                const cells = Array.from(row.querySelectorAll('td')).map(td => '"' + td.textContent.trim() + '"');
+                data.push(cells.join(','));
+            }
+        } else if (tableType === 'bundles') {
+            if (scope === 'all') {
+                fileName = 'bundles-all.csv';
+                const table = document.getElementById('bundleTable');
+                const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent.replace(/\n/g, ' ').trim());
+                data.push(headers.join(','));
+                table.querySelectorAll('tbody tr, tr:not(:first-child)').forEach(row => {
+                    const cells = Array.from(row.querySelectorAll('td')).map(td => '"' + td.textContent.trim() + '"');
+                    data.push(cells.join(','));
+                });
+            } else if (scope === 'row') {
+                fileName = 'bundle-row.csv';
+                const row = buttonEl.closest('tr');
+                const cells = Array.from(row.querySelectorAll('td')).map(td => '"' + td.textContent.trim() + '"');
+                data.push(cells.join(','));
+            }
+        }
+
+        if (data.length > 0) {
+            const csv = data.join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            alert('Exported: ' + fileName);
+        }
+    }
+
+    // ENHANCED S350: Initialize all tables with proper row numbering
+    document.addEventListener('DOMContentLoaded', function() {
+        updateRowNumbers('participantTable');
+        updateRowNumbers('bundleTable');
+    });
+
+    // Tooltip styling (existing functionality preserved)
     document.querySelectorAll('.comment-highlight').forEach(el => {
         el.addEventListener('mouseover', function() {
             this.style.backgroundColor = '#fff3cd';
