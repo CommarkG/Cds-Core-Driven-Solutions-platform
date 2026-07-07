@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDS Agents & Skills — Expert Network</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; }
+        .header { background: #1a1a1a; color: #fff; padding: 20px 30px; }
+        .header h1 { font-size: 24px; margin-bottom: 10px; }
+        .header p { font-size: 13px; color: #ccc; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
+        h2 { font-size: 18px; margin: 40px 0 20px; color: #003366; border-bottom: 2px solid #003366; padding-bottom: 10px; }
+        .agents-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .agent-card { background: #fff; border: 2px solid #003366; border-radius: 8px; padding: 25px; transition: all 0.3s; }
+        .agent-card:hover { box-shadow: 0 8px 16px rgba(0,51,102,0.2); transform: translateY(-4px); }
+        .agent-icon { font-size: 32px; margin-bottom: 15px; }
+        .agent-name { font-size: 16px; font-weight: 600; color: #003366; margin-bottom: 8px; }
+        .agent-desc { font-size: 13px; color: #666; margin-bottom: 15px; }
+        .agent-expertise { font-size: 12px; background: #f0f4c3; padding: 12px; border-radius: 4px; margin-bottom: 15px; }
+        .agent-expertise strong { color: #003366; display: block; margin-bottom: 5px; }
+        .agent-link { display: inline-block; background: #0066cc; color: #fff; padding: 8px 12px; text-decoration: none; border-radius: 4px; font-size: 12px; }
+        .agent-link:hover { background: #0052a3; }
+        .intro-box { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 20px; margin-bottom: 30px; border-radius: 4px; }
+        .intro-box h3 { color: #003366; margin-bottom: 10px; }
+        .wisdom-box { background: #fff; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 4px; }
+        .wisdom-box h4 { color: #003366; margin-bottom: 10px; }
+        .wisdom-box ul { margin-left: 20px; }
+        .wisdom-box li { margin-bottom: 8px; font-size: 13px; }
+        .flow-diagram { background: #f9f9f9; padding: 20px; border-radius: 4px; margin: 20px 0; font-family: monospace; white-space: pre-wrap; font-size: 12px; color: #1a1a1a; }
+        .footer { background: #1a1a1a; color: #fff; padding: 20px 30px; text-align: center; font-size: 12px; margin-top: 60px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🤖 CDS Agents & Skills</h1>
+    <p>Expert network connected to Accumulating Wisdom. Each agent proactively warns, learns, and improves.</p>
+</div>
+
+<div class="container">
+
+<div class="intro-box">
+    <h3>How CDS Agents Work</h3>
+    <p>
+    Each agent is a specialized top expert that watches your work, draws insights from accumulated wisdom, and proactively warns about patterns we've seen before.
+    Agents run daily standup, feed incidents into wisdom, and prevent you from repeating past mistakes.
+    </p>
+</div>
+
+<h2>👥 The 9 Expert Agents</h2>
+
+<div class="agents-grid">
+
+    <!-- INHERITANCE -->
+    <div class="agent-card">
+        <div class="agent-icon">🧬</div>
+        <div class="agent-name">Inheritance Expert</div>
+        <div class="agent-desc">Detects how past decisions block current work. Warns about inherited conflicts before they cascade.</div>
+        <div class="agent-expertise">
+            <strong>Expertise:</strong>
+            Schema conflicts, technical debt, legacy migration, breaking points
+        </div>
+        <a href="CDS-AGENT-INHERITANCE-EXPERT.md" class="agent-link">→ Read Full Definition</a>
+    </div>
+
+    <!-- CONSOLIDATION -->
+    <div class="agent-card">
+        <div class="agent-icon">🔀</div>
+        <div class="agent-name">Consolidation Expert</div>
+        <div class="agent-desc">Eliminates duplication when third similar implementation appears. Prevents premature abstraction.</div>
+        <div class="agent-expertise">
+            <strong>Expertise:</strong>
+            DRY violations, code reuse, template generation, abstraction timing
+        </div>
+        <a href="CDS-AGENT-CONSOLIDATION-EXPERT.md" class="agent-link">→ Read Full Definition</a>
+    </div>
+
+    <!-- PREVENTION -->
+    <div class="agent-card">
+        <div class="agent-icon">🚫</div>
+        <div class="agent-name">Prevention Expert</div>
+        <div class="agent-desc">Converts human failures into mechanical gates. Makes bad decisions impossible, not just discouraged.</div>
+        <div class="agent-expertise">
+            <strong>Expertise:</strong>
+            Gate design, hardwiring, mechanical enforcement, advisory-to-hardwired conversion
+        </div>
+        <a href="CDS-AGENT-PREVENTION-EXPERT.md" class="agent-link">→ Read Full Definition</a>
+    </div>
+
+    <!-- STABILITY -->
+    <div class="agent-card">
+        <div class="agent-icon">⚙️</div>
+        <div class="agent-name">Stability Expert</div>
+        <div class="agent-desc">Catches stability risks before they become incidents. Tests at 3x expected max to find breaking points early.</div>
+        <div class="agent-expertise">
+            <strong>Expertise:</strong>
+            Load testing, performance modeling, graceful degradation, recovery patterns
+        </div>
+        <a href="CDS-AGENT-STABILITY-EXPERT.md" class="agent-link">→ Read Full Definition</a>
+    </div>
+
+    <!-- SECURITY -->
+    <div class="agent-card">
+        <div class="agent-icon">🔒</div>
+        <div class="agent-name">Security Expert</div>
+        <div class="agent-desc">Prevents zero repeat vulnerabilities. Every breach is learned once, never happens again.</div>
+        <div class="agent-expertise">
+            <strong>Expertise:</strong>
+            Vulnerability patterns, breach forensics, audit trails, compliance, secure design
+        </div>
+        <a href="CDS-AGENT-SECURITY-EXPERT.md" class="agent-link">→ Read Full Definition</a>
+    </div>
+
+    <!-- SCALABILITY -->
+    <div class="agent-card">
+        <div class="agent-icon">📈</div>
+        <div class="agent-name">Scalability Expert</div>
+        <div class="agent-desc">Predicts bottlenecks before systems break. Tests scaling across volume, complexity, and team growth.</div>
+        <div class="agent-expertise">
+            <strong>Expertise:</strong>
+            Growth modeling, bottleneck prediction, scaling migration, 3-axis testing
+        </div>
+        <a href="CDS-AGENT-SCALABILITY-EXPERT.md" class="agent-link">→ Read Full Definition</a>
+    </div>
+
+    <!-- VOCABULARY -->
+    <div class="agent-card">
+        <div class="agent-icon">📚</div>
+        <div class="agent-name">Vocabulary Expert</div>
+        <div class="agent-desc">Ensures consistent, clear terminology. Prevents vocabulary drift and catches undefined terms early.</div>
+        <div class="agent-expertise">
+            <strong>Expertise:</strong>
+            Term definition, terminology consistency, vocabulary evolution, clarity validation
+        </div>
+        <a href="CDS-AGENT-VOCABULARY-EXPERT.md" class="agent-link">→ Read Full Definition</a>
+    </div>
+
+    <!-- NAMING -->
+    <div class="agent-card">
+        <div class="agent-icon">🏷️</div>
+        <div class="agent-name">Naming Expert</div>
+        <div class="agent-desc">Makes all identifiers self-documenting. Enforces CDS- standard, prevents cryptic naming.</div>
+        <div class="agent-expertise">
+            <strong>Expertise:</strong>
+            CDS- enforcement, kebab-case conventions, descriptive naming, abbreviation prevention
+        </div>
+        <a href="CDS-AGENT-NAMING-EXPERT.md" class="agent-link">→ Read Full Definition</a>
+    </div>
+
+    <!-- SCHEMA -->
+    <div class="agent-card">
+        <div class="agent-icon">🏗️</div>
+        <div class="agent-name">Schema & Hierarchies Expert</div>
+        <div class="agent-desc">Validates data structure design, prevents circular hierarchies, ensures relational integrity.</div>
+        <div class="agent-expertise">
+            <strong>Expertise:</strong>
+            Schema design, hierarchy validation, relational integrity, migration safety, normalization
+        </div>
+        <a href="CDS-AGENT-SCHEMA-HIERARCHIES-EXPERT.md" class="agent-link">→ Read Full Definition</a>
+    </div>
+
+</div>
+
+<h2>🔄 How Agents Connect to Accumulating Wisdom</h2>
+
+<div class="flow-diagram">
+Daily Standup (Morning):
+┌─ Inheritance: "Watch for schema conflicts"
+├─ Consolidation: "Third instance? Trigger consolidation check"
+├─ Prevention: "These gates are active"
+├─ Stability: "You're approaching [scale limit]"
+├─ Security: "This vulnerability was exploited before"
+├─ Scalability: "Prior systems bottlenecked here"
+├─ Vocabulary: "New term? Must be defined first"
+└─ Naming: "CDS- prefix enforced, [file] non-compliant"
+
+During Work:
+Agents observe → Detect problems → Warn proactively
+
+When Incident Occurs:
+Agents search Wisdom → Offer prior solutions
+OR extract new patterns → Store in Wisdom immediately
+
+Learning Loop:
+Each cycle, agents extract new insights → Feed to Wisdom
+Next cycle, Wisdom grows richer → Prevention improves ↑
+</div>
+
+<h2>📖 Accumulating Wisdom Hub</h2>
+
+<div class="wisdom-box">
+    <h4>What is Accumulating Wisdom?</h4>
+    <p>
+    Permanent institutional memory capturing problem definitions, solutions, nuances, pitfalls, and success patterns.
+    Organized by agent domain. Grows every cycle. Makes each builder smarter.
+    </p>
+    <a href="CDS-ACCUMULATING-WISDOM-ARCHITECTURE.md" style="display: inline-block; margin-top: 15px; background: #0066cc; color: #fff; padding: 8px 12px; text-decoration: none; border-radius: 4px; font-size: 12px;">→ Read Full Architecture</a>
+</div>
+
+<div class="wisdom-box">
+    <h4>8 Wisdom Storage Domains</h4>
+    <ul>
+        <li><strong>CDS-WISDOM-INHERITANCE.md:</strong> Schema conflicts, inherited debt, breaking points</li>
+        <li><strong>CDS-WISDOM-CONSOLIDATION.md:</strong> Duplication patterns, consolidation opportunities, timing</li>
+        <li><strong>CDS-WISDOM-PREVENTION.md:</strong> Gate effectiveness, advisory→mechanical conversions</li>
+        <li><strong>CDS-WISDOM-STABILITY.md:</strong> Instability patterns, performance degradation, recovery</li>
+        <li><strong>CDS-WISDOM-SECURITY.md:</strong> Vulnerabilities, breach patterns, prevention gates</li>
+        <li><strong>CDS-WISDOM-SCALABILITY.md:</strong> Bottleneck patterns, 3x testing results, migration approaches</li>
+        <li><strong>CDS-WISDOM-VOCABULARY.md:</strong> Term drift, definition clarity, terminology evolution</li>
+        <li><strong>CDS-WISDOM-NAMING.md:</strong> Naming clarity, pattern consistency, abbreviation lessons</li>
+    </ul>
+</div>
+
+<h2>⚡ Agent Activation Timeline</h2>
+
+<div class="wisdom-box">
+    <h4>How Agents Become Active</h4>
+    <ul>
+        <li><strong>Immediately:</strong> All 9 agents watch your work (background monitoring)</li>
+        <li><strong>Daily Standup:</strong> Each agent offers morning briefing with relevant warnings</li>
+        <li><strong>During Work:</strong> Agents detect problems, warn proactively before blocking progress</li>
+        <li><strong>Incident Response:</strong> Agents search Wisdom, offer prior solutions or extract new patterns</li>
+        <li><strong>Learning Loop:</strong> Agents feed new insights to Wisdom (cycle-to-cycle improvement)</li>
+        <li><strong>Next Cycle:</strong> Wisdom grows richer, agent warnings become more targeted, builders become smarter</li>
+    </ul>
+</div>
+
+<h2>🎯 Success Metrics</h2>
+
+<div class="wisdom-box">
+    <h4>By Quarter, Measure</h4>
+    <ul>
+        <li><strong>Incident Reduction:</strong> Fewer problems in categories we've warned about</li>
+        <li><strong>Agent Accuracy:</strong> Do agent warnings match reality? How often correct?</li>
+        <li><strong>Wisdom Growth:</strong> 100+ entries per quarter = richer insights over time</li>
+        <li><strong>Prevention Effectiveness:</strong> How many bad decisions are blocked by mechanical gates?</li>
+        <li><strong>Repeat Prevention:</strong> Zero repeat vulnerabilities (each breach learned once)</li>
+        <li><strong>Scale Success:</strong> Features reach planned size without surprise bottlenecks</li>
+        <li><strong>Naming Compliance:</strong> 100% of files follow CDS- standard</li>
+        <li><strong>Schema Validity:</strong> Zero orphaned references, all hierarchies acyclic</li>
+    </ul>
+</div>
+
+</div>
+
+<div class="footer">
+    <p>CDS Agents & Skills | 9 Expert Agents | 8 Wisdom Domains | Institutional Memory</p>
+    <p>Each agent learns. Wisdom accumulates. No lesson learned twice. No mistake repeated.</p>
+</div>
+
+</body>
+</html>
