@@ -370,7 +370,116 @@ Example — Wiring for "Template":
 
 ---
 
-<h2>10. Reading This Schema</h2>
+<h2>10. DRAFT PROPOSAL: Applying Schema to Example Terms</h2>
+
+<p><strong>Status:</strong> DRAFT PROPOSAL | Ready for deep-dive discussion | <strong>Session Scheduled: 2026-07-08</strong></p>
+
+<p>This section shows how vocabulary terms are documented using the schema structure:</p>
+
+<h3>Example Term 1: "Template" (Artifact)</h3>
+
+<table>
+  <tr>
+    <td><strong>GROUP:</strong> Artifacts</td>
+  </tr>
+  <tr>
+    <td><strong>DEFINITION:</strong> A repeatable structure duplicated with all code + wiring inside. Enables infinite scaling without losing consistency.
+    <br><strong>Good Ex 1:</strong> Dashboard Template (title + filters + table) used by Participant, Bundle, Learnings dashboards
+    <br><strong>Good Ex 2:</strong> Workflow Template (intro + steps + review + confirm) used by Goal Wizard, onboarding
+    <br><strong>Bad Ex 1:</strong> Component library without wiring (just UI, no system integration)
+    <br><strong>Bad Ex 2:</strong> Documented process in Notion without executable code
+    </td>
+  </tr>
+  <tr>
+    <td><strong>CORE HIERARCHIES:</strong> Contains Elements, Variants, Wiring, Tests | Contained by CoreSpine</td>
+  </tr>
+  <tr>
+    <td><strong>RELATIONSHIPS:</strong> Role: Enables feature scaling | Dependencies: Schema, Checklist | Serving: Consistency | References: CoreSpine, Pattern</td>
+  </tr>
+  <tr>
+    <td><strong>WIRING:</strong> Schema nodes: decisions.template | Git: /templates/{name}/ | Checklist gate: Template Verification | CI/CD: Pre-commit hook</td>
+  </tr>
+  <tr>
+    <td><strong>UPDATING:</strong> CORE = locked | SCOPE 1 = evolve with approval | SCOPE 2+ = evolve gradually</td>
+  </tr>
+  <tr>
+    <td><strong>STATUS/TAG:</strong> Status: ACTIVE | Tags: HARDWIRED_STRUCTURE, TEMPLATE, DESIGN, CORE</td>
+  </tr>
+</table>
+
+<h3 style="margin-top: 30px;">Example Term 2: "Status" (State)</h3>
+
+<table>
+  <tr>
+    <td><strong>GROUP:</strong> States</td>
+  </tr>
+  <tr>
+    <td><strong>DEFINITION:</strong> Current condition (mutually exclusive). Five values: ACTIVE, PENDING, DRAFT, BLOCKED, ARCHIVED.
+    <br><strong>Good Ex 1:</strong> Task "BLOCKED" with reason: waiting on Yariv decision
+    <br><strong>Good Ex 2:</strong> Document "DRAFT" indicates awaiting approval, cannot proceed
+    <br><strong>Bad Ex 1:</strong> "ACTIVE" and "PENDING" together (contradictory)
+    <br><strong>Bad Ex 2:</strong> BLOCKED with no reason given
+    </td>
+  </tr>
+  <tr>
+    <td><strong>CORE HIERARCHIES:</strong> Contains five status values | Used by every term, task, artifact</td>
+  </tr>
+  <tr>
+    <td><strong>RELATIONSHIPS:</strong> Role: Indicates condition | Serving: Enables progress tracking | References: Tag, Phase, Authority</td>
+  </tr>
+  <tr>
+    <td><strong>WIRING:</strong> Schema: decisions.status | Enforcement: Gates transitions | CI/CD: Blocks operations based on status</td>
+  </tr>
+  <tr>
+    <td><strong>STATUS/TAG:</strong> Status: ACTIVE | Tags: GOVERNANCE, CORE, HARDWIRED_RULE</td>
+  </tr>
+</table>
+
+<h3 style="margin-top: 30px;">Example Term 3: "Orchestrator" (Actor)</h3>
+
+<table>
+  <tr>
+    <td><strong>GROUP:</strong> Actors</td>
+  </tr>
+  <tr>
+    <td><strong>DEFINITION:</strong> CDS itself—symbiotic AI + hard-code system. Validates submissions, resolves conflicts (except final disputes), owns glossary.
+    <br><strong>Good Ex 1:</strong> Validates capability submission against schema, approves or rejects with reason
+    <br><strong>Good Ex 2:</strong> Detects platform definition conflicts, initiates triage
+    <br><strong>Bad Ex 1:</strong> Treating Orchestrator as a person (it's a system)
+    <br><strong>Bad Ex 2:</strong> Orchestrator making final dispute decisions (escalates to Yariv)
+    </td>
+  </tr>
+  <tr>
+    <td><strong>CORE HIERARCHIES:</strong> Contains validation logic, triage, glossary | Works with Agent, Authority</td>
+  </tr>
+  <tr>
+    <td><strong>RELATIONSHIPS:</strong> Role: System coordinator | Serving: Consistent decisions | References: Authority, Mechanical Enforcement</td>
+  </tr>
+  <tr>
+    <td><strong>WIRING:</strong> Implementation: Hard-coded gates + AI | Authority: Mechanical → CDS → Yariv | Logging: decision-log.yaml</td>
+  </tr>
+  <tr>
+    <td><strong>STATUS/TAG:</strong> Status: ACTIVE | Tags: CORE, GOVERNANCE, HARDWIRED_RULE, METHODOLOGY</td>
+  </tr>
+</table>
+
+<h2 style="margin-top: 50px;">11. Deep-Dive Session Scheduled</h2>
+
+<p><strong>Date:</strong> 2026-07-08 | <strong>Duration:</strong> 90 minutes | <strong>Attendees:</strong> Yariv, CDS Team</p>
+
+<p><strong>Agenda:</strong></p>
+
+<ul>
+  <li>Review 3 example terms above — do they match your vision?</li>
+  <li>Validate schema structure — adjust 7 dimensions if needed?</li>
+  <li>Confirm term categorization — are 9 groups correct?</li>
+  <li>Finalize wiring rules — how detailed should we be?</li>
+  <li>Decide vocabulary timeline — when to populate full vocabulary?</li>
+</ul>
+
+<p><strong>Outcomes:</strong> Ratify schema, approve examples, start vocabulary population</p>
+
+<h2>12. Reading This Schema</h2>
 
 <p>When you see a term on the Vocabulary page, you should be able to:</p>
 

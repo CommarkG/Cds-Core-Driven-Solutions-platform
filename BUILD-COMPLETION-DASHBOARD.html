@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDS Build Completion Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; }
+        .header { background: #1a1a1a; color: #fff; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 22px; }
+        .nav { display: flex; gap: 30px; }
+        .nav a { color: #fff; text-decoration: none; font-size: 13px; }
+        .nav a:hover { text-decoration: underline; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
+        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+        .status-complete { background: #c8e6c9; color: #1b5e20; }
+        .status-partial { background: #fff9c4; color: #f57f17; }
+        .status-pending { background: #ffcccc; color: #cc0000; }
+        table { width: 100%; border-collapse: collapse; margin: 30px 0; background: #fff; }
+        th, td { border: 1px solid #ddd; padding: 15px; text-align: left; }
+        th { background: #f5f5f5; font-weight: 600; color: #1a1a1a; }
+        tr:hover { background: #f9f9f9; }
+        .page-name { font-weight: 600; color: #003366; }
+        .feature-list { font-size: 12px; color: #666; }
+        .feature-item { display: inline-block; background: #e3f2fd; padding: 3px 6px; border-radius: 2px; margin: 2px; }
+        .btn-details { background: #0066cc; color: #fff; padding: 6px 12px; border-radius: 3px; text-decoration: none; font-size: 12px; display: inline-block; cursor: pointer; border: none; }
+        .btn-details:hover { background: #0052a3; }
+        .details-panel { background: #f9f9f9; border-left: 4px solid #0066cc; padding: 25px; margin: 20px 0; display: none; }
+        .details-panel.show { display: block; }
+        .details-panel h4 { color: #003366; margin-bottom: 15px; font-size: 14px; }
+        .checklist { margin: 15px 0; }
+        .checklist-item { display: flex; align-items: center; margin: 8px 0; }
+        .checklist-item input { margin-right: 10px; }
+        .checklist-item label { font-size: 13px; cursor: pointer; flex: 1; }
+        .template-link { color: #0066cc; text-decoration: none; margin-left: 10px; font-size: 11px; }
+        .template-link:hover { text-decoration: underline; }
+        .progress-bar { width: 100%; height: 8px; background: #ddd; border-radius: 4px; overflow: hidden; margin: 10px 0; }
+        .progress-fill { height: 100%; background: #4caf50; transition: width 0.3s; }
+        .vocab-section { background: #fff; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 4px; }
+        .vocab-section h4 { color: #003366; margin-bottom: 15px; font-size: 14px; font-weight: 600; }
+        .vocab-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+        .vocab-item { background: #f5f5f5; padding: 10px; border-radius: 3px; font-size: 12px; }
+        .vocab-item strong { color: #003366; display: block; margin-bottom: 5px; }
+        .status-indicator { font-size: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>📊 CDS Build Completion Dashboard</h1>
+    <div class="nav">
+        <a href="#vocabulary">Vocabulary</a>
+        <a href="#templates">Templates</a>
+        <a href="#pages">Pages</a>
+        <a href="#help">Help</a>
+    </div>
+</div>
+
+<div class="container">
+
+<h2 style="margin: 30px 0 20px; color: #1a1a1a;">Project Overview</h2>
+<p style="margin-bottom: 20px; color: #666;">
+CDS Phase 0 (Governance & Vocabulary) — All deliverables tracked with completion status, checklists, and required templates.
+</p>
+
+---
+
+<h3 style="margin-top: 40px; margin-bottom: 20px; color: #003366;">📄 PHASE 0 DOCUMENTS (7 Total)</h3>
+
+<table>
+    <tr>
+        <th style="width: 25%;">Document</th>
+        <th style="width: 35%;">Features / Contents</th>
+        <th style="width: 15%;">Status</th>
+        <th style="width: 25%;">Action</th>
+    </tr>
+    <tr>
+        <td class="page-name">CDS-MASTERPLAN-TRACKER.md</td>
+        <td>
+            <div class="feature-item">5 Phases</div>
+            <div class="feature-item">Status Tracking</div>
+            <div class="feature-item">Task Management</div>
+            <div class="feature-item">Blockers</div>
+        </td>
+        <td><span class="status-badge status-complete">✅ COMPLETE</span></td>
+        <td><button class="btn-details" onclick="toggleDetails('masterplan')">View Checklist</button></td>
+    </tr>
+    <tr>
+        <td class="page-name">SCHEMA-DRAFT.html</td>
+        <td>
+            <div class="feature-item">7 Dimensions</div>
+            <div class="feature-item">Vocabulary Structure</div>
+            <div class="feature-item">Completeness Checklist</div>
+            <div class="feature-item">Hierarchy Rules</div>
+        </td>
+        <td><span class="status-badge status-partial">🟡 DRAFT</span></td>
+        <td><button class="btn-details" onclick="toggleDetails('schema')">View Checklist</button></td>
+    </tr>
+    <tr>
+        <td class="page-name">VOCABULARY-DRAFT.html</td>
+        <td>
+            <div class="feature-item">30+ Terms</div>
+            <div class="feature-item">9 Groups</div>
+            <div class="feature-item">Term Definitions</div>
+            <div class="feature-item">Cross-Links</div>
+        </td>
+        <td><span class="status-badge status-partial">🟡 DRAFT</span></td>
+        <td><button class="btn-details" onclick="toggleDetails('vocabulary')">View Checklist</button></td>
+    </tr>
+    <tr>
+        <td class="page-name">TAGS-STATUSES-DRAFT.html</td>
+        <td>
+            <div class="feature-item">5 Statuses</div>
+            <div class="feature-item">10 Tag Categories</div>
+            <div class="feature-item">Transition Rules</div>
+            <div class="feature-item">Hygiene Rules</div>
+        </td>
+        <td><span class="status-badge status-partial">🟡 DRAFT</span></td>
+        <td><button class="btn-details" onclick="toggleDetails('tags')">View Checklist</button></td>
+    </tr>
+    <tr>
+        <td class="page-name">AI-BEHAVIOR-DRAFT.html</td>
+        <td>
+            <div class="feature-item">3 Zones (LOCKED/GUIDED/OPEN)</div>
+            <div class="feature-item">Decision Process</div>
+            <div class="feature-item">Communication Patterns</div>
+            <div class="feature-item">Pitfall Prevention</div>
+        </td>
+        <td><span class="status-badge status-partial">🟡 DRAFT</span></td>
+        <td><button class="btn-details" onclick="toggleDetails('aibehavior')">View Checklist</button></td>
+    </tr>
+    <tr>
+        <td class="page-name">CDS-METHODOLOGY-NAMING-PROPOSAL.md</td>
+        <td>
+            <div class="feature-item">8 Name Options</div>
+            <div class="feature-item">CAST Recommended</div>
+            <div class="feature-item">Rationale per Option</div>
+            <div class="feature-item">Usage Examples</div>
+        </td>
+        <td><span class="status-badge status-pending">🔴 AWAITING DECISION</span></td>
+        <td><button class="btn-details" onclick="toggleDetails('naming')">View Checklist</button></td>
+    </tr>
+    <tr>
+        <td class="page-name">DEVELOPER-WIREFRAME-TEMPLATES-DRAFT.html</td>
+        <td>
+            <div class="feature-item">4 Page Templates</div>
+            <div class="feature-item">3 Element Templates</div>
+            <div class="feature-item">2 Flow Templates</div>
+            <div class="feature-item">Spacing Grid</div>
+        </td>
+        <td><span class="status-badge status-partial">🟡 DRAFT</span></td>
+        <td><button class="btn-details" onclick="toggleDetails('templates')">View Checklist</button></td>
+    </tr>
+</table>
+
+<!-- CHECKLIST PANELS -->
+
+<div id="masterplan" class="details-panel">
+    <h4>CDS-MASTERPLAN-TRACKER.md — Completion Checklist</h4>
+    <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Track this document's status against its required template.</p>
+    <div class="checklist">
+        <div class="checklist-item">
+            <input type="checkbox" id="mp1" checked>
+            <label for="mp1">5 phases defined (0-4)</label>
+            <a href="CDS-MASTERPLAN-TRACKER.md#phases" class="template-link">→ Document</a>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="mp2" checked>
+            <label for="mp2">All tasks listed with status</label>
+            <a href="CDS-MASTERPLAN-TRACKER.md#phase-0" class="template-link">→ Phase 0 Tasks</a>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="mp3" checked>
+            <label for="mp3">Blockers identified</label>
+            <a href="CDS-MASTERPLAN-TRACKER.md#blockers" class="template-link">→ Blockers</a>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="mp4" checked>
+            <label for="mp4">Status tags defined</label>
+            <a href="TAGS-STATUSES-DRAFT.html" class="template-link">→ Tags/Statuses</a>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="mp5" checked>
+            <label for="mp5">Committed to git</label>
+        </div>
+    </div>
+    <p style="font-size: 11px; color: #666; margin-top: 15px;">Progress: <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div> 100% Complete</p>
+</div>
+
+<div id="schema" class="details-panel">
+    <h4>SCHEMA-DRAFT.html — Completion Checklist</h4>
+    <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Verify schema structure is complete before populating vocabulary.</p>
+    <div class="checklist">
+        <div class="checklist-item">
+            <input type="checkbox" id="sch1" checked>
+            <label for="sch1">7 core dimensions defined</label>
+            <a href="SCHEMA-DRAFT.html#dimensions" class="template-link">→ Document</a>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="sch2" checked>
+            <label for="sch2">Hierarchy rules explained</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="sch3" checked>
+            <label for="sch3">Relationship types documented</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="sch4" checked>
+            <label for="sch4">Wiring specifications included</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="sch5">
+            <label for="sch5">✋ BLOCKING: Yariv approval required</label>
+        </div>
+    </div>
+    <p style="font-size: 11px; color: #666; margin-top: 15px;">Progress: <div class="progress-bar"><div class="progress-fill" style="width: 80%;"></div></div> 80% (Awaiting approval)</p>
+</div>
+
+<div id="vocabulary" class="details-panel">
+    <h4>VOCABULARY-DRAFT.html — Completion Checklist</h4>
+    <p style="font-size: 12px; color: #666; margin-bottom: 15px;">All vocabulary terms must follow schema structure once approved.</p>
+    <div class="checklist">
+        <div class="checklist-item">
+            <input type="checkbox" id="voc1" checked>
+            <label for="voc1">9 vocabulary groups defined</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="voc2" checked>
+            <label for="voc2">30+ terms with template structure</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="voc3" checked>
+            <label for="voc3">All terms tagged and linked</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="voc4">
+            <label for="voc4">✋ BLOCKED: Cannot populate until schema approved</label>
+        </div>
+    </div>
+    <p style="font-size: 11px; color: #666; margin-top: 15px;">Progress: <div class="progress-bar"><div class="progress-fill" style="width: 70%;"></div></div> 70% (Blocked on schema)</p>
+</div>
+
+<div id="tags" class="details-panel">
+    <h4>TAGS-STATUSES-DRAFT.html — Completion Checklist</h4>
+    <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Classification system for all governance items.</p>
+    <div class="checklist">
+        <div class="checklist-item">
+            <input type="checkbox" id="tag1" checked>
+            <label for="tag1">5 status values defined (ACTIVE/PENDING/DRAFT/BLOCKED/ARCHIVED)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="tag2" checked>
+            <label for="tag2">10 tag categories with 80+ tags</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="tag3" checked>
+            <label for="tag3">Status transition rules documented</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="tag4" checked>
+            <label for="tag4">Tag hygiene rules (max 7 per item)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="tag5">
+            <label for="tag5">✋ Awaiting feedback on system</label>
+        </div>
+    </div>
+    <p style="font-size: 11px; color: #666; margin-top: 15px;">Progress: <div class="progress-bar"><div class="progress-fill" style="width: 85%;"></div></div> 85% (Ready for feedback)</p>
+</div>
+
+<div id="aibehavior" class="details-panel">
+    <h4>AI-BEHAVIOR-DRAFT.html — Completion Checklist</h4>
+    <p style="font-size: 12px; color: #666; margin-bottom: 15px;">How Claude operates within CDS constraints.</p>
+    <div class="checklist">
+        <div class="checklist-item">
+            <input type="checkbox" id="ai1" checked>
+            <label for="ai1">3 zones defined (LOCKED/GUIDED/OPEN)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="ai2" checked>
+            <label for="ai2">Zone identification process documented</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="ai3" checked>
+            <label for="ai3">Communication patterns specified</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="ai4" checked>
+            <label for="ai4">7 common pitfalls with solutions</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="ai5">
+            <label for="ai5">✋ Awaiting approval to encode in system prompts</label>
+        </div>
+    </div>
+    <p style="font-size: 11px; color: #666; margin-top: 15px;">Progress: <div class="progress-bar"><div class="progress-fill" style="width: 90%;"></div></div> 90% (Ready for approval)</p>
+</div>
+
+<div id="naming" class="details-panel">
+    <h4>CDS-METHODOLOGY-NAMING-PROPOSAL.md — Decision Required</h4>
+    <p style="font-size: 12px; color: #666; margin-bottom: 15px;">🔴 BLOCKING: Yariv decision needed to move forward.</p>
+    <div class="checklist">
+        <div class="checklist-item">
+            <input type="checkbox" id="name1" checked>
+            <label for="name1">8 naming options presented</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="name2" checked>
+            <label for="name2">CAST recommended with rationale</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="name3" checked>
+            <label for="name3">Secondary candidates (COHERE, NEXUS, ARMOR)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="name4">
+            <label for="name4">⏳ AWAITING YARIV DECISION</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="name5">
+            <label for="name5">After approval: Update all governance docs</label>
+        </div>
+    </div>
+    <p style="font-size: 11px; color: #666; margin-top: 15px;">Progress: <div class="progress-bar"><div class="progress-fill" style="width: 60%;"></div></div> 60% (Awaiting decision)</p>
+</div>
+
+<div id="templates" class="details-panel">
+    <h4>DEVELOPER-WIREFRAME-TEMPLATES-DRAFT.html — Completion Checklist</h4>
+    <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Lean templates for consistent feature development.</p>
+    <div class="checklist">
+        <div class="checklist-item">
+            <input type="checkbox" id="tpl1" checked>
+            <label for="tpl1">4 page templates (Dashboard, Form, Empty, Variants)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="tpl2" checked>
+            <label for="tpl2">3 element templates (Buttons, Inputs, Table)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="tpl3" checked>
+            <label for="tpl3">2 flow templates (CRUD, Multi-step)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="tpl4" checked>
+            <label for="tpl4">Spacing grid & design tokens reference</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="tpl5">
+            <label for="tpl5">✋ Awaiting approval before MVP build starts</label>
+        </div>
+    </div>
+    <p style="font-size: 11px; color: #666; margin-top: 15px;">Progress: <div class="progress-bar"><div class="progress-fill" style="width: 90%;"></div></div> 90% (Ready for approval)</p>
+</div>
+
+---
+
+<h3 id="vocabulary" style="margin-top: 50px; margin-bottom: 20px; color: #003366;">📚 VOCABULARY CONFIRMATION (All Terms from VOCABULARY-DRAFT.html)</h3>
+
+<div class="vocab-section">
+    <h4>GROUP 1: ARTIFACTS — Reusable Structures</h4>
+    <div class="vocab-list">
+        <div class="vocab-item"><strong>Template</strong> Reusable blueprint</div>
+        <div class="vocab-item"><strong>CoreSpine</strong> Master pattern</div>
+        <div class="vocab-item"><strong>CoreSpiral</strong> Iterative improvement</div>
+        <div class="vocab-item"><strong>CoreCycles</strong> Time-based loops</div>
+        <div class="vocab-item"><strong>CoreCouncil</strong> Decision group</div>
+        <div class="vocab-item"><strong>CoreCircle</strong> Participation levels</div>
+        <div class="vocab-item"><strong>Pattern</strong> Proven solution</div>
+        <div class="vocab-item"><strong>Checklist</strong> Verification list</div>
+        <div class="vocab-item"><strong>Schema</strong> Data structure</div>
+        <div class="vocab-item"><strong>Integration</strong> Connection point</div>
+    </div>
+</div>
+
+<div class="vocab-section">
+    <h4>GROUP 2: PROCESSES — Repeatable Flows</h4>
+    <div class="vocab-list">
+        <div class="vocab-item"><strong>Flow</strong> User process</div>
+        <div class="vocab-item"><strong>Pipeline</strong> System process</div>
+        <div class="vocab-item"><strong>Iteration</strong> Cycle</div>
+        <div class="vocab-item"><strong>Workflow</strong> Complex sequence</div>
+        <div class="vocab-item"><strong>Escalation</strong> Authority chain</div>
+    </div>
+</div>
+
+<div class="vocab-section">
+    <h4>GROUP 3: ACTORS — Who Does What</h4>
+    <div class="vocab-list">
+        <div class="vocab-item"><strong>Orchestrator</strong> CDS system</div>
+        <div class="vocab-item"><strong>Agent</strong> Claude AI</div>
+        <div class="vocab-item"><strong>Skill</strong> Capability</div>
+        <div class="vocab-item"><strong>Role</strong> Function</div>
+        <div class="vocab-item"><strong>Dependencies</strong> Requirements</div>
+        <div class="vocab-item"><strong>Relationships</strong> Connections</div>
+        <div class="vocab-item"><strong>Serving</strong> Purpose</div>
+    </div>
+</div>
+
+<div class="vocab-section">
+    <h4>GROUP 4: STATES — Current Conditions</h4>
+    <div class="vocab-list">
+        <div class="vocab-item"><strong>Status</strong> ACTIVE/PENDING/DRAFT</div>
+        <div class="vocab-item"><strong>Tag</strong> Classification</div>
+        <div class="vocab-item"><strong>DepthLevel</strong> CORE/SCOPE 1/2</div>
+    </div>
+</div>
+
+<div class="vocab-section">
+    <h4>GROUP 5: SYSTEM ARCHITECTURE — How Things Connect</h4>
+    <div class="vocab-list">
+        <div class="vocab-item"><strong>Platform</strong> Complete system</div>
+        <div class="vocab-item"><strong>System</strong> Subsystem</div>
+        <div class="vocab-item"><strong>App</strong> Frontend</div>
+        <div class="vocab-item"><strong>SaaS</strong> Hosted service</div>
+        <div class="vocab-item"><strong>Wiring</strong> Connections</div>
+        <div class="vocab-item"><strong>Architecture</strong> Structure</div>
+        <div class="vocab-item"><strong>PCR</strong> Plan→Code→Review</div>
+    </div>
+</div>
+
+<div class="vocab-section">
+    <h4>GROUP 6: METHODOLOGY — How We Work</h4>
+    <div class="vocab-list">
+        <div class="vocab-item"><strong>[CAST/TBD]</strong> Symbiotic hardcoding + AI</div>
+        <div class="vocab-item"><strong>Mechanical Hardcoding</strong> Enforced rules</div>
+        <div class="vocab-item"><strong>Mechanical Enforcing</strong> System prevents failures</div>
+        <div class="vocab-item"><strong>Authority Approval</strong> Yariv decision</div>
+    </div>
+</div>
+
+<div class="vocab-section">
+    <h4>GROUP 7: COGNITIVE STAGES — What We're Doing</h4>
+    <div class="vocab-list">
+        <div class="vocab-item"><strong>Thinking</strong> Exploring</div>
+        <div class="vocab-item"><strong>Researching</strong> Investigating</div>
+        <div class="vocab-item"><strong>Planning</strong> Designing</div>
+        <div class="vocab-item"><strong>Implementing</strong> Building</div>
+        <div class="vocab-item"><strong>Evolving</strong> Improving</div>
+    </div>
+</div>
+
+<div class="vocab-section">
+    <h4>GROUP 8: QUALITY ASSURANCE — How We Verify</h4>
+    <div class="vocab-list">
+        <div class="vocab-item"><strong>QC</strong> Automated checks</div>
+        <div class="vocab-item"><strong>Sanity Check</strong> Quick manual</div>
+        <div class="vocab-item"><strong>Review</strong> Code review</div>
+        <div class="vocab-item"><strong>Validation</strong> Meets spec?</div>
+        <div class="vocab-item"><strong>Verification</strong> Works?</div>
+        <div class="vocab-item"><strong>Audit</strong> Full compliance</div>
+        <div class="vocab-item"><strong>Deep Dive</strong> Exhaustive analysis</div>
+    </div>
+</div>
+
+<div class="vocab-section">
+    <h4>GROUP 9: DESIGN & UX — Visual/User Layer</h4>
+    <div class="vocab-list">
+        <div class="vocab-item"><strong>UX</strong> Interaction</div>
+        <div class="vocab-item"><strong>UX Element</strong> Interaction component</div>
+        <div class="vocab-item"><strong>UI</strong> Visual design</div>
+        <div class="vocab-item"><strong>UI Element</strong> Visual component</div>
+        <div class="vocab-item"><strong>Page Template</strong> Layout skeleton</div>
+        <div class="vocab-item"><strong>Flow Template</strong> Interaction pattern</div>
+        <div class="vocab-item"><strong>Element Template</strong> Component skeleton</div>
+        <div class="vocab-item"><strong>Wizard Template</strong> Guided process</div>
+    </div>
+</div>
+
+---
+
+<h3 style="margin-top: 50px; margin-bottom: 20px; color: #003366;">📊 COMPLETION SUMMARY</h3>
+
+<table>
+    <tr>
+        <th>Category</th>
+        <th>Total Items</th>
+        <th>Complete</th>
+        <th>Partial</th>
+        <th>Pending</th>
+        <th>Progress</th>
+    </tr>
+    <tr>
+        <td>Documents</td>
+        <td>7</td>
+        <td>1</td>
+        <td>5</td>
+        <td>1</td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width: 71%;"></div></div></td>
+    </tr>
+    <tr>
+        <td>Vocabulary Terms</td>
+        <td>50+</td>
+        <td>30+</td>
+        <td>20+</td>
+        <td>0</td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div></td>
+    </tr>
+    <tr>
+        <td>Templates</td>
+        <td>10</td>
+        <td>10</td>
+        <td>0</td>
+        <td>0</td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div></td>
+    </tr>
+    <tr style="font-weight: 600; background: #f5f5f5;">
+        <td>OVERALL</td>
+        <td>67+</td>
+        <td>41+</td>
+        <td>25+</td>
+        <td>1</td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width: 82%;"></div></div></td>
+    </tr>
+</table>
+
+---
+
+<h3 style="margin-top: 50px; margin-bottom: 20px; color: #003366;">🔴 CRITICAL BLOCKERS</h3>
+
+<table>
+    <tr>
+        <th>Item</th>
+        <th>Blocker</th>
+        <th>Required By</th>
+        <th>Impact</th>
+    </tr>
+    <tr>
+        <td>Schema Ratification</td>
+        <td>Yariv approval</td>
+        <td>2026-07-08</td>
+        <td>Gates vocabulary population + all Phase 1 docs</td>
+    </tr>
+    <tr>
+        <td>Methodology Naming</td>
+        <td>Yariv decision (CAST or other)</td>
+        <td>2026-07-08</td>
+        <td>Becomes core terminology in all docs</td>
+    </tr>
+    <tr>
+        <td>AI Behavior Approval</td>
+        <td>Yariv feedback</td>
+        <td>2026-07-08</td>
+        <td>Shapes all future Claude behavior</td>
+    </tr>
+    <tr>
+        <td>Developer Templates Approval</td>
+        <td>Feedback on wireframes</td>
+        <td>2026-07-10</td>
+        <td>Unblocks MVP build (Phase 1)</td>
+    </tr>
+</table>
+
+---
+
+<p style="text-align: center; margin-top: 50px; color: #666; font-size: 12px;">
+BUILD COMPLETION DASHBOARD | Phase 0 (Governance) | 82% Complete | 4 Blockers Pending
+</p>
+
+</div>
+
+<script>
+function toggleDetails(id) {
+    const panel = document.getElementById(id);
+    const allPanels = document.querySelectorAll('.details-panel');
+    allPanels.forEach(p => p.classList.remove('show'));
+    panel.classList.add('show');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+</script>
+
+</body>
+</html>
