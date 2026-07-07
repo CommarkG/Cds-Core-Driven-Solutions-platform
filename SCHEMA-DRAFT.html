@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDS Vocabulary Schema — Structure & Relationships</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; padding: 30px; }
+        .container { max-width: 1200px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 4px; }
+        h1 { font-size: 28px; margin-bottom: 10px; }
+        .subtitle { color: #666; margin-bottom: 30px; font-size: 14px; }
+        h2 { font-size: 20px; margin-top: 40px; margin-bottom: 20px; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
+        h3 { font-size: 16px; margin-top: 25px; margin-bottom: 15px; color: #003366; }
+        .section { margin-bottom: 40px; }
+        .diagram { background: #f9f9f9; padding: 20px; border-left: 4px solid #003366; margin: 20px 0; font-family: monospace; white-space: pre-wrap; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #f5f5f5; font-weight: 600; }
+        .example { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; margin: 20px 0; }
+        .note { background: #fff3cd; border-left: 4px solid #ff9800; padding: 15px; margin: 20px 0; font-size: 13px; }
+        .warning { background: #ffebee; border-left: 4px solid #f44336; padding: 15px; margin: 20px 0; font-size: 13px; font-weight: 600; }
+        ul { margin-left: 20px; margin-bottom: 15px; }
+        li { margin-bottom: 8px; }
+        code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>CDS Vocabulary Schema</h1>
+<p class="subtitle">Master schema defining how vocabulary terms relate, interconnect, and organize.</p>
+
+<div class="warning">
+⚠️ CRITICAL: This schema must be ratified before populating vocabulary with content.
+No term can be added to the Vocabulary page without conforming to this schema structure.
+</div>
+
+---
+
+<h2>1. Core Principle: Vocabulary Terms Are Interconnected</h2>
+
+<p>
+Every vocabulary term in CDS does not exist in isolation. Each term:
+</p>
+
+<ul>
+  <li><strong>Belongs to a group</strong> (e.g., Process, Artifact, Actor, Pattern)</li>
+  <li><strong>Has a definition</strong> (context + good examples + bad examples)</li>
+  <li><strong>References other terms</strong> (relationships / dependencies)</li>
+  <li><strong>Has a role</strong> (what it does in the system)</li>
+  <li><strong>Has a tag</strong> (status, type, classification)</li>
+  <li><strong>Has wiring</strong> (how it connects to other components)</li>
+  <li><strong>Has update rules</strong> (how it evolves, when it can change)</li>
+</ul>
+
+---
+
+<h2>2. Schema Structure: Seven Core Dimensions</h2>
+
+<p>Every vocabulary term MUST be defined across these seven dimensions:</p>
+
+<table>
+  <tr>
+    <th>Dimension</th>
+    <th>Definition</th>
+    <th>Example (for "Template")</th>
+  </tr>
+  <tr>
+    <td><strong>Group</strong></td>
+    <td>Which vocabulary group does this term belong to? (e.g., Artifact, Process, Actor, Pattern)</td>
+    <td>Artifact (reusable structure)</td>
+  </tr>
+  <tr>
+    <td><strong>Definition</strong></td>
+    <td>Context + purpose + 2 good examples + 2 bad examples + measurements</td>
+    <td>A repeatable structure that can be duplicated with all code + wiring inside</td>
+  </tr>
+  <tr>
+    <td><strong>Core Hierarchies</strong></td>
+    <td>What does this term contain? (parent-child relationships)</td>
+    <td>Template contains: Elements, Variants, Wiring, Tests</td>
+  </tr>
+  <tr>
+    <td><strong>Relationships</strong></td>
+    <td>What other terms does this reference? (Role / Dependencies / Serving)</td>
+    <td>Template uses: CoreSpine, Pattern, Tag, Status</td>
+  </tr>
+  <tr>
+    <td><strong>Wiring</strong></td>
+    <td>How does this connect to the system? (mechanical connections)</td>
+    <td>Template wired to: Git, Schema, Checklist, CI/CD gates</td>
+  </tr>
+  <tr>
+    <td><strong>Updating</strong></td>
+    <td>How/when can this change? (rules + authority)</td>
+    <td>Template: can evolve in SCOPE 1/2, locked in CORE. Yariv approval for breaking changes.</td>
+  </tr>
+  <tr>
+    <td><strong>Tag/Status</strong></td>
+    <td>Current state + classification (from Tags & Statuses page)</td>
+    <td>Status: ACTIVE | Tag: HARDWIRED_STRUCTURE</td>
+  </tr>
+</table>
+
+---
+
+<h2>3. Vocabulary Grouping Hierarchy</h2>
+
+<p>Vocabulary terms are organized into groups and sub-groups:</p>
+
+<div class="diagram">
+VOCABULARY
+├── ARTIFACTS (Reusable Things)
+│   ├── Template
+│   ├── CoreSpine / CoreSpiral / CoreCycles / CoreCouncil / CoreCircle
+│   ├── Pattern
+│   ├── Checklist
+│   ├── Schema
+│   └── Integration
+│
+├── PROCESSES (Repeatable Flows)
+│   ├── Flow / Pipeline
+│   ├── Iteration
+│   ├── Cycle
+│   ├── Workflow
+│   ├── Ritual (Weekly Review, Learning Loop)
+│   └── Escalation
+│
+├── ACTORS (Who Does What)
+│   ├── Orchestrator
+│   ├── Agent (AI)
+│   ├── Skill
+│   ├── Role / Dependencies / Relationships / Serving
+│   └── Authority
+│
+├── STATES (Current Condition)
+│   ├── Status (ACTIVE, PENDING, BLOCKED, COMPLETE)
+│   ├── Tag (HARDWIRED, TEMPLATE, DESIGN, etc.)
+│   ├── Phase (Phase 0, Phase 1, etc.)
+│   └── DepthLevel (CORE, SCOPE 1, SCOPE 2)
+│
+├── SYSTEM ARCHITECTURE (How Things Connect)
+│   ├── Platform / System / App / SaaS
+│   ├── Schema
+│   ├── Wiring
+│   ├── Architecture
+│   ├── PCR (Plan / Code / Review)
+│   └── Integration
+│
+├── METHODOLOGY (How We Work)
+│   ├── [CDS Symbiotic Methodology Name] (TO BE NAMED)
+│   ├── Mechanical Hardcoding
+│   ├── AI Behavior
+│   ├── Mechanical Enforcing
+│   ├── Accountability
+│   └── Authority Approval
+│
+├── COGNITIVE STAGES (What We're Doing)
+│   ├── Thinking
+│   ├── Researching
+│   ├── Planning
+│   ├── Implementing
+│   ├── Evolving
+│   └── Maintenance
+│
+├── QUALITY ASSURANCE (How We Verify)
+│   ├── Sanity Check
+│   ├── Review
+│   ├── Validation (does it meet spec?)
+│   ├── Verification (does it work?)
+│   ├── Audit (full compliance check)
+│   ├── Deep Dive (exhaustive analysis)
+│   ├── QC (quality control)
+│   └── Mechanical Verification (automated gates)
+│
+└── DESIGN & UX (Visual/User Layer)
+    ├── UX (User Experience)
+    ├── UX Element (interaction component)
+    ├── UI (User Interface)
+    ├── UI Element (visual component)
+    ├── Page Template
+    ├── Flow Template
+    ├── Element Template
+    └── Wizard Template
+</div>
+
+---
+
+<h2>4. Term Definition Template (MANDATORY STRUCTURE)</h2>
+
+<p>When adding a term to vocabulary, EVERY term must follow this template:</p>
+
+<div class="diagram">
+[TERM NAME]
+├── Group: [Which group does this belong to?]
+├── Definition: [What is it? Context + purpose]
+│   ├── Good Example 1: [Specific, measurable]
+│   ├── Good Example 2: [Specific, measurable]
+│   ├── Bad Example 1: [What NOT to do]
+│   └── Bad Example 2: [What NOT to do]
+├── Core Hierarchies: [What does it contain?]
+│   ├── Contains: [Sub-elements]
+│   └── Parent: [What contains it?]
+├── Relationships: [Other terms it uses/references]
+│   ├── Role: [What role does this play?]
+│   ├── Dependencies: [What must exist for this to work?]
+│   ├── Serving: [What does this enable?]
+│   └── References: [Other vocabulary terms it relates to]
+├── Wiring: [How does it mechanically connect?]
+│   ├── Mechanical Connections: [Git, Schema, Checklist, CI/CD gates, etc.]
+│   └── Data Flow: [How data enters/exits this term]
+├── Updating: [Change rules + authority]
+│   ├── Evolution Path: [How can this evolve?]
+│   ├── Change Authority: [Who can change this?]
+│   ├── Breaking Changes: [What requires Yariv approval?]
+│   └── Deprecation: [How is this retired?]
+└── Status/Tag: [Current state + classification]
+    ├── Status: [ACTIVE, PENDING, ARCHIVED, etc.]
+    ├── Tags: [HARDWIRED, TEMPLATE, DESIGN, etc.]
+    └── Last Updated: [Date + who]
+</div>
+
+---
+
+<h2>5. Term Relationships: Four Types</h2>
+
+<table>
+  <tr>
+    <th>Relationship Type</th>
+    <th>Definition</th>
+    <th>Example</th>
+  </tr>
+  <tr>
+    <td><strong>Hierarchy</strong></td>
+    <td>Parent-child containment (X contains Y)</td>
+    <td>Template contains: CoreSpine, Variants, Elements</td>
+  </tr>
+  <tr>
+    <td><strong>Dependency</strong></td>
+    <td>X requires Y to function (X depends on Y)</td>
+    <td>Mechanical Hardcoding depends on: Schema, Checklist, Linter</td>
+  </tr>
+  <tr>
+    <td><strong>Reference</strong></td>
+    <td>X uses Y as input/context (X references Y)</td>
+    <td>CoreSpine references: Template, Pattern, Tag, Status</td>
+  </tr>
+  <tr>
+    <td><strong>Serving</strong></td>
+    <td>X enables/supports Y (X serves Y)</td>
+    <td>CoreSpine serves: Template instantiation, infinite scaling</td>
+  </tr>
+</table>
+
+---
+
+<h2>6. Wiring: How Terms Connect Mechanically</h2>
+
+<p>Every term must specify its mechanical wiring:</p>
+
+<ul>
+  <li><strong>Schema Nodes:</strong> What schema.yaml nodes does this term map to?</li>
+  <li><strong>Git Integration:</strong> How is this stored/tracked in git?</li>
+  <li><strong>Checklist Gates:</strong> What checklist items verify this?</li>
+  <li><strong>CI/CD Enforcement:</strong> What pre-commit hooks / linters enforce this?</li>
+  <li><strong>Authority Approval:</strong> What level of approval is required to change this?</li>
+  <li><strong>Audit Trail:</strong> How is change history tracked?</li>
+</ul>
+
+<div class="example">
+Example — Wiring for "Template":
+- Schema Nodes: decisions.template, decisions.core_spine
+- Git: Stored in /templates/{name}/, versioned
+- Checklist: Template Verification Checklist (250+ items)
+- CI/CD: Pre-commit hook validates template structure
+- Authority: CORE templates locked, SCOPE 1/2 can evolve. Breaking changes require Yariv approval.
+- Audit: All template changes logged in git with decision-log references
+</div>
+
+---
+
+<h2>7. Status & Tag System</h2>
+
+<p>Every term has a <strong>Status</strong> (current condition) and <strong>Tags</strong> (classification):</p>
+
+<h3>Status Values (mutually exclusive):</h3>
+<ul>
+  <li><strong>ACTIVE</strong> — Currently used, fully implemented</li>
+  <li><strong>PENDING</strong> — Approved but not yet fully implemented</li>
+  <li><strong>DRAFT</strong> — Proposed, awaiting approval</li>
+  <li><strong>BLOCKED</strong> — Waiting on external dependency</li>
+  <li><strong>ARCHIVED</strong> — No longer used, retained for history</li>
+</ul>
+
+<h3>Tag Examples (can have multiple):</h3>
+<ul>
+  <li><strong>HARDWIRED</strong> — Mechanically enforced, cannot be bypassed</li>
+  <li><strong>TEMPLATE</strong> — Reusable structure</li>
+  <li><strong>DESIGN</strong> — UX/UI component</li>
+  <li><strong>PROCESS</strong> — Repeatable workflow</li>
+  <li><strong>GOVERNANCE</strong> — Authority/approval required</li>
+  <li><strong>SCHEMA</strong> — Part of canonical schema</li>
+  <li><strong>METHODOLOGY</strong> — Core approach/practice</li>
+</ul>
+
+---
+
+<h2>8. Updating Rules: When & How Terms Evolve</h2>
+
+<p>Every term has rules about how it can change:</p>
+
+<table>
+  <tr>
+    <th>Category</th>
+    <th>CORE (Phase 1)</th>
+    <th>SCOPE 1 (Phase 2-3)</th>
+    <th>SCOPE 2+ (Future)</th>
+  </tr>
+  <tr>
+    <td><strong>Name Changes</strong></td>
+    <td>❌ Locked. No changes.</td>
+    <td>⚠️ Yariv approval only. Creates alias.</td>
+    <td>✅ Can evolve, tracked as variant</td>
+  </tr>
+  <tr>
+    <td><strong>Definition Changes</strong></td>
+    <td>❌ Locked. No changes.</td>
+    <td>⚠️ Yariv approval. Must update all references.</td>
+    <td>✅ Can evolve gradually</td>
+  </tr>
+  <tr>
+    <td><strong>Adding Sub-elements</strong></td>
+    <td>⚠️ Yariv approval only</td>
+    <td>✅ Can add in SCOPE 1, approved by CDS</td>
+    <td>✅ Can add freely</td>
+  </tr>
+  <tr>
+    <td><strong>Removing Elements</strong></td>
+    <td>❌ Never remove from CORE</td>
+    <td>❌ Never remove, only deprecate</td>
+    <td>✅ Deprecate, migrate, then remove</td>
+  </tr>
+  <tr>
+    <td><strong>Breaking Changes</strong></td>
+    <td>❌ No breaking changes</td>
+    <td>⚠️ Requires Yariv approval + migration plan</td>
+    <td>✅ Documented deprecation path</td>
+  </tr>
+</table>
+
+---
+
+<h2>9. Vocabulary Completeness Checklist</h2>
+
+<p>Before a term is considered "complete" and can be used, verify:</p>
+
+<ul>
+  <li>☐ Group assigned (and group exists in schema)</li>
+  <li>☐ Definition includes: context + 2 good examples + 2 bad examples + measurements</li>
+  <li>☐ Core hierarchies documented (what it contains, what contains it)</li>
+  <li>☐ All relationships documented (role, dependencies, serving, references)</li>
+  <li>☐ Wiring specified (schema nodes, git path, checklist gates, CI/CD enforcement)</li>
+  <li>☐ Updating rules clear (authority, evolution path, breaking change policy)</li>
+  <li>☐ Status + Tags assigned</li>
+  <li>☐ Related terms cross-linked (in Vocabulary page)</li>
+  <li>☐ Yariv approval (if CORE or breaking change)</li>
+</ul>
+
+---
+
+<h2>10. Reading This Schema</h2>
+
+<p>When you see a term on the Vocabulary page, you should be able to:</p>
+
+<ol>
+  <li>Understand what group it belongs to</li>
+  <li>Read its definition with examples</li>
+  <li>See what other terms it relates to</li>
+  <li>Understand how it mechanically connects to the system</li>
+  <li>Know the rules for changing it</li>
+  <li>See its current status</li>
+</ol>
+
+---
+
+<h2>Next Step</h2>
+
+<p>
+<strong>FOR YARIV:</strong> Ratify this schema structure. Does it work? Should we adjust groupings, dimensions, or rules?
+</p>
+
+<p>
+<strong>AFTER APPROVAL:</strong> Populate the Vocabulary page with terms following this schema exactly. No exceptions.
+</p>
+
+---
+
+<p style="margin-top: 40px; font-size: 12px; color: #666;">
+Schema Version: 1.0 | Date: 2026-07-07 | Status: DRAFT — AWAITING APPROVAL
+</p>
+
+</div>
+
+</body>
+</html>

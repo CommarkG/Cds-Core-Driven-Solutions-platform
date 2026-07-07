@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDS Tags & Statuses — Classification System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; padding: 30px; }
+        .container { max-width: 1200px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 4px; }
+        h1 { font-size: 28px; margin-bottom: 10px; }
+        .subtitle { color: #666; margin-bottom: 30px; font-size: 14px; }
+        h2 { font-size: 20px; margin-top: 50px; margin-bottom: 20px; border-bottom: 2px solid #003366; padding-bottom: 10px; }
+        h3 { font-size: 16px; margin-top: 25px; margin-bottom: 15px; color: #003366; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #f5f5f5; font-weight: 600; }
+        .tag-example { display: inline-block; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 600; margin-right: 5px; margin-bottom: 5px; }
+        .tag-hardwired { background: #ffcccc; color: #cc0000; }
+        .tag-design { background: #e3f2fd; color: #1976d2; }
+        .tag-template { background: #fff3e0; color: #e65100; }
+        .tag-process { background: #f0f4c3; color: #827717; }
+        .tag-governance { background: #f3e5f5; color: #6a1b9a; }
+        .tag-schema { background: #c8e6c9; color: #2e7d32; }
+        .tag-methodology { background: #ffe0b2; color: #e65100; }
+        .tag-core { background: #1a1a1a; color: #fff; }
+        .tag-verification { background: #b3e5fc; color: #0277bd; }
+        .tag-reusable { background: #c8e6c9; color: #1b5e20; }
+        .tag-infrastructure { background: #d1c4e9; color: #3949ab; }
+        .status { display: inline-block; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: 600; }
+        .status-active { background: #c8e6c9; color: #1b5e20; }
+        .status-pending { background: #fff9c4; color: #f57f17; }
+        .status-draft { background: #f0f4c3; color: #827717; }
+        .status-blocked { background: #ffcccc; color: #c62828; }
+        .status-archived { background: #e0e0e0; color: #424242; }
+        .example { background: #f9f9f9; border-left: 4px solid #2196f3; padding: 15px; margin: 15px 0; }
+        .note { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; margin: 20px 0; font-size: 13px; }
+        .warning { background: #ffebee; border-left: 4px solid #f44336; padding: 15px; margin: 20px 0; }
+        ul { margin-left: 20px; margin-bottom: 15px; }
+        li { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>CDS Tags & Statuses</h1>
+<p class="subtitle">Classification system for organizing terms, tasks, and artifacts. Tags describe what something is. Statuses describe what state it's in.</p>
+
+---
+
+<h2>Part 1: STATUS (Mutually Exclusive — Pick One)</h2>
+
+<p><strong>Definition:</strong> Current condition of a term, task, or artifact. Only ONE status per item.</p>
+
+<table>
+    <tr>
+        <th>Status</th>
+        <th>Visual</th>
+        <th>Meaning</th>
+        <th>Transition</th>
+    </tr>
+    <tr>
+        <td><strong>ACTIVE</strong></td>
+        <td><span class="status status-active">ACTIVE</span></td>
+        <td>Fully implemented and currently in use. No further action needed for standard operations.</td>
+        <td>← PENDING (when implementation completes) or DRAFT (after approval)</td>
+    </tr>
+    <tr>
+        <td><strong>PENDING</strong></td>
+        <td><span class="status status-pending">PENDING</span></td>
+        <td>Approved and planned, but not yet fully implemented. In progress.</td>
+        <td>→ ACTIVE (when work completes) or ← DRAFT (after ratification)</td>
+    </tr>
+    <tr>
+        <td><strong>DRAFT</strong></td>
+        <td><span class="status status-draft">DRAFT</span></td>
+        <td>Proposed but awaiting approval/ratification. Not yet approved by authority.</td>
+        <td>→ PENDING (when approved) or ARCHIVED (if rejected)</td>
+    </tr>
+    <tr>
+        <td><strong>BLOCKED</strong></td>
+        <td><span class="status status-blocked">BLOCKED</span></td>
+        <td>Cannot proceed. Waiting on external dependency or authority decision. Time-sensitive.</td>
+        <td>→ PENDING (when blocker removed) or ARCHIVED (if cannot be resolved)</td>
+    </tr>
+    <tr>
+        <td><strong>ARCHIVED</strong></td>
+        <td><span class="status status-archived">ARCHIVED</span></td>
+        <td>No longer used or needed. Kept for history/reference only. Not in active path.</td>
+        <td>← ACTIVE/PENDING/DRAFT (final state, rarely reversed)</td>
+    </tr>
+</table>
+
+<h3>Status Transition Rules</h3>
+
+<ul>
+    <li><strong>DRAFT → PENDING:</strong> Requires ratification/approval (by authority based on term type)</li>
+    <li><strong>PENDING → ACTIVE:</strong> Work completed, verified, deployed</li>
+    <li><strong>ACTIVE → PENDING:</strong> Changes planned, not yet merged</li>
+    <li><strong>Any → BLOCKED:</strong> External dependency discovered, work paused</li>
+    <li><strong>BLOCKED → PENDING:</strong> Blocker removed, work resumed</li>
+    <li><strong>BLOCKED → ARCHIVED:</strong> Blocker cannot be resolved, abandon</li>
+    <li><strong>Any → ARCHIVED:</strong> No longer relevant, retire (final)</li>
+</ul>
+
+<h3>Status in Masterplan Context</h3>
+
+<p>In the Masterplan Tracker (CDS-MASTERPLAN-TRACKER.md), statuses are visual indicators:</p>
+
+<ul>
+    <li>🟢 = On track (ACTIVE)</li>
+    <li>🟡 = At risk or In progress (PENDING, BLOCKED)</li>
+    <li>🔴 = Not started or Blocked (DRAFT, BLOCKED)</li>
+    <li>✅ = Complete (ACTIVE, final)</li>
+    <li>⏳ = Awaiting external input (BLOCKED)</li>
+</ul>
+
+---
+
+<h2>Part 2: TAGS (Non-Mutually Exclusive — Can Have Multiple)</h2>
+
+<p><strong>Definition:</strong> Classification labels. An item can have 0, 1, or many tags. Tags describe WHAT something is, not what STATE it's in.</p>
+
+<h3>Core Tag Groups</h3>
+
+<table>
+    <tr>
+        <th>Tag Category</th>
+        <th>Tags in Group</th>
+        <th>Purpose</th>
+        <th>Mutually Exclusive?</th>
+    </tr>
+    <tr>
+        <td><strong>Hardwiring & Enforcement</strong></td>
+        <td><span class="tag-example tag-hardwired">HARDWIRED_STRUCTURE</span> <span class="tag-example tag-hardwired">HARDWIRED_RULE</span> <span class="tag-example tag-hardwired">HARDWIRED_GATE</span> <span class="tag-example tag-hardwired">MECHANICAL_ENFORCEMENT</span></td>
+        <td>Rules/structures that cannot be bypassed. Enforced at execution layer.</td>
+        <td>No — an item can be both HARDWIRED_STRUCTURE and HARDWIRED_GATE</td>
+    </tr>
+    <tr>
+        <td><strong>Architecture & Design</strong></td>
+        <td><span class="tag-example tag-design">DESIGN</span> <span class="tag-example tag-design">UX</span> <span class="tag-example tag-design">UI</span> <span class="tag-example tag-design">ARCHITECTURE</span> <span class="tag-example tag-design">COMPONENT</span></td>
+        <td>Design and architecture domains</td>
+        <td>No — UX and UI are both valid for a feature</td>
+    </tr>
+    <tr>
+        <td><strong>Artifacts & Reusability</strong></td>
+        <td><span class="tag-example tag-template">TEMPLATE</span> <span class="tag-example tag-template">REUSABLE</span> <span class="tag-example tag-template">CORE_SPINE</span> <span class="tag-example tag-template">PATTERN</span> <span class="tag-example tag-template">FRAMEWORK</span></td>
+        <td>Things that are designed for reuse</td>
+        <td>No — can be TEMPLATE and PATTERN and REUSABLE</td>
+    </tr>
+    <tr>
+        <td><strong>Process & Workflow</strong></td>
+        <td><span class="tag-example tag-process">PROCESS</span> <span class="tag-example tag-process">WORKFLOW</span> <span class="tag-example tag-process">RITUAL</span> <span class="tag-example tag-process">ESCALATION</span> <span class="tag-example tag-process">ITERATION</span></td>
+        <td>How work gets done</td>
+        <td>No — can be PROCESS and ESCALATION</td>
+    </tr>
+    <tr>
+        <td><strong>Governance & Authority</strong></td>
+        <td><span class="tag-example tag-governance">GOVERNANCE</span> <span class="tag-example tag-governance">AUTHORITY</span> <span class="tag-example tag-governance">APPROVAL_REQUIRED</span> <span class="tag-example tag-governance">YARIV_DECISION</span></td>
+        <td>Items requiring authority or oversight</td>
+        <td>No — can need AUTHORITY and APPROVAL_REQUIRED</td>
+    </tr>
+    <tr>
+        <td><strong>System Structure</strong></td>
+        <td><span class="tag-example tag-schema">SCHEMA</span> <span class="tag-example tag-schema">WIRING</span> <span class="tag-example tag-schema">INTEGRATION</span> <span class="tag-example tag-schema">API</span></td>
+        <td>Technical infrastructure connections</td>
+        <td>No — can be SCHEMA and WIRING</td>
+    </tr>
+    <tr>
+        <td><strong>Methodology & Approach</strong></td>
+        <td><span class="tag-example tag-methodology">METHODOLOGY</span> <span class="tag-example tag-methodology">SYMBIOTIC_AI_HARDCODE</span> <span class="tag-example tag-methodology">OPTIONS_FIRST</span> <span class="tag-example tag-methodology">3_SCOPE</span> <span class="tag-example tag-methodology">MECHANICAL_ENFORCING</span></td>
+        <td>Core approaches and philosophies</td>
+        <td>No — can use multiple methodologies</td>
+    </tr>
+    <tr>
+        <td><strong>Scope & Phase</strong></td>
+        <td><span class="tag-example tag-core">CORE</span> <span class="tag-example tag-core">SCOPE_1</span> <span class="tag-example tag-core">SCOPE_2</span> <span class="tag-example tag-core">PHASE_0</span> <span class="tag-example tag-core">PHASE_1</span> <span class="tag-example tag-core">MVP</span></td>
+        <td>What phase/scope this belongs to</td>
+        <td>YES — pick ONE scope (CORE, SCOPE_1, or SCOPE_2). Can have multiple phases.</td>
+    </tr>
+    <tr>
+        <td><strong>Verification & Quality</strong></td>
+        <td><span class="tag-example tag-verification">QA</span> <span class="tag-example tag-verification">VERIFICATION</span> <span class="tag-example tag-verification">VALIDATION</span> <span class="tag-example tag-verification">AUDIT</span> <span class="tag-example tag-verification">CHECKLIST</span> <span class="tag-example tag-verification">TESTING</span></td>
+        <td>Quality verification activities</td>
+        <td>No — can require multiple types of verification</td>
+    </tr>
+    <tr>
+        <td><strong>Infrastructure & Operations</strong></td>
+        <td><span class="tag-example tag-infrastructure">INFRA</span> <span class="tag-example tag-infrastructure">GIT</span> <span class="tag-example tag-infrastructure">CI_CD</span> <span class="tag-example tag-infrastructure">DEPLOYMENT</span> <span class="tag-example tag-infrastructure">MONITORING</span></td>
+        <td>DevOps and infrastructure concerns</td>
+        <td>No — can touch GIT and CI_CD</td>
+    </tr>
+    <tr>
+        <td><strong>External & Special</strong></td>
+        <td><span class="tag-example tag-governance">EXTERNAL</span> <span class="tag-example tag-governance">BLOCKED_ON_EXTERNAL</span> <span class="tag-example tag-governance">CSP_CONSULTING</span> <span class="tag-example tag-governance">CSPS_CONSULTING</span></td>
+        <td>External dependencies and special integrations</td>
+        <td>No</td>
+    </tr>
+</table>
+
+---
+
+<h2>Part 3: Status + Tags in Practice</h2>
+
+<h3>Example 1: Template Term</h3>
+
+<div class="example">
+    <strong>Term:</strong> Dashboard Template<br>
+    <strong>Status:</strong> <span class="status status-active">ACTIVE</span><br>
+    <strong>Tags:</strong>
+    <span class="tag-example tag-template">TEMPLATE</span>
+    <span class="tag-example tag-design">DESIGN</span>
+    <span class="tag-example tag-hardwired">HARDWIRED_STRUCTURE</span>
+    <span class="tag-example tag-core">CORE</span>
+    <span class="tag-example tag-template">REUSABLE</span>
+    <br><br>
+    <em>Meaning: This is an active, hardwired template structure used in CORE phase. Designed for reuse.</em>
+</div>
+
+<h3>Example 2: Feature in Development</h3>
+
+<div class="example">
+    <strong>Item:</strong> Goal Approval Workflow<br>
+    <strong>Status:</strong> <span class="status status-pending">PENDING</span><br>
+    <strong>Tags:</strong>
+    <span class="tag-example tag-process">WORKFLOW</span>
+    <span class="tag-example tag-governance">GOVERNANCE</span>
+    <span class="tag-example tag-core">CORE</span>
+    <span class="tag-example tag-verification">VERIFICATION</span>
+    <span class="tag-example tag-hardwired">HARDWIRED_GATE</span>
+    <br><br>
+    <em>Meaning: This is an approved workflow for CORE phase. It's a governance process with hardwired gates. Currently being implemented.</em>
+</div>
+
+<h3>Example 3: Proposed Enhancement</h3>
+
+<div class="example">
+    <strong>Item:</strong> Learning Loops Dashboard<br>
+    <strong>Status:</strong> <span class="status status-draft">DRAFT</span><br>
+    <strong>Tags:</strong>
+    <span class="tag-example tag-design">DESIGN</span>
+    <span class="tag-example tag-design">UX</span>
+    <span class="tag-example tag-core">SCOPE_1</span>
+    <span class="tag-example tag-process">ITERATION</span>
+    <span class="tag-example tag-governance">APPROVAL_REQUIRED</span>
+    <br><br>
+    <em>Meaning: This is a draft design for SCOPE 1. It's a UX/design artifact for iteration/learning purposes. Needs approval before implementation.</em>
+</div>
+
+---
+
+<h2>Part 4: Using Tags in Organization</h2>
+
+<h3>Tag-Based Search & Navigation</h3>
+
+<p>Tags enable powerful searches:</p>
+
+<ul>
+    <li>"Show all CORE HARDWIRED_RULE items" — What's locked in Phase 1?</li>
+    <li>"Show all PENDING items tagged DESIGN" — What design work is in progress?</li>
+    <li>"Show all ARCHIVED templates" — What old patterns can we learn from?</li>
+    <li>"Show all items tagged APPROVAL_REQUIRED" — What needs Yariv sign-off?</li>
+</ul>
+
+<h3>Tag-Based Governance</h3>
+
+<p>Certain tag combinations trigger rules:</p>
+
+<ul>
+    <li><strong>HARDWIRED_GATE + CORE:</strong> Pre-commit hook MUST enforce. No exceptions.</li>
+    <li><strong>APPROVAL_REQUIRED + DRAFT:</strong> Cannot transition to PENDING without authority sign-off.</li>
+    <li><strong>SCHEMA + ACTIVE:</strong> Must have runtime validation. No bypasses.</li>
+    <li><strong>MECHANICAL_ENFORCEMENT:</strong> Rule must be impossible to violate, not just encouraged.</li>
+</ul>
+
+---
+
+<h2>Part 5: Combined Status + Tags Matrix</h2>
+
+<p>Some combinations are valid, others are contradictory:</p>
+
+<table>
+    <tr>
+        <th>Status</th>
+        <th>Can Have HARDWIRED_*?</th>
+        <th>Can Have APPROVAL_REQUIRED?</th>
+        <th>Notes</th>
+    </tr>
+    <tr>
+        <td>ACTIVE</td>
+        <td>✅ YES</td>
+        <td>❌ NO</td>
+        <td>Hardwired rules are active. Approval already happened.</td>
+    </tr>
+    <tr>
+        <td>PENDING</td>
+        <td>✅ YES</td>
+        <td>❌ NO</td>
+        <td>Approved, now being implemented. Hardwired rules apply.</td>
+    </tr>
+    <tr>
+        <td>DRAFT</td>
+        <td>❌ NO</td>
+        <td>✅ YES</td>
+        <td>Not approved yet. Cannot have hardwired rules until approved.</td>
+    </tr>
+    <tr>
+        <td>BLOCKED</td>
+        <td>✅ YES</td>
+        <td>✅ YES</td>
+        <td>Can have both. May be waiting on approval or external input.</td>
+    </tr>
+    <tr>
+        <td>ARCHIVED</td>
+        <td>❌ NO</td>
+        <td>❌ NO</td>
+        <td>No longer active. Don't apply rules to archived items.</td>
+    </tr>
+</table>
+
+---
+
+<h2>Part 6: Tag Hygiene Rules</h2>
+
+<p>To keep tags useful:</p>
+
+<ul>
+    <li><strong>At least one tag per item:</strong> Every term must have a tag. Untagged items get lost.</li>
+    <li><strong>Max 7 tags per item:</strong> Too many tags = noise. If you need 8+, tags aren't descriptive enough.</li>
+    <li><strong>One scope tag per item (CORE, SCOPE_1, or SCOPE_2):</strong> Pick the primary scope. Cannot be in multiple scopes simultaneously.</li>
+    <li><strong>Review tags quarterly:</strong> Tags drift. Unused tags accumulate. Clean up archived items.</li>
+    <li><strong>New tag proposals to Yariv:</strong> If you need a tag that doesn't exist, propose it here. Don't create ad-hoc tags.</li>
+</ul>
+
+---
+
+<h2>Part 7: Reading Status + Tags Together</h2>
+
+<p><strong>Formula:</strong> Status tells you the current condition. Tags tell you what kind of thing it is and how important it is.</p>
+
+<div class="note">
+<strong>Example Reading:</strong> "Template" has status <span class="status status-active">ACTIVE</span> and tags <span class="tag-example tag-template">TEMPLATE</span> <span class="tag-example tag-hardwired">HARDWIRED_STRUCTURE</span> <span class="tag-example tag-core">CORE</span>.
+<br><br>
+Translation: "This is a hardwired template structure that is fully implemented and required in CORE phase. It cannot change without Yariv approval."
+</div>
+
+---
+
+<h2>Next Steps</h2>
+
+<p>This Tags & Statuses system is:</p>
+
+<ul>
+    <li>✅ Proposed (this document)</li>
+    <li>⏳ Awaiting Yariv approval</li>
+    <li>❌ Not yet enforced (will add to CI/CD gates after approval)</li>
+</ul>
+
+<p><strong>FOR YARIV:</strong> Does this tag and status system work for CDS? Should we adjust tag categories or transition rules?</p>
+
+---
+
+<p style="margin-top: 40px; font-size: 12px; color: #666; border-top: 1px solid #ddd; padding-top: 20px;">
+Tags & Statuses Version: 1.0 DRAFT | Date: 2026-07-07 | Status: AWAITING APPROVAL
+</p>
+
+</div>
+
+</body>
+</html>

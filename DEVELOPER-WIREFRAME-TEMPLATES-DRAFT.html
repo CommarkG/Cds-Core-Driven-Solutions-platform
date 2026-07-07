@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Wireframe Templates — Lean UX/UI Patterns</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', monospace; background: #f5f5f5; color: #1a1a1a; line-height: 1.5; padding: 30px; }
+        .container { max-width: 1400px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 4px; font-family: 'Courier New', monospace; }
+        h1 { font-size: 24px; margin-bottom: 10px; font-family: 'Segoe UI', sans-serif; }
+        .subtitle { color: #666; margin-bottom: 30px; font-size: 13px; }
+        h2 { font-size: 18px; margin-top: 50px; margin-bottom: 20px; border-bottom: 2px solid #003366; padding-bottom: 10px; font-family: 'Segoe UI', sans-serif; }
+        h3 { font-size: 14px; margin-top: 25px; margin-bottom: 15px; color: #003366; font-family: 'Segoe UI', sans-serif; }
+        .wireframe { background: #f9f9f9; border: 1px solid #ddd; padding: 25px; margin: 25px 0; font-family: 'Courier New', monospace; white-space: pre; overflow-x: auto; font-size: 12px; line-height: 1.4; }
+        .wireframe-title { font-weight: bold; color: #003366; margin-bottom: 15px; }
+        .usage { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; margin: 20px 0; font-family: 'Segoe UI', sans-serif; font-size: 13px; }
+        .notes { background: #f0f4c3; border-left: 4px solid #ff9800; padding: 15px; margin: 20px 0; font-family: 'Segoe UI', sans-serif; font-size: 13px; }
+        .section-intro { font-family: 'Segoe UI', sans-serif; font-size: 13px; margin-bottom: 20px; }
+        .template-list { font-family: 'Segoe UI', sans-serif; margin-left: 20px; margin-bottom: 20px; }
+        .template-list li { margin-bottom: 8px; }
+        code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>Developer Wireframe Templates</h1>
+<p class="subtitle">Lean UX/UI blueprint templates for building consistent features without starting from scratch.</p>
+
+<p style="font-family: 'Segoe UI', sans-serif; font-size: 14px; margin-bottom: 30px;">
+<strong>Purpose:</strong> Every developer building a UI should start with one of these templates. Copy → Customize → Build. Ensures consistency while speeding up development.
+</p>
+
+---
+
+<h2>SECTION 1: PAGE TEMPLATES</h2>
+
+<p class="section-intro">
+Use these page templates as the layout skeleton. Adjust content areas, but keep structure consistent.
+</p>
+
+<h3>Page Template 1: Standard Dashboard Page</h3>
+
+<div class="wireframe"><div class="wireframe-title">DASHBOARD PAGE LAYOUT</div>
+
+┌─────────────────────────────────────────────────────────────────┐
+│ HEADER (sticky)                           [Logo]  [User Menu]   │
+├─────────────────────────────────────────────────────────────────┤
+│ BREADCRUMB: Home > Participants > Dashboard                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│ PAGE TITLE: Participants                                  [?]   │
+│ Subtitle: View all participants with their strengths, status     │
+│                                                                   │
+│ ACTION BUTTONS (green):                                          │
+│ [+ Add Participant] [+ Create Group]  [Export All]  [Settings]  │
+│                                                                   │
+├─────────────────────────────────────────────────────────────────┤
+│ FILTERS / SEARCH (light background):                             │
+│ [Search: __________]  [Filter ▼]  [Sort ▼]  [Clear All]        │
+│                                                                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│ TABLE (with row numbers, sortable headers):                      │
+│ #  | Name       | Status  | Load  | Capacity | Position | Notes │
+│ ---|------------|---------|-------|----------|----------|-------│
+│ 1  | CSP        | Active  | 3/10  | 0.95     | Position | Data  │
+│ 2  | CSPS       | Active  | 1/10  | 0.78     | Position | Data  │
+│ 3  | [more rows...]                                              │
+│                                                                   │
+│ [Pagination: < 1 2 3 > ] [Show 10 ▼] rows                       │
+│                                                                   │
+├─────────────────────────────────────────────────────────────────┤
+│ FOOTER: Updated 5 min ago | © 2026 CDS                          │
+└─────────────────────────────────────────────────────────────────┘
+
+SPACING GRID (use 8px base):
+- Header height: 48px (40px base + 8px padding)
+- Breadcrumb: 8px top + 12px bottom
+- Title: 20px top + 8px bottom
+- Buttons: 40px height, 8px gap between
+- Table: 12px row height, 8px cell padding
+- Footer: 40px height
+</div>
+
+<div class="usage">
+<strong>Use this template for:</strong> Any dashboard showing data (participants, bundles, metrics, learnings, conflicts)
+<br><strong>Customize:</strong> Table columns, filter options, action buttons (but keep layout structure)
+<br><strong>Required elements:</strong> Header, breadcrumb, title+subtitle, action buttons, filters, table, pagination, footer
+</div>
+
+---
+
+<h3>Page Template 2: Form / Configuration Page</h3>
+
+<div class="wireframe"><div class="wireframe-title">FORM / SETTINGS PAGE LAYOUT</div>
+
+┌─────────────────────────────────────────────────────────────────┐
+│ HEADER (sticky)                           [Logo]  [User Menu]   │
+├─────────────────────────────────────────────────────────────────┤
+│ BREADCRUMB: Home > Settings > Goal Configuration                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│ PAGE TITLE: Configure Goals                                      │
+│ Description: Set parameters for goal creation and evaluation     │
+│                                                                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│ FORM SECTIONS (left panel, narrow):                              │
+│                                                                   │
+│ ┌─────────────────────────────────────┐                          │
+│ │ □ BASIC INFORMATION                │                          │
+│ │                                     │                          │
+│ │ Field Label: [________________]    │                          │
+│ │                                     │                          │
+│ │ Field Label: [Select option ▼]     │                          │
+│ │                                     │                          │
+│ │ Field Label: ☑ Enabled              │                          │
+│ │                                     │                          │
+│ │ [Clear]  [Reset to Defaults]       │                          │
+│ └─────────────────────────────────────┘                          │
+│                                                                   │
+│ ┌─────────────────────────────────────┐                          │
+│ │ □ ADVANCED OPTIONS                 │                          │
+│ │                                     │                          │
+│ │ Field Label: [________________]    │                          │
+│ │ ? [Tooltip on hover]                │                          │
+│ │                                     │                          │
+│ │ [Show More ▼]                       │                          │
+│ └─────────────────────────────────────┘                          │
+│                                                                   │
+│ ACTION BUTTONS:                                                  │
+│ [Cancel]  [Save Changes]  [Save As Template]                    │
+│                                                                   │
+├─────────────────────────────────────────────────────────────────┤
+│ FOOTER: Last updated 2 hours ago                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+SPACING GRID:
+- Form width: 400-500px max (not full width)
+- Field label to input: 8px
+- Field height: 40px
+- Gap between fields: 20px
+- Section gap: 30px
+- Button height: 40px
+- Gap between buttons: 12px
+</div>
+
+<div class="usage">
+<strong>Use this template for:</strong> Settings pages, configuration forms, admin controls, preferences
+<br><strong>Customize:</strong> Form fields, sections, field types (text, select, toggle, etc.)
+<br><strong>Required elements:</strong> Header, breadcrumb, title, form sections, field validation, action buttons, footer
+</div>
+
+---
+
+<h3>Page Template 3: Empty / Onboarding Page</h3>
+
+<div class="wireframe"><div class="wireframe-title">EMPTY STATE / ONBOARDING PAGE LAYOUT</div>
+
+┌─────────────────────────────────────────────────────────────────┐
+│ HEADER                                    [Logo]  [User Menu]   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│                          ┌─────────────────────┐                 │
+│                          │                     │                 │
+│                          │   [Large Icon]      │                 │
+│                          │                     │                 │
+│                          └─────────────────────┘                 │
+│                                                                   │
+│                      Get Started with Goals                      │
+│                                                                   │
+│         No goals have been created yet. Goals help you           │
+│         organize work and track progress. Start now!             │
+│                                                                   │
+│                   [+ Create First Goal] [Learn More]            │
+│                                                                   │
+│                                                                   │
+│   OR browse available templates:                                │
+│                                                                   │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
+│   │ [Icon]       │  │ [Icon]       │  │ [Icon]       │          │
+│   │ Template 1   │  │ Template 2   │  │ Template 3   │          │
+│   │ [Use This]   │  │ [Use This]   │  │ [Use This]   │          │
+│   └──────────────┘  └──────────────┘  └──────────────┘          │
+│                                                                   │
+├─────────────────────────────────────────────────────────────────┤
+│ FOOTER: Questions? [Help] [Documentation]                        │
+└─────────────────────────────────────────────────────────────────┘
+
+SPACING GRID:
+- Icon: 80-120px square, centered
+- Title: 20px font, 20px top + bottom
+- Description: 14px font, 20px bottom
+- Button: 40px height, 12px gap
+- Template cards: 120px width, 30px gap
+</div>
+
+<div class="usage">
+<strong>Use this template for:</strong> First-time user experience, empty states, onboarding flow
+<br><strong>Customize:</strong> Icon, title, description, primary action, template options
+<br><strong>Required elements:</strong> Icon/illustration, title, description, primary CTA, alternative actions, footer help
+</div>
+
+---
+
+<h2>SECTION 2: ELEMENT TEMPLATES</h2>
+
+<p class="section-intro">
+Lean component specifications. Use these as the structural guide; style with design tokens (ETSC-DESIGN-TOKENS.md).
+</p>
+
+<h3>Element Template 1: Button States</h3>
+
+<div class="wireframe"><div class="wireframe-title">BUTTON COMPONENT STATES</div>
+
+HEIGHT: 40px (locked)
+PADDING: 12px left/right
+BORDER-RADIUS: 4px
+FONT: 600 weight, 14px
+
+PRIMARY BUTTON (Green #50c878):
+┌─────────────────────────┐
+│    [+ Add Participant]  │  ← Default (white text on green)
+└─────────────────────────┘
+    ↓ Hover:  Background darker (#3d9d63), shadow added, transform up -2px
+    ↓ Active: Background even darker (#2e7d52)
+    ↓ Disabled: Gray (#ccc), cursor not-allowed
+
+SECONDARY BUTTON (Blue #0066cc):
+┌─────────────────────────┐
+│    [Edit Profile]       │  ← Default (white text on blue)
+└─────────────────────────┘
+
+DANGER BUTTON (Red #e74c3c):
+┌─────────────────────────┐
+│    [Delete Item]        │  ← Default (white text on red)
+└─────────────────────────┘
+
+TEXT BUTTON (No background):
+     [Cancel]              ← Default (text only, no box)
+    ↓ Hover: Underline, slight background
+
+BUTTON GROUP:
+┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+│  [Cancel]   │ │ [Save]      │ │ [Publish]   │
+└─────────────┘ └─────────────┘ └─────────────┘
+  Gap between buttons: 12px
+
+ICON BUTTON (square):
+┌────────────┐
+│     ⋯      │  ← 40x40px, centered icon
+└────────────┘
+</div>
+
+<div class="usage">
+<strong>Use this template for:</strong> All buttons in application
+<br><strong>Locked rules:</strong> Height 40px, border-radius 4px, gap 12px (HARDWIRED_STRUCTURE)
+<br><strong>Customizable:</strong> Button text, colors (use design tokens), icon (if icon button)
+</div>
+
+---
+
+<h3>Element Template 2: Form Input / Field</h3>
+
+<div class="wireframe"><div class="wireframe-title">FORM INPUT COMPONENT</div>
+
+HEIGHT: 40px (locked)
+PADDING: 12px left/right, 8px top/bottom
+BORDER: 1px solid #ddd
+BORDER-RADIUS: 4px
+
+TEXT INPUT:
+Label Text
+[________________________]  ← Placeholder shown, 40px height
+
+┌─ Hover state: Border #0066cc
+
+┌─ Focus state: Border #0066cc (2px), box-shadow: 0 0 0 3px rgba(0,102,204, 0.1)
+
+┌─ Filled state:
+[Typed value____________]  ← Text visible
+
+┌─ Error state: Border #e74c3c (2px)
+! This field is required
+(Error message in red below)
+
+SELECT DROPDOWN:
+[Select option ▼]  ← 40px height, chevron icon right-aligned
+
+TEXTAREA (multi-line):
+[
+  Multiple lines of text allowed
+  Minimum height: 100px
+  Scrollable if content exceeds height
+]
+
+CHECKBOX / RADIO:
+☑ Enable feature              ← 20x20px square, label right
+
+◉ Option 1                    ← 20x20px circle, label right
+
+TOGGLE / SWITCH:
+[●   ]  Enabled              ← 48px wide, animated (120ms)
+[  ●]  Disabled              ← Grayed out when disabled
+</div>
+
+<div class="usage">
+<strong>Use this template for:</strong> All form fields
+<br><strong>Locked rules:</strong> Height 40px, padding 12px/8px, border-radius 4px (HARDWIRED_STRUCTURE)
+<br><strong>States required:</strong> Default, hover, focus, filled, error, disabled
+</div>
+
+---
+
+<h3>Element Template 3: Table / Data Grid</h3>
+
+<div class="wireframe"><div class="wireframe-title">TABLE COMPONENT</div>
+
+ROW HEIGHT: 40px (cells include padding)
+CELL PADDING: 12px left/right, 8px top/bottom
+HEADER BACKGROUND: #f5f5f5
+HEADER TEXT: #1a1a1a (dark)
+BORDER: 1px solid #ddd
+
+HEADER ROW (sticky, sortable):
+┌────┬────────────┬──────────┬────────┬──────────┬───────────┬────────┐
+│ #  │ Name ↕     │ Status ↕ │ Load ↕ │ Cap ↕    │ Position  │ Delete │
+├────┼────────────┼──────────┼────────┼──────────┼───────────┼────────┤
+│ 1  │ CSP        │ Active   │ 3/10   │ 0.95     │ Position 1│ [×]    │
+├────┼────────────┼──────────┼────────┼──────────┼───────────┼────────┤
+│ 2  │ CSPS       │ Active   │ 1/10   │ 0.78     │ Position 2│ [×]    │
+├────┼────────────┼──────────┼────────┼──────────┼───────────┼────────┤
+│ 3  │ [scrolls...]                                                      │
+└────┴────────────┴──────────┴────────┴──────────┴───────────┴────────┘
+
+HOVER STATE: Row background #f9f9f9, slight shadow
+
+ROW ACTIONS (right side):
+[Edit] [Delete] [Export]  ← Appear on row hover
+
+EXPANDABLE ROW:
+│ 1  │ CSP        │ [▶] Click to expand more details
+└─ Expanded child rows visible below
+
+COLUMN RESIZING:
+Drag | between headers to resize (optional, or locked width)
+
+SORTING:
+Click header to sort ↕ (up/down/no sort = cycle)
+
+PAGINATION:
+[< Prev] [1] [2] [3] [>] [Show 10 ▼] Rows 1-10 of 45
+</div>
+
+<div class="usage">
+<strong>Use this template for:</strong> All data displays, dashboards
+<br><strong>Locked rules:</strong> Row height 40px, cell padding 12px/8px, border-radius 4px
+<br><strong>Required features:</strong> Sortable headers, row hover, pagination, row actions (edit/delete)
+</div>
+
+---
+
+<h2>SECTION 3: FLOW TEMPLATES</h2>
+
+<p class="section-intro">
+User interaction flows. How users navigate from state to state. Wireframe the decision points.
+</p>
+
+<h3>Flow Template 1: Standard CRUD Flow (Create-Read-Update-Delete)</h3>
+
+<div class="wireframe"><div class="wireframe-title">CRUD FLOW</div>
+
+START
+  │
+  ├─→ [View List Page]
+  │    ├─ [Click Row]  ──→ [View Detail Page]
+  │    │                    ├─ [Click Edit] ──→ [Edit Form] ──→ [Save] ──→ [Updated Message] ──→ back to Detail
+  │    │                    ├─ [Click Delete] ──→ [Confirm Dialog] ──→ [Deleted] ──→ back to List
+  │    │                    └─ [Back] ──→ back to List
+  │    │
+  │    └─ [Click "+ Add"] ──→ [Create Form]
+  │                            ├─ [Fill fields]
+  │                            ├─ [Click Save]
+  │                            └─ [Success Message] ──→ [View Detail] or [back to List]
+  │
+  └─ [Click Filter/Search] ──→ [Updated List]
+
+KEY DECISION POINTS:
+1. User browsing or creating? (List vs. Add)
+2. Viewing detail or editing? (Detail vs. Edit)
+3. Delete confirmed? (Dialog blocks action)
+4. Save success or error? (Message shown)
+5. Return to list or detail after save? (Option given)
+</div>
+
+<div class="usage">
+<strong>Use this template for:</strong> Any data management page (participants, goals, bundles, etc.)
+<br><strong>Customize:</strong> Form fields, dialog copy, success messages
+<br><strong>Required states:</strong> List, Detail, Edit, Create, Delete confirmation
+</div>
+
+---
+
+<h3>Flow Template 2: Multi-Step Process / Wizard</h3>
+
+<div class="wireframe"><div class="wireframe-title">WIZARD / MULTI-STEP FLOW</div>
+
+START ──→ [Step 1: Intro]
+             │
+             ├─ [Next] ──→ [Step 2: Configure]
+             │                 │
+             │                 ├─ [Validation Error] ──→ [Field Highlighted]
+             │                 │                           [Next] (re-triggered)
+             │                 │
+             │                 └─ [Next] ──→ [Step 3: Review]
+             │                                  │
+             │                                  ├─ [Edit Step 1] ──→ Jump to Step 1
+             │                                  ├─ [Edit Step 2] ──→ Jump to Step 2
+             │                                  │
+             │                                  └─ [Confirm] ──→ [Processing...]
+             │                                                    ├─ Success ──→ [Completion Page]
+             │                                                    └─ Error ──→ [Error Message] [Retry]
+             │
+             └─ [Cancel] ──→ [Confirm Discard] ──→ back to Home
+
+PROGRESS INDICATOR:
+Step 1 [●] ─→ Step 2 [○] ─→ Step 3 [○] ─→ Review [○]
+(filled = completed, empty = pending, line between = progress)
+
+EACH STEP:
+┌───────────────────────────┐
+│ Progress indicator above  │
+├───────────────────────────┤
+│ Step Title                │
+│ Step Description          │
+├───────────────────────────┤
+│ [Form fields / Content]   │
+│                           │
+├───────────────────────────┤
+│ [Back]  [Cancel]  [Next]  │ (or [Confirm] on last step)
+└───────────────────────────┘
+</div>
+
+<div class="usage">
+<strong>Use this template for:</strong> Goal Wizard, onboarding flows, complex configuration
+<br><strong>Customize:</strong> Number of steps, step content, validation rules
+<br><strong>Required elements:</strong> Progress indicator, step title/description, form/content, navigation buttons
+</div>
+
+---
+
+<h2>SECTION 4: WIZARD TEMPLATES</h2>
+
+<p class="section-intro">
+Specialized wizard patterns for common CDS workflows.
+</p>
+
+<h3>Wizard Template 1: Goal Wizard</h3>
+
+<div class="wireframe"><div class="wireframe-title">GOAL WIZARD (Multi-Step)</div>
+
+STEP 1: GOAL BASICS
+─────────────────
+Title: [                                    ]
+Description: [                             ]
+[                                           ]
+
+STEP 2: PARTICIPANTS
+─────────────────
+Add participants:
+[+ Add Participant]
+
+Participants added (3):
+☑ CSP
+☑ CSPS
+☑ [Another Participant]
+
+STEP 3: RESOURCES & PRIORITY
+─────────────────────────────
+Available effort: [      ]%
+Priority: [High ▼]
+Dependencies: [+ Add]
+
+STEP 4: REVIEW
+──────────────
+Summary of entered data:
+- Goal: [Title shown]
+- Participants: 3
+- Priority: High
+- Effort: XX%
+
+[Create Goal]
+
+FLOW:
+Basics → Participants → Resources → Review → Create → Success Page
+</div>
+
+<div class="usage">
+<strong>Use this template for:</strong> Goal creation workflow
+<br><strong>Locked elements:</strong> Step sequence, review page, confirmation
+<br><strong>Customizable:</strong> Step content, fields, validation
+</div>
+
+---
+
+<h2>SECTION 5: LAYOUT GRID & SPACING</h2>
+
+<div class="wireframe"><div class="wireframe-title">DESIGN TOKEN SPACING GRID</div>
+
+BASE UNIT: 8px
+
+SPACING VALUES (all multiples of 8):
+8px   ─ Smallest gap (between form label + field)
+12px  ─ Small gap (button group, cell padding horizontal)
+16px  ─ Medium gap (section spacing within container)
+20px  ─ Large gap (between major sections)
+30px  ─ Very large gap (between page sections)
+40px  ─ Extra large gap (page margin)
+
+COMPONENT HEIGHTS (locked):
+32px  ─ Badge, small button
+40px  ─ Standard button, form field, table row
+48px  ─ Large button
+60px  ─ Page header (with padding)
+
+TYPOGRAPHY SIZES (locked):
+12px  ─ Small text, labels
+13px  ─ Help text, metadata
+14px  ─ Body text, inputs
+16px  ─ Section headers
+18px  ─ Page subtitle
+20px  ─ Page title
+24px  ─ Main heading
+28px  ─ Hero heading
+
+WIDTHS:
+400px max ─ Form/sidebar content
+1000-1200px ─ Main content area
+1400px max ─ Full container
+
+BORDER-RADIUS (locked):
+0px   ─ No radius (crisp)
+4px   ─ Standard (buttons, inputs, cards)
+8px   ─ Large (modals, large cards)
+</div>
+
+<div class="usage">
+<strong>All spacing MUST use 8px grid.</strong> Non-multiples of 8 break the grid and cause alignment issues at scale.
+<br><strong>All component heights MUST follow values above.</strong> No arbitrary 38px or 42px heights.
+<br><strong>These are HARDWIRED in ETSC-DESIGN-TOKENS.md</strong>
+</div>
+
+---
+
+<h2>How to Use These Templates</h2>
+
+<p class="section-intro">
+Template workflow:
+</p>
+
+<ol style="font-family: 'Segoe UI', sans-serif; font-size: 13px; margin-left: 30px;">
+    <li><strong>Identify what you're building:</strong> Dashboard? Form? Wizard?</li>
+    <li><strong>Find matching template:</strong> Standard Dashboard, Form Page, Multi-Step Wizard, etc.</li>
+    <li><strong>Copy template wireframe structure:</strong> Paste skeleton into your design/code</li>
+    <li><strong>Customize content:</strong> Change labels, fields, data, titles</li>
+    <li><strong>Apply design tokens:</strong> All colors/spacing from ETSC-DESIGN-TOKENS.md</li>
+    <li><strong>Verify against checklist:</strong> ETSC-DESIGN-CONSISTENCY-CHECKLIST.md</li>
+    <li><strong>Build/code:</strong> Implement with React, Vue, etc.</li>
+    <li><strong>Test:</strong> Run through flows, verify states, test responsiveness</li>
+</ol>
+
+---
+
+<h2>Next Steps</h2>
+
+<p style="font-family: 'Segoe UI', sans-serif; margin-top: 30px;">
+These developer templates are:
+</p>
+
+<ul style="font-family: 'Segoe UI', sans-serif; margin-left: 30px;">
+    <li>✅ Proposed (this document)</li>
+    <li>⏳ Awaiting approval to integrate with design system</li>
+    <li>❌ Not yet integrated into CI/CD checks</li>
+</ul>
+
+<p style="font-family: 'Segoe UI', sans-serif; margin-top: 20px;">
+<strong>FOR YARIV:</strong> Are these templates clear enough? Should we add more patterns? Should we formalize these into "core spine" templates?
+</p>
+
+---
+
+<p style="margin-top: 40px; font-size: 12px; color: #666; border-top: 1px solid #ddd; padding-top: 20px; font-family: 'Segoe UI', sans-serif;">
+Developer Wireframe Templates Version: 1.0 DRAFT | Date: 2026-07-07 | Status: AWAITING APPROVAL
+</p>
+
+</div>
+
+</body>
+</html>
