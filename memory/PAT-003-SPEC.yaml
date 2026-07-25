@@ -1,0 +1,73 @@
+---
+pattern_id: PAT-003
+pattern_name: "Structural claim without enforcement mechanism"
+severity: HIGH
+sessions_confirmed: 3
+first_observed: "2026-07-07"
+recurrence_count: 9
+status: COMPLETE
+output_1_status: STORED
+output_2_status: DEFINED
+source_library: RESOLUTION-LIBRARY (STRUCTURAL-CLAIM-WITHOUT-MECHANISM)
+---
+
+## Output 1 — Pattern Statement
+
+A governance artifact declares that a structural rule exists ("layer declaration is required",
+"corespine_context must be declared", "IDs must follow GE-[DOMAIN]-[SEQ]") without pointing
+to specific code, a script line, or a gate that actually enforces the rule. The rule exists
+in documentation only — it is not enforced anywhere mechanically.
+
+**Observed in:** Corespine constraint definitions, schema validation rules, protocol
+enforcement claims.
+**When it appears:** When a constraint is ratified before its enforcement code is written.
+The constraint is real. The enforcement is not yet real. But the document claims enforcement exists.
+**Why it persists:** The constraint and the enforcement feel like the same thing.
+Writing "this is enforced in rules.ts" in a document feels equivalent to the enforcement running.
+**Cost:** Every structural rule without an enforcement mechanism is a request, not a constraint.
+Requests drift. Constraints don't.
+
+---
+
+## Output 2 — Mechanical Check Specification
+
+```yaml
+mechanical_check:
+  trigger: >
+    Before any constraint, rule, or protocol is marked ACTIVE or submitted for ratification.
+    Also when scanning existing corespine records for constraint completeness.
+
+  detection: >
+    For each constraint or rule claiming structural enforcement (contains: "is required",
+    "must be", "cannot be", "is forbidden", "is rejected", "is blocked", "enforces",
+    "validates", "prevents"):
+    Check whether an enforcement_code field exists pointing to a specific file and line.
+    The field must contain: actual file path + line number where the enforcement runs.
+    If claim exists without enforcement_code → VIOLATION.
+    If enforcement_code contains "TBD", "to be built", "Phase B" without an explicit
+    ANTICIPATED status label → VIOLATION.
+
+  failure_output: >
+    BLOCKED: constraint '[constraint_id]' in '[artifact_id]' claims structural enforcement
+    without an enforcement_code pointer.
+    Claim: '[claim_text]'
+    Required: enforcement_code field containing real file path + line number.
+    Example: "threshold/src/gate/rules.ts → RULE-GOAL (line 54-85)"
+    If enforcement not yet built: label constraint status as ANTICIPATED, not ACTIVE.
+    Ratification of an ANTICIPATED constraint is permitted — claiming it is ACTIVE is not.
+
+  enforcement_layer: pre-ratification
+
+  false_positive_risk: LOW
+  false_positive_reason: >
+    Constraints correctly labeled ANTICIPATED or PROPOSED do not violate this pattern.
+    The check only triggers on constraints claiming ACTIVE status without enforcement_code.
+    A constraint can be ratified as ANTICIPATED — that is honest and acceptable.
+
+check_status: DEFINED
+ratification_reference: null
+ratification_date: null
+wired_date: null
+active_date: null
+consecutive_clean_sessions: 0
+```

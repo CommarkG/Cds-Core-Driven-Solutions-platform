@@ -4,14 +4,18 @@ title: CDS Canonical Platform Element Schema
 supersedes: CANONICAL-DECISION-NODE-SCHEMA-001 (misnomer — scope is all platform elements, not only decisions)
 pcr_reference: PCR-001
 corespiral_stage: FLESH
-status: SKIN COMPLETE — ZF-0 PASSED — AWAITING GOVERNOR RATIFICATION
+status: RATIFIED — CURRENT — 2026-07-25
 created: 2026-07-20
 skin_complete: 2026-07-20
+ratified: 2026-07-25
 rename_date: 2026-07-20
 rename_reason: "Original name 'DecisionNode schema' was a misnomer. This schema governs ALL platform elements (corespines, PCRs, patterns, consulting entries, schemas) — not only decisions. System A (decision-node-v1.1.schema.yaml) retains the DecisionNode name for decision content fields."
 authority: Governor Yariv Fink
-wiring_state: REACHABLE
-ratification_state: PROPOSED
+wiring_state: CURRENT
+ratification_state: RATIFIED
+governor_signature: "Platform Element schema is locked. Changes require PCR."
+governor_signed_by: Yariv Fink
+governor_signed_date: 2026-07-25
 corespine: CS-PE-001
 schema_position: CDS.SYSTEM.GOVERNANCE.PLATFORM_ELEMENT
 kernel_component: "YES — kernel gate checked when this reaches CURRENT"
@@ -555,8 +559,10 @@ corespiral_stage_log:
     wiring_state_advanced_to: REACHABLE
 
   VERIFY:
-    status: ZF-0 PASSED — AWAITING GOVERNOR RATIFICATION
+    status: COMPLETE — GOVERNOR RATIFIED 2026-07-25
     date: "2026-07-20"
+    ratification_date: "2026-07-25"
+    governor_signature: "Platform Element schema is locked. Changes require PCR."
     zf_audit_result:
       mechanical:
         findings: 0

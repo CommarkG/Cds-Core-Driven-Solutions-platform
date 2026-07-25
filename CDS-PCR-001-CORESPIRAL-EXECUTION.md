@@ -1,9 +1,11 @@
 ---
 document_id: CDS-PCR-001-CORESPIRAL-EXECUTION-001
 title: PCR-001 — DecisionNode Schema — CoreSpiral Execution (SEED + SKELETON)
-status: ZF-0 PASSED — AWAITING GOVERNOR RATIFICATION
+status: COMPLETE — GOVERNOR RATIFIED 2026-07-25
 authority: Governor Yariv Fink
-wiring_state: REACHABLE
+wiring_state: CURRENT
+ratification_date: 2026-07-25
+governor_signature: "Platform Element schema is locked. Changes require PCR."
 corespine: CS-PE-001
 schema_position: CDS.SCHEMA.DECISION_NODE
 pe_score: 42.2
@@ -181,9 +183,9 @@ STAGE 1 — SEED        [LOCKED ✓]   2026-07-20
 STAGE 2 — SKELETON    [LOCKED ✓]   2026-07-20
 STAGE 3 — FLESH       [LOCKED ✓]   2026-07-20
 STAGE 4 — SKIN        [LOCKED ✓]   2026-07-20
-STAGE 5 — VERIFY      [ZF-0 PASSED ✓ — awaiting Governor sign-off]
+STAGE 5 — VERIFY      [COMPLETE ✓ — Governor ratified 2026-07-25]
 ──────────────────────────────────────────────
-WIRING STATE          [REACHABLE]
-KERNEL GATE           [OPEN — Governor sign-off → CURRENT → gate checked]
-PHASE B GATE          [BLOCKED — kernel gate open]
+WIRING STATE          [CURRENT ✓]
+KERNEL GATE           [PCR-001 CHECKED ✓ — 3/4 kernel components CURRENT]
+PHASE B GATE          [BLOCKED — PCR-002 pending]
 ```

@@ -24,10 +24,12 @@ priority_queue:
     can_start: IMMEDIATELY
     estimated_effort_days: 2
     done_signal: "CANONICAL-DECISION-NODE-SCHEMA.yaml version 1.0 LOCKED + Governor sign-off"
-    corespiral_status: "FLESH LOCKED (2026-07-20) — SKIN in progress — VERIFY pending Governor"
+    corespiral_status: "ALL 5 STAGES COMPLETE — RATIFIED 2026-07-25"
     schema_file: "CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml"
     elements_registered: [GE-PE-001, GE-GOV-001, GE-CON-001]
-    pending: "Governor ratification required to advance to CURRENT and close kernel gate"
+    status: "DONE — wiring_state CURRENT — kernel gate PCR-001 CHECKED"
+    governor_signature: "Platform Element schema is locked. Changes require PCR."
+    ratified_date: "2026-07-25"
 
   - rank: 2
     pcr_id: PCR-002

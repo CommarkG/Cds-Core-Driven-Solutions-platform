@@ -1,0 +1,124 @@
+---
+document_id: RATIFICATION-REQUEST-TEMPLATE
+title: "Ratification Request — Reusable Template"
+version: 1.0
+created: 2026-07-25
+status: ACTIVE — use for all future ratification requests
+part_of: PCR-002 (proves the ratification system is repeatable and standardized)
+usage: "Copy this file, fill in the [BRACKETS], remove this header note, submit to Governor"
+---
+
+# RATIFICATION REQUEST TEMPLATE
+# Copy → fill in → submit to Governor
+
+---
+
+## WHAT IS BEING RATIFIED
+
+```yaml
+artifact_id: "[ID — e.g. CS-GOAL-001, PCR-003, PAT-007]"
+artifact_type: "[CORESPINE | PCR | PATTERN | SCHEMA | PROTOCOL]"
+artifact_name: "[Human-readable name]"
+ratification_request_date: "[YYYY-MM-DD]"
+submitted_by: "CDS"
+submitted_to: "Governor Yariv Fink"
+gov_id_requested: "GOV-[YYYYMMDD]-[TYPE]-[SEQ]"
+```
+
+---
+
+## WHAT WAS BUILT
+
+```
+[3–5 bullet points. What was produced. Specific — not aspirational.]
+- [Field / constraint / rule: what it is and what it governs]
+- [...]
+- [...]
+```
+
+---
+
+## WHAT A GOVERNOR SIGNATURE MEANS
+
+```
+[2–3 sentences. What becomes locked. What changes require PCR after this.
+What systems depend on this being stable.]
+```
+
+---
+
+## ZF-0 STATUS
+
+```yaml
+mechanical_findings: 0     # [integer — must be 0 to submit]
+semantic_findings: 0       # [integer — must be 0 to submit]
+propagation_findings: 0    # [integer — must be 0 to submit]
+zf_0_status: "PASS"        # PASS required before submission
+audit_date: "[YYYY-MM-DD]"
+findings_log: "[file or 'none']"
+```
+
+---
+
+## FALSIFICATION TEST (Phase A verifiable)
+
+```
+[What a third party can check RIGHT NOW to verify this artifact is correctly applied.
+No Phase B dependencies. Observable. Runnable without AI judgment.]
+```
+
+---
+
+## DOWNSTREAM DEPENDENCIES
+
+```
+[What is waiting on this ratification before it can proceed?
+What gets unblocked when Governor signs?]
+- [System / gate / PCR that advances on sign-off]
+- [...]
+```
+
+---
+
+## CONSTRAINTS BEING RATIFIED
+
+```yaml
+constraints:
+  - id: "[ARTIFACT-ID]-C1"
+    name: "[Constraint name]"
+    status: "[ACTIVE | PROPOSED — if PROPOSED, note it is not ratified yet]"
+    falsification_test: "[Observable check]"
+
+  - id: "[ARTIFACT-ID]-C2"
+    name: "[Constraint name]"
+    status: "[ACTIVE | PROPOSED]"
+    falsification_test: "[Observable check]"
+```
+
+---
+
+## GOVERNOR SIGN-OFF BLOCK
+
+```
+Reviewed by: Governor Yariv Fink
+Decision: [ ] RATIFIED    [ ] REJECTED    [ ] RETURNED FOR REVISION
+Notes: ___________________________________________________________________
+Signature phrase (if RATIFIED): ___________________________________________
+Date: _______________
+GOV-ID assigned: _______________
+```
+
+---
+
+## HOW TO USE THIS TEMPLATE
+
+1. Copy this file to `RATIFICATION-REQUEST-[ARTIFACT-ID].md`
+2. Fill in all [BRACKETS]
+3. Remove the "Copy → fill in → submit" note from the title
+4. Verify ZF-0 passes before submitting
+5. Present to Governor — wait for signature before advancing wiring_state
+6. On ratification: create `RATIFICATION-[ARTIFACT-ID].yaml` per existing records
+   (see RATIFICATION-CS-PE-001.yaml, RATIFICATION-CS-GOAL-001.yaml as examples)
+
+---
+Template version 1.0 — ratified as part of PCR-002 proof of repeatable system

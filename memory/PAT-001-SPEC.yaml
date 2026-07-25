@@ -1,0 +1,64 @@
+---
+pattern_id: PAT-001
+pattern_name: "Mechanical claim without falsification test"
+severity: CRITICAL
+sessions_confirmed: 3
+first_observed: "2026-07-07"
+recurrence_count: 14
+status: COMPLETE
+output_1_status: STORED
+output_2_status: DEFINED
+source_library: RESOLUTION-LIBRARY (MECHANICAL-CLAIM-WITHOUT-TEST)
+---
+
+## Output 1 — Pattern Statement
+
+A governance artifact asserts a mechanical behavior ("this is enforced", "this gate blocks",
+"this check runs") without a falsification test field. The claim cannot be verified by anyone
+other than the author. The artifact appears to be governed but is actually aspirational.
+
+**Observed in:** Corespine constraints, PCR completion criteria, validation rules in schema files.
+**When it appears:** During rapid session work when artifacts are written under time pressure.
+**Why it persists:** Claims feel complete once written. Verification step is deferred and never done.
+**Cost:** Every ACTIVE mechanical claim without a test is an unverifiable assumption.
+A platform built on unverifiable claims is not a governed platform.
+
+---
+
+## Output 2 — Mechanical Check Specification
+
+```yaml
+mechanical_check:
+  trigger: >
+    Before any governance artifact is submitted for ratification. Also at session-start
+    audit when scanning existing artifacts for compliance.
+
+  detection: >
+    For each artifact claiming a mechanical behavior (contains words:
+    "enforced", "blocked", "gates", "required", "mandatory", "validated",
+    "checked", "prevented", "rejected", "cannot", "must not"):
+    Check whether a falsification_test field exists in the same artifact.
+    If the claim exists and falsification_test is absent or contains modal verbs
+    (should, would, might, could, may) → VIOLATION.
+
+  failure_output: >
+    BLOCKED: artifact '[artifact_id]' contains mechanical claim without falsification test.
+    Claim found: '[claim_text]'
+    Add falsification_test field with: observable output, specific file/field/system reference,
+    runnable by tool without AI judgment. Modal verbs (should/would/might) are not accepted.
+
+  enforcement_layer: pre-ratification
+
+  false_positive_risk: LOW
+  false_positive_reason: >
+    A document can mention enforcement in passing without making a new mechanical claim.
+    The check should only trigger on claims with imperative/present-tense language in a
+    constraint or rule block — not in prose descriptions.
+
+check_status: DEFINED
+ratification_reference: null
+ratification_date: null
+wired_date: null
+active_date: null
+consecutive_clean_sessions: 0
+```

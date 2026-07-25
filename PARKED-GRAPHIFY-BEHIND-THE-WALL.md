@@ -1,13 +1,14 @@
 ---
 document_id: PARKED-GRAPHIFY-BEHIND-THE-WALL
 title: Graphify Behind the Wall — Safe-Isolation Install & Use Guide
-status: PARKED — Governor demand 2026-07-20
+status: HARDWIRED — Governor ratified 2026-07-25
+superseded_by: CDS-GRAPHIFY-MANDATORY-PROTOCOL.md
 parked_by: Governor Yariv Fink
 parked_date: 2026-07-20
-activation_condition: "When Phase B build begins and codebase is large enough to benefit from structural graph queries. Re-evaluate at Phase B kickoff."
-pe_score_estimate: LOW — operational tooling, not governance or kernel
-priority_reason: "Not a governance artifact. Operational efficiency tool. Phase A not large enough to need it."
-cds_alignment_verdict: "WALL PRINCIPLE is native CDS. The tool itself is deferred."
+hardwired_date: 2026-07-25
+hardwired_note: "Governor upgraded from PARKED to HARDWIRED. Graphify is now mandatory in all CDS external systems. See CDS-GRAPHIFY-MANDATORY-PROTOCOL.md for full spec."
+activation_condition: "ACTIVATED — mandatory at first commit of any external system/app/SaaS"
+cds_alignment_verdict: "WALL PRINCIPLE is native CDS. The tool is now hardwired."
 schema_verdict: "Graphify is NOT a schema. See SCHEMA-VERDICT section below."
 source: "Governor Yariv Fink — provided 2026-07-20 for evaluation"
 ---

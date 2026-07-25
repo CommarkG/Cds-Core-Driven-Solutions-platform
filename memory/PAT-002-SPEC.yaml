@@ -1,0 +1,72 @@
+---
+pattern_id: PAT-002
+pattern_name: "Hardwired claim without proof of execution"
+severity: CRITICAL
+sessions_confirmed: 3
+first_observed: "2026-07-07"
+recurrence_count: 11
+status: COMPLETE
+output_1_status: STORED
+output_2_status: DEFINED
+source_library: RESOLUTION-LIBRARY (HARDWIRED-CLAIM-WITHOUT-PROOF)
+---
+
+## Output 1 — Pattern Statement
+
+A governance artifact or session output claims that a hook, script, or gate "runs" or
+"is active" without producing any proof that it executed. The claim is stated as fact,
+but no timestamp, log entry, or audit record exists to confirm actual execution.
+
+**Observed in:** Hook implementation claims in corespine records, prevention protocol
+enforcement notes, session summaries claiming a gate fired.
+**When it appears:** After a hook or script is designed but before it is verified.
+The design is good — the proof that it ran is missing.
+**Why it persists:** Designing a hook feels like activating it. Writing "hook is active"
+in a document feels like proof. It is not.
+**Cost:** Governance built on unverified execution is indistinguishable from
+governance that only exists on paper.
+
+---
+
+## Output 2 — Mechanical Check Specification
+
+```yaml
+mechanical_check:
+  trigger: >
+    Before any corespine, protocol, or enforcement document is submitted for ratification.
+    Also when reviewing any document claiming a script or hook is "ACTIVE" or "enforced".
+
+  detection: >
+    For each artifact claiming enforcement is active (contains: "ACTIVE", "hook runs",
+    "gate fires", "enforced at", "prevention active", "running at"):
+    Check whether a proof_of_execution field or execution log reference exists.
+    Proof must contain: specific file path + line number where check executes,
+    AND (timestamp of last execution OR reference to log file containing execution record).
+    If claim exists without proof → VIOLATION.
+    If proof field exists but contains only a file path with no execution record → VIOLATION.
+
+  failure_output: >
+    BLOCKED: artifact '[artifact_id]' claims enforcement is ACTIVE but no proof of execution found.
+    Claim: '[claim_text]'
+    Required: proof_of_execution field containing:
+    1. File path + line number of executing check
+    2. Timestamp of last confirmed execution OR log file reference showing execution record
+    Acceptable: "scripts/pre-tool-corespine-hook.sh line 109 — last run 2026-07-25T10:00:00Z"
+    Not acceptable: "hook is active" or "see hook file" without execution evidence.
+
+  enforcement_layer: pre-ratification
+
+  false_positive_risk: MEDIUM
+  false_positive_reason: >
+    Phase A documents may legitimately declare Phase B enforcement as ANTICIPATED (not ACTIVE).
+    The check should only trigger when the word ACTIVE or equivalent is used — not when the
+    document correctly labels the enforcement as ANTICIPATED or PLANNED. Check the exact status
+    qualifier before flagging.
+
+check_status: DEFINED
+ratification_reference: null
+ratification_date: null
+wired_date: null
+active_date: null
+consecutive_clean_sessions: 0
+```

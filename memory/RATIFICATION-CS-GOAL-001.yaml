@@ -1,0 +1,83 @@
+---
+document_id: RATIFICATION-CS-GOAL-001
+gov_id: GOV-20260725-GOAL-001
+title: "Ratification Record — CS-GOAL-001 Goal Ratification Corespine"
+ratified_by: Governor Yariv Fink
+ratified_date: 2026-07-25
+corespine_id: CS-GOAL-001
+corespine_name: "Goal Ratification Corespine"
+domain: "platform goals"
+pcr_reference: "PCR-002 — 3rd ratification cycle proving system is repeatable"
+ratification_state: RATIFIED
+---
+
+# Ratification Record — CS-GOAL-001
+
+## What Is Being Ratified
+
+CS-GOAL-001 defines the governance rule: every platform goal must be ratified before
+any pipeline activates against it. An unratified goal is an assumption — and assumptions
+are not a basis for execution in CDS.
+
+This corespine governs all goal-level decisions across the platform.
+
+---
+
+## Constraints Ratified
+
+| Constraint ID | Name | Status |
+|--------------|------|--------|
+| CS-GOAL-001-C1 | Every goal must be ratified (GOV-ID format enforced) | RATIFIED |
+| CS-GOAL-001-C2 | Goal must have observable resolution signal (verifiable by third party) | RATIFIED |
+| CS-GOAL-001-PROPOSED-1 | Code enforcement equivalence (RULE-GOAL must read from registry) | PROPOSED — deferred to Phase B implementation |
+
+---
+
+## Falsification Tests (Phase A)
+
+**C1:** CORESPINE-REGISTRY.yaml CS-GOAL-001 block contains constraint CS-GOAL-001-C1 with
+status ACTIVE. threshold/src/gate/rules.ts RULE-GOAL (line 54–85) checks for GOV-[YEAR]-GOAL-[SEQ]
+format. A goal submitted without this format is rejected.
+
+**C2:** A goal entry without a `resolution_signal` field is rejected at creation time.
+Verified by: checking CS-GOAL-001-C2 status = ACTIVE in CORESPINE-REGISTRY.yaml.
+
+---
+
+## PCR-002 Significance
+
+This is ratification cycle 3. Prior cycles:
+- Cycle 1: CS-THRESHOLD-001 (RATIFICATION-CS-THRESHOLD-001.yaml — 2026-07-08)
+- Cycle 2: CS-PE-001 (RATIFICATION-CS-PE-001.yaml — 2026-07-20)
+- Cycle 3: CS-GOAL-001 (this record — 2026-07-25)
+
+Three completed cycles prove the ratification system is repeatable.
+PCR-002 completion criteria (3 cycles) is now met.
+RATIFICATION-REQUEST-TEMPLATE.yaml proves the format is standardized.
+
+---
+
+## Governor Notes
+
+CS-GOAL-001 was in PENDING state since 2026-07-08 (session when corespine registry was built).
+No blocking reason found — ratification was deferred to session with bandwidth.
+Constraints C1 and C2 are active in enforcement code. Ratification is a recognition of
+existing operational state, not a change to it.
+
+CS-GOAL-001-PROPOSED-1 (code enforcement equivalence) requires Phase B code changes.
+Deferred — not ratified. Will re-enter queue when Phase B begins.
+
+---
+
+## Kernel Gate Impact
+
+PCR-002 now has 3 ratification cycles complete.
+PCR-002 is ready for Governor sign-off: "Phase A ratification system is functional."
+Kernel gate component PCR-002: REACHABLE → pending PCR-002 final sign-off.
+
+---
+
+governance_element_id: GE-GOV-001
+wiring_state: CURRENT
+created_session: "2026-07-25"
+last_modified_session: "2026-07-25"
