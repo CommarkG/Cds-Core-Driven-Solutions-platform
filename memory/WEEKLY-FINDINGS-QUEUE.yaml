@@ -1,0 +1,145 @@
+---
+document_id: WEEKLY-FINDINGS-QUEUE
+version: 1.0
+created: 2026-07-25
+updated_at: 2026-07-25
+authority: CDS (Governor oversight)
+purpose: "Permanent accumulator for all platform findings. Feeds weekly evolution sessions."
+engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
+queue_health:
+  total_findings: 7
+  pending: 7
+  batched: 0
+  resolved: 0
+  deferred: 0
+  queue_status: HEALTHY
+  last_weekly_session: null
+  next_weekly_session: "2026-08-01 (Saturday)"
+---
+
+# Weekly Findings Queue
+
+## SEED FINDINGS (initial scan — 2026-07-25)
+
+findings:
+
+  - finding_id: FND-20260725-001
+    category: PATTERN
+    description: "PAT-004 and PAT-005 not yet written — rate limit hit this session. Patterns from RESOLUTION-LIBRARY still missing Output 2 specs."
+    affected_artifacts:
+      - "memory/RESOLUTION-LIBRARY.yaml"
+      - "memory/PAT-004-SPEC.yaml (does not exist yet)"
+      - "memory/PAT-005-SPEC.yaml (does not exist yet)"
+    pe_score: 28.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-31"
+    status: PENDING
+    propagation_required: false
+    propagation_verified: null
+    added_session: "2026-07-25"
+    resolution_reference: null
+
+  - finding_id: FND-20260725-002
+    category: STALE
+    description: "CORESPINE-DASHBOARD.yaml counts are stale — ratified count shows 1 but CS-GOAL-001 is now RATIFIED (should be 2). Derived index has drifted from registry."
+    affected_artifacts:
+      - "memory/CORESPINE-DASHBOARD.yaml"
+      - "memory/CORESPINE-REGISTRY.yaml"
+    pe_score: 35.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-31"
+    status: PENDING
+    propagation_required: true
+    propagation_verified: null
+    added_session: "2026-07-25"
+    resolution_reference: null
+
+  - finding_id: FND-20260725-003
+    category: WISDOM
+    description: "WISDOM-009 (wiring essential) exists in CDS-SYSTEM-WISDOM.md but is not yet cited in CDS-BUILD-DOCTRINE-CORESPIRAL.md as a ratified principle. The doctrine doesn't cross-reference the wisdom file."
+    affected_artifacts:
+      - "CDS-BUILD-DOCTRINE-CORESPIRAL.md"
+      - "CDS-SYSTEM-WISDOM.md"
+    pe_score: 22.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-31"
+    status: PENDING
+    propagation_required: true
+    propagation_verified: null
+    added_session: "2026-07-25"
+    resolution_reference: null
+
+  - finding_id: FND-20260725-004
+    category: PROPAGATION
+    description: "Phase A→B checklist item 4 (pattern archive two-output) is only 3/5 done. PAT-004 and PAT-005 needed before gate can be checked."
+    affected_artifacts:
+      - "CDS-PHASE-TRANSITION-PROTOCOL.md"
+      - "memory/WEEKLY-FINDINGS-QUEUE.yaml"
+    pe_score: 30.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-31"
+    status: PENDING
+    propagation_required: false
+    propagation_verified: null
+    added_session: "2026-07-25"
+    resolution_reference: null
+
+  - finding_id: FND-20260725-005
+    category: VIOLATION
+    description: "System A schemas (decision-node-v1.1, execution-mode-v1.1, agent-definition-v1.1, intent-alignment-v1.1) are OPUS-AUDIT-APPROVED and lock-eligible but never formally locked. No governor sign-off exists."
+    affected_artifacts:
+      - "decision-node-v1.1.schema.yaml"
+      - "execution-mode-v1.1.schema.yaml"
+      - "agent-definition-v1.1.schema.yaml"
+      - "intent-alignment-v1.1.schema.yaml"
+      - "PHASE1-SCHEMAS-COMPLETE-SYSTEM.md"
+    pe_score: 18.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-32"
+    status: PENDING
+    propagation_required: true
+    propagation_verified: null
+    added_session: "2026-07-25"
+    resolution_reference: null
+
+  - finding_id: FND-20260725-006
+    category: OPTIMIZATION
+    description: "CDS-SELF-EVOLUTION-PROTOCOL.md (existing 5-step enrich cycle) is now superseded or enhanced by CDS-WEEKLY-EVOLUTION-ENGINE.md. The relationship between the two is undefined — potential for overlap or confusion."
+    affected_artifacts:
+      - "CDS-SELF-EVOLUTION-PROTOCOL.md"
+      - "CDS-WEEKLY-EVOLUTION-ENGINE.md"
+    pe_score: 20.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-31"
+    status: PENDING
+    propagation_required: true
+    propagation_verified: null
+    added_session: "2026-07-25"
+    resolution_reference: null
+
+  - finding_id: FND-20260725-007
+    category: WISDOM
+    description: "Challenge cycle (Phase A→B gate item 5) has no defined format. What counts as an external review? Who can do it? What report format is required? Undefined = ungated."
+    affected_artifacts:
+      - "CDS-PHASE-TRANSITION-PROTOCOL.md"
+    pe_score: 32.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-31"
+    status: PENDING
+    propagation_required: false
+    propagation_verified: null
+    added_session: "2026-07-25"
+    resolution_reference: null
+
+## BATCH PLAN
+
+  WEEK-2026-31 (2026-08-01):
+    findings: [FND-20260725-002, FND-20260725-007, FND-20260725-004, FND-20260725-001, FND-20260725-006, FND-20260725-003]
+    count: 6
+    priority_order: by pe_score descending
+    estimated_session_time: 45 min
+
+  WEEK-2026-32 (2026-08-08):
+    findings: [FND-20260725-005]
+    count: 1
+    note: "System A schema lock — Governor decision required. Schedule as part of broader Phase B prep."
