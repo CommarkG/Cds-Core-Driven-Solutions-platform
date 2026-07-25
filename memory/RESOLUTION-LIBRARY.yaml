@@ -1,0 +1,102 @@
+---
+document_id: RESOLUTION-LIBRARY
+version: 1.0
+created: 2026-07-08
+authority: CDS (Phase D — completion redefined)
+purpose: "Templates for resolving known violation types. Completion gate — findings open until resolution template exists."
+
+resolution_templates:
+
+  - pattern_id: MECHANICAL-CLAIM-WITHOUT-TEST
+    pattern_name: "Mechanical claim lacks falsification test"
+    confidence_score: 0.7
+    sessions_confirmed: 2
+    status: ACTIVE
+
+    resolution_action: "Add falsification_test field describing concrete blocking action"
+    resolution_example: |
+      Before: claim — "The system enforces layer_declaration on every AI output"
+      After:  claim + test — "The system enforces layer_declaration. Test: run TypeScript on server.ts — if layer_declaration is missing, compilation fails."
+
+    structural_or_cosmetic: STRUCTURAL
+    verified_by: "hardwiring-verification-gate.sh Level 2"
+    prevention_hook: "pre-creation-corespine-hook.sh checks at creation time"
+
+    times_applied: 1
+    success_rate: 0
+    last_applied: 2026-07-08T18:47:19Z
+    last_result: FAIL
+    last_failure_reason: "Added falsification_test description but gate parser did not recognize format. Gate expects specific markdown format for test field. Escalating to Brain for clarification on correct format."
+
+    escalate_to_brain_if: "falsification test cannot be specified concretely (e.g., claim is aspirational rather than mechanical) OR gate parser rejects the test format"
+
+  - pattern_id: HARDWIRED-CLAIM-WITHOUT-PROOF
+    pattern_name: "Hardwired claim lacks proof of execution"
+    confidence_score: 0.7
+    sessions_confirmed: 2
+    status: ACTIVE
+
+    resolution_action: "Add proof_of_execution field showing gate actually ran"
+    resolution_example: |
+      Before: claim — "The hook validates all Write operations"
+      After:  claim + proof — "The hook validates all Write operations. Proof: scripts/pre-tool-corespine-hook.sh runs at TOOL_CALL gate (line 109); logs show ✓ decision made 2026-07-08T16:05:00Z"
+
+    structural_or_cosmetic: STRUCTURAL
+    verified_by: "sweep-all-artifacts.sh count drops on re-scan"
+    prevention_hook: "pre-creation-corespine-hook.sh"
+
+    times_applied: 0
+    success_rate: null
+    last_applied: null
+
+    escalate_to_brain_if: "execution proof cannot be generated mechanically (gate never fires, or proof requires human observation)"
+
+  - pattern_id: STRUCTURAL-CLAIM-WITHOUT-MECHANISM
+    pattern_name: "Structural claim lacks enforcement mechanism"
+    confidence_score: 0.7
+    sessions_confirmed: 2
+    status: ACTIVE
+
+    resolution_action: "Add enforcement_code field pointing to specific file and line where mechanism is enforced"
+    resolution_example: |
+      Before: claim — "Layer declaration is required on every AI output"
+      After:  claim + enforcement — "Layer declaration is required on every AI output. Enforcement: threshold/src/gate/rules.ts line 463-513 (RULE-LAYER-DECLARATION); types.ts line 246-259 (type definition); server.ts line 254-265 (population)."
+
+    structural_or_cosmetic: STRUCTURAL
+    verified_by: "grep enforcement_code finds real file path and mechanism exists"
+    prevention_hook: "pre-creation-corespine-hook.sh"
+
+    times_applied: 0
+    success_rate: null
+    last_applied: null
+
+    escalate_to_brain_if: "mechanism genuinely does not exist yet — must be built as new feature, outside library scope"
+
+  - pattern_id: IMPOSSIBLE-CLAIM-WITHOUT-ENFORCEMENT
+    pattern_name: "Impossible/must-claim lacks enforcement"
+    confidence_score: 0.7
+    sessions_confirmed: 2
+    status: ACTIVE
+
+    resolution_action: "Either (1) build the enforcement that makes the claim true, or (2) relabel claim as TELL not RULE"
+    resolution_example: |
+      Before: claim — "No unclassified input reaches native AI. [NO ENFORCEMENT CODE SHOWN]"
+      After:  claim + enforcement or relabel —
+        Option A: "No unclassified input reaches native AI. Enforcement: RULE-CLASS in threshold/src/gate/rules.ts line 129-159."
+        Option B: "Every input should pass classification. [TELL — documented aspiration, not enforced]"
+
+    structural_or_cosmetic: STRUCTURAL
+    verified_by: "claim disappears from sweep (becomes TOLD not RULED) or gate exists in code"
+    prevention_hook: "pre-creation-corespine-hook.sh"
+
+    times_applied: 0
+    success_rate: null
+    last_applied: null
+
+    escalate_to_brain_if: "enforcement would require architectural change above CDS scope (e.g., new corespine layer, new reasoning framework)"
+
+metadata:
+  rationale: "Resolution Library redefines completion. A violation is DETECTED (acknowledged) until a resolution template exists. RESOLVED (template applied and verified). PREVENTED (creation gate blocks type before occurrence). Confidence measures problem validity. Completion measures resolution status. These are separate axes."
+  template_growth_rule: "When CDS escalates a new violation type, Brain's response becomes a new template entry. This entry is added to RESOLUTION-LIBRARY.yaml before any other work. The library grows from operational experience."
+  verification_gate: "No finding closes (moves from DETECTED to RESOLVED or PREVENTED) without matching resolution_template here"
+  next_review: "Weekly by Opus synthesis. Track times_applied and success_rate to identify template patterns that work vs. those that need Brain redesign"

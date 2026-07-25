@@ -1,0 +1,100 @@
+---
+document_id: GOV-PE-BOOTSTRAP-001
+title: "Governor Priority List — Pre-PE Bootstrap"
+created: 2026-07-15
+authority: Governor (Yariv Fink)
+status: ACTIVE
+purpose: |
+  Manual priority list for all work until PE is ACTIVE (Phase C).
+  This is the ONLY authorized pre-PE prioritization mechanism.
+  No other manual ordering permitted.
+  Deactivates on PE activation day — archived, not deleted.
+
+# ════════════════════════════════════════════════
+# PRIORITY ORDER (top = execute first)
+# ════════════════════════════════════════════════
+
+priority_queue:
+
+  - rank: 1
+    pcr_id: PCR-001
+    title: "Lock DecisionNode Canonical Schema"
+    pe_score_preview: 42.2    # Highest scoring item — goes first
+    why_first: "Critical path blocker. Nothing in Phase B can be built until schema is locked."
+    can_start: IMMEDIATELY
+    estimated_effort_days: 2
+    done_signal: "CANONICAL-DECISION-NODE-SCHEMA.yaml version 1.0 LOCKED + Governor sign-off"
+    corespiral_status: "FLESH LOCKED (2026-07-20) — SKIN in progress — VERIFY pending Governor"
+    schema_file: "CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml"
+    elements_registered: [GE-PE-001, GE-GOV-001, GE-CON-001]
+    pending: "Governor ratification required to advance to CURRENT and close kernel gate"
+
+  - rank: 2
+    pcr_id: PCR-002
+    title: "Phase A Ratification System — Functional"
+    pe_score_preview: 32.7
+    why_second: "Can run parallel with PCR-001. Completes the second Phase B unblock condition."
+    can_start: IMMEDIATELY — parallel with rank 1
+    estimated_effort_days: 1.5
+    done_signal: "3 ratification cycles complete + Governor signs PCR-002 COMPLETE"
+
+  - rank: 3
+    pcr_id: PENDING
+    title: "PE Phase B Build (scoring-engine.ts + queue-manager.ts)"
+    pe_score_preview: TBD — score when PCR-001 and PCR-002 complete
+    why_third: "Cannot start until PCR-001 and PCR-002 are DONE. Then Phase B build begins."
+    can_start: "After PCR-001 AND PCR-002 complete"
+    estimated_effort_days: 5
+    done_signal: "All 10 falsification tests in RATIFICATION-CS-PE-001.yaml pass"
+
+  - rank: 4
+    pcr_id: PENDING
+    title: "90-Day Simulation Before PE ACTIVE"
+    pe_score_preview: TBD
+    why_fourth: "Required before Phase C (PE goes ACTIVE). Governor reviews simulation report."
+    can_start: "After Phase B build complete and stable"
+    estimated_effort_days: 1
+    done_signal: "Simulation report presented to Governor; Governor approves ACTIVE status"
+
+  - rank: 5
+    pcr_id: PENDING
+    title: "GOV-PE-BOOTSTRAP-001 Archive (PE ACTIVE)"
+    pe_score_preview: N/A
+    why_last: "On PE activation day, this document is archived. PE takes over all prioritization."
+    can_start: "PE activation day"
+    done_signal: "bootstrap_status: ARCHIVED. PE queue is now governing."
+
+# ════════════════════════════════════════════════
+# GOVERNOR SUPER ADMIN NOTE
+# ════════════════════════════════════════════════
+
+governor_authority_note: |
+  NOT FLEXIBLE decisions that require ONLY Governor approval:
+  - Q9: Platform suspension (never automatic — Governor decides)
+  - Q10: Formula coefficient changes (Governor approves; CDS models options)
+  - Q11: Simulation before ACTIVE (Governor receives report; Governor says GO)
+  - Q14: PE-CONFIG.yaml writes (Governor-only; CDS reads only)
+
+  These are NOT hard-locked. They require YOUR explicit approval.
+  You have full authority. The label "NOT FLEXIBLE" means:
+  CDS cannot self-authorize these — they need your sign-off.
+
+  Super admin dashboard requirement noted. This will be:
+  CDS-GOVERNOR-DASHBOARD.yaml — single file showing:
+    - All PCRs (status, rank, score)
+    - All corespine ratification states
+    - All NOT-FLEXIBLE decisions pending Governor action
+    - Platform trust tier statuses
+    - PE queue state (when active)
+  Status: QUEUED (rank after Phase B build)
+
+# ════════════════════════════════════════════════
+# BOOTSTRAP LIFECYCLE
+# ════════════════════════════════════════════════
+
+lifecycle:
+  created: 2026-07-15
+  active_until: "PE ACTIVE (Phase C) — date TBD"
+  deactivation_trigger: "PE scores its first live action"
+  archive_location: "memory/archive/GOV-PE-BOOTSTRAP-001-ARCHIVED.yaml"
+  replacement: "PE queue (mechanical, formula-driven, no manual ordering)"

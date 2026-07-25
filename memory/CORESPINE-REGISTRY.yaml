@@ -1,0 +1,249 @@
+---
+registry_id: CORESPINE-REGISTRY
+version: 1.1
+created: 2026-07-08
+last_updated: 2026-07-20
+authority: "Brain (CDS Governor oversight via Yariv)"
+purpose: "Single source of truth for all corespines and their spine constraints"
+hook_design: "All corespines enforced via pre-tool-corespine-hook.sh on EVERY tool call (reads, writes, searches, creates)"
+canonical_platform_element_schema: "CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml"
+schema_wire_date: "2026-07-20"
+schema_wire_note: "PCR-001 FLESH complete. Every corespine entry must declare its governance_element_id. GE- prefix (not DN-)."
+
+corespines:
+  - id: "CS-GOAL-001"
+    name: "Goal Ratification Corespine"
+    domain: "platform goals"
+    ratification_state: "PENDING"
+    ratification_governor_approval: "Awaiting Yariv decision: ratify now or during Phase A"
+    trunk_position: "T1/Goal Governance/Goal Ratification"
+    hook_scope: "ALL_TOOL_CALLS"
+    hook_file: "scripts/pre-tool-corespine-hook.sh"
+    enforcement_code: "threshold/src/gate/rules.ts → RULE-GOAL (line 54-85)"
+    allowed_operations:
+      - Read
+      - Write
+      - Edit
+      - Bash
+      - Glob
+      - Grep
+    blocked_operations:
+      - modify_ratified_goal
+      - delete_goal_record
+    spine_constraints:
+      - constraint_id: "CS-GOAL-001-C1"
+        name: "Every goal must be ratified"
+        description: "A goal that has not been ratified is an assumption. No pipeline activates without traceable ratified goal."
+        hard_coded_check: "RULE-GOAL checks for GOV-[YEAR]-GOAL-[SEQUENCE] format and existence"
+        status: "ACTIVE"
+
+      - constraint_id: "CS-GOAL-001-C2"
+        name: "Goal must have observable resolution signal"
+        description: "Resolution signal must be verifiable by third party; not aspirational"
+        hard_coded_check: "Declaration field enforced at goal creation time"
+        status: "ACTIVE"
+
+      - constraint_id: "CS-GOAL-001-PROPOSED-1"
+        name: "Code enforcement equivalence"
+        description: "A mechanical rule gate implementing a corespine's spine constraints is NOT equivalent to ratified corespine enforcement unless the rule reads its constraints from the corespine registry. Hardcoded rule values do not count as governed constraints."
+        hard_coded_check: "RULE-GOAL must read constraint list from CORESPINE-REGISTRY.yaml at runtime, not hardcode validation logic"
+        implementation_required: "Modify RULE-GOAL to: (1) query CORESPINE-REGISTRY for CS-GOAL-001 constraints, (2) validate goal against registry constraints, (3) reject if registry unreachable"
+        falsification_test: "Add new constraint to CS-GOAL-001 in registry. New goals must respect it without code change."
+        status: "PROPOSED_PENDING_RATIFICATION"
+        source: "Session 2026-07-08: Independence protocol Q3"
+
+  - id: "CS-CREATION-001"
+    name: "Creation Definition Corespine"
+    domain: "any act of creation"
+    ratification_state: "PENDING"
+    trunk_position: "T7/Governance/Creation Protocol"
+    hook_scope: "ALL_TOOL_CALLS"
+    hook_file: "scripts/pre-tool-corespine-hook.sh"
+    enforcement_code: "scripts/pre-tool-corespine-hook.sh (to be built Phase B)"
+    allowed_operations:
+      - Read
+      - Write
+      - Edit
+      - Bash
+      - Glob
+      - Grep
+    blocked_operations:
+      - create_element_without_corespine_declaration
+      - fork_corespine
+    spine_constraints:
+      - constraint_id: "CS-CREATION-001-C1"
+        name: "ZF check before creation"
+        description: "Every new element must pass zero-findings check before activation"
+        status: "ACTIVE"
+
+      - constraint_id: "CS-CREATION-001-PROPOSED-1"
+        name: "Arm contradiction resolution"
+        description: "No arm may contradict declared spine constraints, even with Governor approval. Contradiction triggers escalation, not override. AI does not resolve arm-spine contradictions silently."
+        hard_coded_check: "pre-creation-corespine-hook.sh checks: does element's arm contradict its declared spine? If yes, block creation and surface contradiction to Governor."
+        arm_contradiction_resolution: "BLOCK_AT_CREATION + ESCALATE_TO_GOVERNOR"
+        falsification_test: "Attempt to create arm that contradicts spine → hook must block and provide specific contradiction details"
+        status: "PROPOSED_PENDING_RATIFICATION"
+        source: "Session 2026-07-08: Brain guidance on Q2"
+
+  - id: "CS-THRESHOLD-001"
+    name: "Threshold Enforcement Corespine"
+    domain: "all inputs and outputs"
+    ratification_state: "RATIFIED"
+    ratification_date: "2026-07-08"
+    ratified_by: "Yariv Fink (Governor)"
+    ratification_record: "memory/RATIFICATION-CS-THRESHOLD-001.yaml"
+    trunk_position: "T5/Threshold/Enforcement"
+    hook_scope: "ALL_TOOL_CALLS"
+    hook_file: "scripts/pre-tool-corespine-hook.sh"
+    enforcement_code: "threshold/src/gate/rules.ts → RULE-CLASS (line 129-159) + RULE-QUAR (line 167-183)"
+    enforcement_score: 100%
+    allowed_operations:
+      - Read
+      - Write
+      - Edit
+      - Bash
+      - Glob
+      - Grep
+    blocked_operations:
+      - modify_classification_record
+      - delete_classification_record
+      - bypass_threshold
+    spine_constraints:
+      - constraint_id: "CS-THRESHOLD-001-C1"
+        name: "No unclassified input reaches native AI"
+        description: "Every input is classified at threshold before reaching AI. CR-ID validation required."
+        hard_coded_check: "RULE-CLASS checks for valid CR-ID format"
+        status: "ACTIVE"
+
+      - constraint_id: "CS-THRESHOLD-001-C2"
+        name: "No external content without quarantine"
+        description: "External inputs are flagged QUARANTINE. Cannot activate until cleared."
+        hard_coded_check: "RULE-QUAR enforces QUARANTINE status on external paths"
+        status: "ACTIVE"
+
+  - id: "CS-AI-BEHAVIOR-001"
+    name: "AI Behavior Corespine"
+    domain: "all AI reasoning and output"
+    ratification_state: "PARTIALLY_RATIFIED"
+    ratification_date: "2026-07-08"
+    ratified_by: "CDS Phase C (automatic partial ratification via RULE-LAYER-DECLARATION enforcement)"
+    enforcement_code: "threshold/src/gate/rules.ts → RULE-LAYER-DECLARATION (line 463-513)"
+    enforcement_score: 40%
+    honest_status: "layer_declaration field enforced in ClassificationRecord type. RULE-LAYER-DECLARATION validates presence and validity. reasoning_trace field present in type but not yet validated in output contract—that gap remains."
+    trunk_position: "T7/Governance/AI Behavior Governance"
+    hook_scope: "ALL_TOOL_CALLS"
+    hook_file: "scripts/pre-tool-corespine-hook.sh"
+    allowed_operations:
+      - Read
+      - Write
+      - Edit
+      - Bash
+      - Glob
+      - Grep
+    blocked_operations:
+      - modify_lel_state_directly
+      - self_promote_pattern_to_active
+    spine_constraints:
+      - constraint_id: "CS-AI-BEHAVIOR-001-C1"
+        name: "Layer declaration required"
+        description: "Every AI output must declare which layer (1/2/3) it operates in"
+        hard_coded_check: "RULE-LAYER-DECLARATION in rules.ts validates presence, format, and spine constraint reference"
+        status: "ACTIVE_ENFORCED"
+
+      - constraint_id: "CS-AI-BEHAVIOR-001-PROPOSED-1"
+        name: "Agent demotion policy"
+        description: "Split by severity. false_positive_rate > 0.2 in any single session triggers automatic demotion to PROVISIONAL (not DEPRECATED). DEPRECATED requires Governor decision with evidence."
+        hard_coded_check: "lel-state.json: after Haiku run, if agent.false_positive_rate > 0.2, update agent.status to PROVISIONAL and log_reason"
+        demotion_triggers:
+          - "false_positive_rate > 0.2 → automatic PROVISIONAL demotion (no human decision needed)"
+          - "DEPRECATED status → requires Governor ratification with evidence brief"
+        falsification_test: "Set agent false_positive_rate to 0.25 in lel-state.json → verify system updates status to PROVISIONAL automatically"
+        status: "PROPOSED_PENDING_RATIFICATION"
+        source: "Session 2026-07-08: Brain guidance on Q4"
+
+metadata:
+  ratification_required_before_phase_a: 3
+  proposed_pending_count: 3
+  active_enforced_count: 4
+  designed_not_enforced_count: 1
+  next_review: "Upon Yariv ratification of Phase A"
+
+proposed_ratifications:
+  - spine_constraint_id: "CS-GOAL-001-PROPOSED-1"
+    description: "Code enforcement equivalence: rules must read from registry"
+    proposed_by: "CDS session 2026-07-08"
+    severity: "HIGH"
+
+  - spine_constraint_id: "CS-CREATION-001-PROPOSED-1"
+    description: "Arm contradiction resolution: block at creation, escalate to Governor"
+    proposed_by: "CDS session 2026-07-08"
+    severity: "CRITICAL"
+
+  - spine_constraint_id: "CS-AI-BEHAVIOR-001-PROPOSED-1"
+    description: "Agent demotion policy: automatic on false_positive_rate > 0.2"
+    proposed_by: "CDS session 2026-07-08"
+    severity: "MEDIUM"
+
+  - id: "CS-PE-001"
+    name: "Priority Engine Governance Corespine"
+    domain: "priority scoring, queue management, work ordering"
+    ratification_state: "RATIFIED"
+    ratification_date: "2026-07-15"
+    ratified_by: "Yariv Fink (Governor)"
+    ratification_record: "memory/RATIFICATION-CS-PE-001.yaml"
+    governance_element_id: "GE-PE-001"
+    platform_element_schema: "CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml"
+    trunk_position: "T-PLATFORM/EXECUTION/PRIORITY-ENGINE"
+    hook_scope: "ALL_QUEUE_OPERATIONS"
+    hook_file: "scripts/pre-pe-scoring-hook.sh"
+    enforcement_code: "pe/src/scoring-engine.ts (Phase B build)"
+    enforcement_score: 0%
+    honest_status: "Corespine ratified. PE-CONFIG.yaml created. Implementation (scoring-engine.ts, queue-manager.ts) pending Phase B build."
+    allowed_operations:
+      - read_action_metadata
+      - query_corespine_registry
+      - query_platform_goal
+      - query_platform_status
+      - query_pe_config
+      - calculate_score
+      - modify_queue_position
+      - log_queue_change
+      - escalate_to_governor
+    blocked_operations:
+      - modify_formula_coefficients_without_approval
+      - bypass_ratification_check
+      - reorder_queue_without_logging
+      - hide_trust_modifier_from_metadata
+      - continue_when_registry_unreachable
+    spine_constraints:
+      - constraint_id: "CS-PE-001-C1"
+        name: "Formula reads from config, not hardcoded"
+        description: "All formula coefficients must be read from PE-CONFIG.yaml at runtime."
+        hard_coded_check: "RULE-PE-FORMULA: grep scoring engine for hardcoded numeric coefficient values — must find zero"
+        falsification_test: "Change decay_rate in PE-CONFIG.yaml. Confirm next cycle uses new rate without code deployment."
+        status: "ACTIVE"
+      - constraint_id: "CS-PE-001-C2"
+        name: "Score calculation is deterministic"
+        description: "Identical input parameters must produce bit-identical output scores."
+        hard_coded_check: "RULE-PE-DETERMINISM: automated test runs same input 1000 times, verifies identical output"
+        falsification_test: "Run PE scoring on fixed input set 10 times. All 10 outputs must match byte-for-byte."
+        status: "ACTIVE"
+      - constraint_id: "CS-PE-001-C3"
+        name: "Every queue change is logged"
+        description: "Queue position changes must be logged with: action_id, old_position, new_position, reason, timestamp."
+        hard_coded_check: "RULE-PE-AUDIT: queue operations fail if audit log is unreachable"
+        falsification_test: "Promote action in queue. Verify audit log contains all required fields."
+        status: "ACTIVE"
+      - constraint_id: "CS-PE-001-C4"
+        name: "PE halts when CORESPINE-REGISTRY unreachable"
+        description: "If CORESPINE-REGISTRY.yaml is unreachable, PE must HALT and escalate. No default-allow."
+        hard_coded_check: "RULE-PE-HALT: PE startup check pings registry; failure triggers halt protocol"
+        falsification_test: "Make CORESPINE-REGISTRY unreachable. PE must halt and log HALT message."
+        status: "ACTIVE"
+    proposed_constraints:
+      - constraint_id: "CS-PE-001-PROPOSED-1"
+        name: "LEL confidence integration"
+        description: "When LEL pattern confidence > 0.8, risk field may be adjusted automatically with logging."
+        status: "PROPOSED — awaiting LEL integration in Phase B"
+
+write_gate: "CORESPINE-WRITE-GATE: before adding, verify (1) corespine_id unique, (2) no spine constraint duplicates, (3) enforcement_code exists or marked PENDING"

@@ -1,0 +1,179 @@
+---
+vocabulary_id: VOCABULARY-GRID
+version: 1.0
+created: 2026-07-08T10:05:00Z
+last_updated: 2026-07-08T10:05:00Z
+authority: "CDS (from CSPS semantic anchoring schema + falsification_test field)"
+purpose: "Single source of truth for all vocabulary terms and their corespine governance"
+schema_source: "CSPS production semantic anchoring (five fields) + CDS falsification_test (sixth field)"
+
+terms:
+  - id: "VOCAB-001"
+    term: "CORESPINE"
+    corespine_context: "CS-CREATION-001"
+    definition: "A hierarchical inheritance contract with three inseparable layers: Spine (hard-coded constraints), Arms (AI-governed extensions), and Enforcement Hook (pre-operation gate). Every element in CDS is either governed by a corespine or is an unwitnessed write."
+    usage_boundaries: |
+      CANNOT mean: a governing document, a policy file, a best practice guide, an advisory recommendation.
+      CANNOT be: created informally or extended without Governor approval.
+      CANNOT be enforced: by documentation alone — must have mechanical gate.
+    inheritance_chain: |
+      Inherits from: Nothing (foundational concept).
+      Parent concept: None.
+      Inherited by: Every domain-specific corespine (CS-GOAL-001, CS-THRESHOLD-001, etc.).
+    enforcement_hook: "pre-tool-corespine-hook.sh checks: does this domain have a declared corespine? If not, warn (unknown domain). If yes, proceed to operation check."
+    falsification_test: "Attempt to create element without declaring governing_corespine field. Hook must block with specific message: 'No corespine found for domain.' Element must not be created."
+
+  - id: "VOCAB-002"
+    term: "SPINE"
+    corespine_context: "CS-CREATION-001"
+    definition: "The invariant foundation of a corespine. It defines hard-coded constraints that all elements in this domain must inherit. The spine cannot be changed by AI judgment or by individual element design — only by Governor ratification of a corespine extension."
+    usage_boundaries: |
+      CANNOT mean: the overall corespine (that's the whole tree).
+      CANNOT mean: policy guidance or soft recommendations.
+      CANNOT be extended: without formal Governor ratification and corespine update.
+      CANNOT be bypassed: even with Governor approval (arm contradiction blocks).
+    inheritance_chain: |
+      Inherits from: CS-CREATION-001 (the creation corespine defines what a spine is).
+      Parent concept: Corespine structure.
+      Inherited by: Every corespine's spine_constraints array.
+    enforcement_hook: "pre-tool-corespine-hook.sh CHECK 2: Is this operation in allowed_operations? Allowed_operations is derived from the spine constraints of the governing corespine."
+    falsification_test: "Add new spine constraint to a corespine. Attempt operation that violates new constraint. Hook must block with message naming the violated spine constraint. No code change should be needed — hook reads constraint from registry."
+
+  - id: "VOCAB-003"
+    term: "ARM"
+    corespine_context: "CS-CREATION-001"
+    definition: "A domain-specific extension that sits on top of a spine. Arms contain the WHAT and HOW that AI reasons about, always within spine constraints. AI cannot modify the spine — only propose and execute within arm-layer scope."
+    usage_boundaries: |
+      CANNOT contradict its parent spine (violation blocks creation).
+      CANNOT extend the spine (that requires Governor ratification).
+      CANNOT claim to be independent from a spine.
+      CANNOT bypass spine constraints even with good intent.
+    inheritance_chain: |
+      Inherits from: Its parent corespine's spine constraints.
+      Parent concept: Corespine structure (arms only exist in context of spine).
+      Inherited by: Individual elements (each element is spine + specific arm design).
+    enforcement_hook: "pre-tool-corespine-hook.sh CHECK 3 (creation operations only): Does the creation context declare corespine inheritance? This ensures the arm knows which spine it is constrained by."
+    falsification_test: "Create arm that contradicts spine (e.g., arm declares operation not in spine's allowed_operations). Hook must block before creation: 'ARM contradiction: operation X violates spine constraint Y.' Element must not be created."
+
+  - id: "VOCAB-004"
+    term: "TELL vs RULE"
+    corespine_context: "CS-AI-BEHAVIOR-001"
+    definition: "A TELL is a documented intention without mechanical enforcement (governance as prose). A RULE is a constraint mechanically enforced in code (governance as gate). CDS moves all critical governance from TELL to RULE."
+    usage_boundaries: |
+      TELL: documentation, best practices, advisory guidance, unwitnessed procedures.
+      RULE: mechanical gates, code-enforced constraints, hard-blocked violations.
+      CANNOT blur: if it's documented as critical but not mechanically enforced, it's still a TELL.
+      CANNOT claim RULE: if the enforcement code can be bypassed.
+    inheritance_chain: |
+      Inherits from: CS-AI-BEHAVIOR-001 (AI behavior governance distinguishes tell from rule).
+      Parent concept: Governance distinction.
+      Inherited by: Every spine constraint (must be rule, not tell) and every falsification test (must test the rule, not the tell).
+    enforcement_hook: "pre-tool-corespine-hook.sh: the entire hook is a RULE, not a TELL. Every check is mechanical, not advisory."
+    falsification_test: "Document a governance principle as TELL-only (e.g., 'AI should avoid freelancing'). Attempt freelancing operation. If operation succeeds, it's TELL-only and not enforced as RULE. If operation blocks, the principle is mechanically enforced as RULE."
+
+  - id: "VOCAB-005"
+    term: "SYMBIOTIC PROTOCOL"
+    corespine_context: "CS-AI-BEHAVIOR-001"
+    definition: "The runtime mechanism by which hard-coded spine constraints and AI judgment interact. Hard-code sets the boundary. AI operates within it. Layer 1 (hard-code) is mechanical. Layer 2 (AI judgment) is adaptive within Layer 1. Layer 3 (enforcement hook) validates Layer 2 output against Layer 1 constraints before state changes."
+    usage_boundaries: |
+      CANNOT mean: AI autonomy without constraints.
+      CANNOT mean: hard-code without AI flexibility.
+      CANNOT blur: layers must be mechanically separate in code.
+      CANNOT claim: symbiosis if one layer can override another silently.
+    inheritance_chain: |
+      Inherits from: CS-AI-BEHAVIOR-001 (AI behavior governance).
+      Parent concept: AI-human collaboration model.
+      Inherited by: Every layer_declaration field and every three-layer policy boundary.
+    enforcement_hook: "pre-tool-corespine-hook.sh CHECK 1-3: the hook embodies symbiosis. Hard-code (hook) checks spine constraints (Layer 1). Allowed operations list is the boundary. AI proposes within boundary. Hook validates at gate."
+    falsification_test: "Create AI output that violates spine constraint but claims Layer 2 judgment. Hook must reject before state change with message: 'Output violates spine constraint of Layer 1. Resubmit within constraint.' AI judgment is bounded, not autonomous."
+
+  - id: "VOCAB-006"
+    term: "THRESHOLD"
+    corespine_context: "CS-THRESHOLD-001"
+    definition: "The mechanical gate where all input is classified and all output is validated before reaching AI or human. Nothing bypasses threshold. Every path (human-to-AI, external-to-system, API-to-system) is threaded through threshold gates."
+    usage_boundaries: |
+      CANNOT mean: a simple firewall or filter.
+      CANNOT be: disabled or skipped for performance.
+      CANNOT let: unclassified input reach native AI.
+      CANNOT let: unvalidated output reach human.
+    inheritance_chain: |
+      Inherits from: Nothing (foundational infrastructure).
+      Parent concept: Security and governance boundary.
+      Inherited by: RULE-1 through RULE-9, RULE-CLASS, RULE-QUAR.
+    enforcement_hook: "pre-tool-corespine-hook.sh calls threshold checks implicitly: is this operation allowed by spine? That enforcement IS the threshold gate."
+    falsification_test: "Attempt to issue unclassified input or unvalidated output. Threshold gates (RULE-CLASS, output validation hook) must block both. Neither can reach AI or human. Show the blocked message."
+
+  - id: "VOCAB-007"
+    term: "CLASSIFICATION RECORD"
+    corespine_context: "CS-THRESHOLD-001"
+    definition: "The entry point artifact created when input is classified. Format: CR-[YYMMDD]-[SEQUENCE]. Contains: input source, classification result, confidence, timestamp, auditor. The CR-ID is the gate key — no AI session opens without a valid CR-ID."
+    usage_boundaries: |
+      CANNOT be: missing when AI session opens (RULE-CLASS blocks).
+      CANNOT be: forged or self-generated.
+      CANNOT be: reused across different inputs.
+      CANNOT expire: without explicit Governor ratification of expiration policy.
+    inheritance_chain: |
+      Inherits from: CS-THRESHOLD-001 (threshold governance).
+      Parent concept: Input validation artifact.
+      Inherited by: RULE-CLASS (gate that validates CR-ID).
+    enforcement_hook: "pre-tool-corespine-hook.sh: reading a classification record must be in allowed_operations for CS-THRESHOLD-001. Creating one must have Governor approval in the operation's context."
+    falsification_test: "Attempt AI session without providing CR-ID, or with invalid CR-ID format. RULE-CLASS must block: 'No valid classification record provided. Session cannot open.' Show the blocked message."
+
+  - id: "VOCAB-008"
+    term: "LAYER DECLARATION"
+    corespine_context: "CS-AI-BEHAVIOR-001"
+    definition: "A mandatory field in every AI output that states which layer (1, 2, or 3) the reasoning or decision operates in. Layer 1 = hard-code answer (no judgment). Layer 2 = AI judgment within spine constraints. Layer 3 = escalated decision pending Governor ratification. Every output must declare its layer or be rejected."
+    usage_boundaries: |
+      CANNOT mean: informal reasoning about what layer AI is in.
+      CANNOT be: omitted from output.
+      CANNOT be: false (layer must match actual reasoning source).
+      CANNOT be: anything other than 1, 2, or 3.
+    inheritance_chain: |
+      Inherits from: CS-AI-BEHAVIOR-001 (AI behavior governance).
+      Parent concept: Transparency of AI decision source.
+      Inherited by: Every AI output field validation.
+    enforcement_hook: "pre-tool-corespine-hook.sh: output validation must check layer_declaration field. If missing or invalid, block output before reaching human."
+    falsification_test: "Produce AI output without layer_declaration field. Hook must block: 'Output missing layer_declaration field. Output is not transparent about reasoning source.' Show the rejection."
+
+  - id: "VOCAB-009"
+    term: "GOAL"
+    corespine_context: "CS-GOAL-001"
+    definition: "A single sentence stating a felt need with an observable resolution signal. Formally reviewed and approved by the Platform Governor before any pipeline or build action activates. A goal is a constitutional artifact, not a feature request or project brief."
+    usage_boundaries: |
+      CANNOT be: a solution or technology choice.
+      CANNOT be: multiple goals bundled as one sentence.
+      CANNOT be: aspirational (e.g., 'users feel confident') instead of observable.
+      CANNOT activate: without Governor signature.
+    inheritance_chain: |
+      Inherits from: CS-GOAL-001 (goal ratification corespine).
+      Parent concept: Constitutional requirement for all builds.
+      Inherited by: Every build wizard request (must carry GOV-[YEAR]-GOAL-[SEQUENCE]).
+    enforcement_hook: "pre-tool-corespine-hook.sh: build_wizard_request is an operation that only appears in allowed_operations if a valid goal is declared. Hook blocks if no goal."
+    falsification_test: "Attempt build wizard without goal reference, or with invalid goal format. RULE-GOAL must block: 'No goal reference or goal format invalid. Provide GOV-[YEAR]-GOAL-[SEQUENCE].' Show the blocked message."
+
+  - id: "VOCAB-010"
+    term: "FALSIFICATION TEST"
+    corespine_context: "CS-CREATION-001"
+    definition: "A specific, executable check that proves a claimed constraint is actually enforced. Not a description of enforcement. Not a design intention. A real test that, when violated, shows the constraint working (violation is blocked) or not working (violation succeeds). Every spine constraint must have a falsification test."
+    usage_boundaries: |
+      CANNOT be: theoretical or aspirational.
+      CANNOT be: a description of what should happen.
+      CANNOT be: absent from any spine constraint.
+      CANNOT be: vague (e.g., 'test the constraint') instead of specific.
+    inheritance_chain: |
+      Inherits from: CS-CREATION-001 (creation governance).
+      Parent concept: Proof-of-enforcement standard.
+      Inherited by: Every spine constraint in CORESPINE-REGISTRY.yaml.
+    enforcement_hook: "pre-tool-corespine-hook.sh: after every hook update, a falsification test must show the hook still works. Test with operations that should block and operations that should pass."
+    falsification_test: "For this term itself: Add falsification_test field to a spine constraint. Run the test. It must either prove the constraint is enforced or prove it is not. There is no middle ground. Show the test output."
+
+metadata:
+  total_terms: 10
+  schema_fields: 6
+  corespine_coverage:
+    CS-CREATION-001: 4 terms (CORESPINE, SPINE, ARM, FALSIFICATION TEST)
+    CS-AI-BEHAVIOR-001: 3 terms (TELL vs RULE, SYMBIOTIC PROTOCOL, LAYER DECLARATION)
+    CS-THRESHOLD-001: 2 terms (THRESHOLD, CLASSIFICATION RECORD)
+    CS-GOAL-001: 1 term (GOAL)
+  next_terms_queued: "RATIFICATION, GOVERNOR, VIOLATED, INHERITED, QUALIFIED"
+  write_gate: "VOCABULARY-WRITE-GATE: before adding, verify (1) term_id unique, (2) corespine_context exists in CORESPINE-REGISTRY.yaml, (3) falsification_test is executable"

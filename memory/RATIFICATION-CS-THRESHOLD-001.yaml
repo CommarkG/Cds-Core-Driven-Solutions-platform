@@ -1,0 +1,54 @@
+---
+document_id: RATIFICATION-CS-THRESHOLD-001
+version: 1.0
+created: 2026-07-08T10:15:00Z
+authority: "Yariv Fink (Platform Governor)"
+ratification_date: 2026-07-08T10:15:00Z
+ratified_by: "Yariv Fink (Governor)"
+purpose: "Formal ratification of CS-THRESHOLD-001 corespine"
+
+corespine_id: CS-THRESHOLD-001
+corespine_name: "Threshold Enforcement Corespine"
+corespine_domain: "all inputs and outputs"
+
+evidence_of_mechanical_enforcement:
+  - mechanism: "RULE-CLASS (rules.ts line 129-159)"
+    constraint: "No unclassified input reaches native AI"
+    enforcement: "CR-ID validation, classification record required"
+    status: "MECHANICALLY ENFORCED"
+
+  - mechanism: "RULE-QUAR (rules.ts line 167-183)"
+    constraint: "No external content without quarantine"
+    enforcement: "External paths flagged QUARANTINE, blocked until clearance"
+    status: "MECHANICALLY ENFORCED"
+
+  - mechanism: "Output validation gate (referenced in CS-AI-BEHAVIOR-001)"
+    constraint: "No unvalidated output reaches human"
+    enforcement: "Output contract validation before state change"
+    status: "DESIGNED, PARTIALLY ENFORCED"
+
+ratification_evidence:
+  - file: "threshold/src/gate/rules.ts"
+    lines: "129-183 (RULE-CLASS and RULE-QUAR)"
+    proof: "Code shows hard-block logic, not advisory"
+
+  - file: "memory/CORESPINE-REGISTRY.yaml"
+    entry: "CS-THRESHOLD-001"
+    proof: "Enforcement code locations documented"
+
+  - file: "memory/VOCABULARY-GRID.yaml"
+    terms: ["THRESHOLD", "CLASSIFICATION RECORD"]
+    proof: "Vocabulary anchors corespine to semantic definitions"
+
+ratification_decision:
+  "CS-THRESHOLD-001 is RATIFIED as the first CDS corespine with real code enforcement. It has:
+   1. Documented spine constraints (no unclassified input, no external content without quarantine)
+   2. Mechanical enforcement in production code (RULE-CLASS, RULE-QUAR)
+   3. Vocabulary definitions (VOCABULARY-GRID.yaml)
+   4. Hook enforcement scope defined (pre-tool-corespine-hook.sh)
+   This is what a RULE looks like, not a TELL."
+
+ratification_state: "RATIFIED"
+next_corespines_for_ratification: ["CS-GOAL-001 (in progress)", "CS-CREATION-001 (pending)", "CS-AI-BEHAVIOR-001 (pending)"]
+
+approval_signature: "Yariv Fink, Platform Governor"

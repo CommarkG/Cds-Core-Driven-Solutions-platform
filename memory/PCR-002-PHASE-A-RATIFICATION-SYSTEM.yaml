@@ -1,0 +1,106 @@
+---
+document_id: PCR-002
+type: Priority Change Request
+title: "Phase A Ratification System — Functional Gate"
+created: 2026-07-15
+created_by: CDS (submitted for Governor queue)
+authority: Governor (Yariv Fink)
+status: PENDING_QUEUE — awaiting PE activation; manually prioritized via GOV-PE-BOOTSTRAP-001
+
+# ════════════════════════════════════════════════
+# WHY THIS EXISTS
+# ════════════════════════════════════════════════
+
+why: |
+  Phase B requires a working ratification system. PE's core mechanic (unratified = HELD)
+  is meaningless without a working ratification workflow. If ratification cannot be triggered,
+  approved, and recorded — PE cannot govern anything. This PCR defines what "ratification
+  system functional" actually means, so Governor can declare it done.
+
+# ════════════════════════════════════════════════
+# WHAT "DONE" MEANS
+# ════════════════════════════════════════════════
+
+completion_criteria:
+  - Governor can receive a ratification request (format: structured brief)
+  - Governor can approve or reject with a record (format: RATIFICATION-[ID].yaml)
+  - Approved ratification updates CORESPINE-REGISTRY.yaml ratification_state automatically or by CDS
+  - At least 3 ratification cycles completed successfully (CS-THRESHOLD-001 is 1, CS-PE-001 is 2 — need 1 more test case)
+  - CORESPINE-DASHBOARD.yaml shows accurate ratification counts (currently: 2 RATIFIED, 1 PARTIALLY_RATIFIED, 2 PENDING)
+  - False-positive test: attempt to queue unratified action — must be HELD, not queued
+  ratification_required: false
+  note: "This is procedural/mechanical — no corespine ratification needed for the ratification system itself. Governor declares it functional by signing PCR-002 completion."
+
+# ════════════════════════════════════════════════
+# PE SCORING INPUTS
+# ════════════════════════════════════════════════
+
+pe_metadata:
+  value: 80           # Without this, PE's ratification gate is untested — high value
+  urgency: 7          # Phase B can start while this is in progress; less critical than PCR-001
+  risk: 15            # Medium — partially built already (CS-THRESHOLD-001 and CS-PE-001 both completed)
+  effort: 12          # 1.5 days — mostly validating existing flow + 1 additional test case
+  verification_cost: 8  # 1 day — run 3 ratification cycles end-to-end, verify HELD gate
+  trust_tier: ADMIN
+  platform_priority_tag: CRITICAL
+
+  # Calculated (for reference):
+  # base_score = ((80 x 7) - 15) / (12 + 8) = (560 - 15) / 20 = 545/20 = 27.25
+  # final_score = 27.25 x 1.2 (ADMIN) = 32.7
+  # Second priority after PCR-001 (score 42.2)
+
+# ════════════════════════════════════════════════
+# CURRENT STATE (what's already working)
+# ════════════════════════════════════════════════
+
+current_state:
+  working:
+    - Ratification record format (RATIFICATION-CS-THRESHOLD-001.yaml, RATIFICATION-CS-PE-001.yaml both exist)
+    - CORESPINE-REGISTRY.yaml ratification_state field (proven: CS-THRESHOLD-001 RATIFIED, CS-PE-001 RATIFIED)
+    - Governor ratification decision mechanism (2 successful ratifications)
+  not_yet_proven:
+    - HELD gate (unratified action blocked from queue — not tested end-to-end, PE not built yet)
+    - Ratification state update triggering queue re-evaluation (PE not built)
+    - Third ratification cycle (only 2 complete)
+  implication: "The ratification PROCESS works. The ratification GATE in PE needs Phase B build to be proven."
+
+# ════════════════════════════════════════════════
+# SCOPE
+# ════════════════════════════════════════════════
+
+scope:
+  in_scope:
+    - Complete one more ratification cycle (CS-GOAL-001 or CS-CREATION-001)
+    - Verify CORESPINE-DASHBOARD.yaml counts are accurate
+    - Document ratification request format (so any future corespine follows the same flow)
+    - Governor signs: "Ratification system is functional as a process"
+  out_of_scope:
+    - The PE HELD gate (proven in Phase B when scoring-engine.ts is built)
+    - Automatic ratification state propagation to PE queue (Phase B)
+    - Ratification for non-corespine items (future scope)
+
+# ════════════════════════════════════════════════
+# DEPENDENCY MAP
+# ════════════════════════════════════════════════
+
+blocks:
+  - Phase B build start (second of 4 conditions)
+  - PE going ACTIVE (Phase C)
+
+blocked_by:
+  - Nothing — can run in parallel with PCR-001
+
+can_run_parallel_with: PCR-001
+
+# ════════════════════════════════════════════════
+# RECOMMENDED EXECUTION
+# ════════════════════════════════════════════════
+
+recommended_approach:
+  step_1: "Ratify either CS-GOAL-001 or CS-CREATION-001 (both PENDING — pick one as test case)"
+  step_2: "Update CORESPINE-DASHBOARD.yaml counts"
+  step_3: "Document standard ratification request format as RATIFICATION-REQUEST-TEMPLATE.yaml"
+  step_4: "Governor reviews 3 completed ratifications and signs: PCR-002 COMPLETE"
+
+  recommended_next_ratification: "CS-GOAL-001 (Goal Ratification Corespine) — most foundational of the two PENDING corespines"
+  sequencing: "Can run in parallel with PCR-001. Second item in GOV-PE-BOOTSTRAP-001."

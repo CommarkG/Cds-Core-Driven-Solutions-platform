@@ -1,0 +1,153 @@
+---
+document_id: SCHEMA-DASHBOARD
+version: 1.0
+created: 2026-07-08T19:30:00Z
+last_updated: 2026-07-08T19:30:00Z
+authority: CDS Platform (data view from VOCABULARY-GRID.yaml)
+purpose: "Real-time visibility into schema vocabulary state: term coverage, governance binding, enforcement proof"
+data_source: "memory/VOCABULARY-GRID.yaml (single source of truth)"
+
+schema_summary:
+  total_terms: 10
+  total_schema_fields: 6
+  measurement_timestamp: 2026-07-08T10:05:00Z
+  status: "VERIFIED — 100% corespine coverage, 100% falsification tests present"
+
+vocabulary_inventory:
+  by_corespine:
+    CS-CREATION-001:
+      count: 4
+      terms: ["CORESPINE", "SPINE", "ARM", "FALSIFICATION TEST"]
+      coverage: 100%
+      enforcement_gateway: "pre-tool-corespine-hook.sh"
+
+    CS-AI-BEHAVIOR-001:
+      count: 3
+      terms: ["TELL vs RULE", "SYMBIOTIC PROTOCOL", "LAYER DECLARATION"]
+      coverage: 100%
+      enforcement_gateway: "threshold/src/gate/rules.ts (RULE-LAYER-DECLARATION)"
+
+    CS-THRESHOLD-001:
+      count: 2
+      terms: ["THRESHOLD", "CLASSIFICATION RECORD"]
+      coverage: 100%
+      enforcement_gateway: "threshold/src/gate/rules.ts (RULE-CLASS, RULE-QUAR)"
+
+    CS-GOAL-001:
+      count: 1
+      terms: ["GOAL"]
+      coverage: 100%
+      enforcement_gateway: "threshold/src/gate/rules.ts (RULE-GOAL)"
+
+completeness_metrics:
+  terms_with_schema_position: 10/10 (100%)
+  terms_with_corespine_context: 10/10 (100%)
+  terms_with_falsification_test: 10/10 (100%)
+  terms_with_usage_boundaries: 10/10 (100%)
+  terms_with_inheritance_chain: 10/10 (100%)
+  terms_with_enforcement_hook_reference: 10/10 (100%)
+
+schema_binding_proof:
+  - term_id: VOCAB-001
+    term: CORESPINE
+    governed_by: CS-CREATION-001
+    enforcement_visible: true
+    proof: "pre-tool-corespine-hook.sh CHECK 1 checks domain corespine"
+
+  - term_id: VOCAB-002
+    term: SPINE
+    governed_by: CS-CREATION-001
+    enforcement_visible: true
+    proof: "pre-tool-corespine-hook.sh CHECK 2 validates spine constraints from registry"
+
+  - term_id: VOCAB-003
+    term: ARM
+    governed_by: CS-CREATION-001
+    enforcement_visible: true
+    proof: "pre-tool-corespine-hook.sh CHECK 3 detects arm-spine contradictions at creation"
+
+  - term_id: VOCAB-004
+    term: TELL vs RULE
+    governed_by: CS-AI-BEHAVIOR-001
+    enforcement_visible: true
+    proof: "pre-tool-corespine-hook.sh is a RULE, not a TELL — mechanically enforced"
+
+  - term_id: VOCAB-005
+    term: SYMBIOTIC PROTOCOL
+    governed_by: CS-AI-BEHAVIOR-001
+    enforcement_visible: true
+    proof: "Three-layer separation enforced: hard-code (hook) → AI (judgment) → validation (hook)"
+
+  - term_id: VOCAB-006
+    term: THRESHOLD
+    governed_by: CS-THRESHOLD-001
+    enforcement_visible: true
+    proof: "RULE-CLASS and RULE-QUAR are live gate implementations"
+
+  - term_id: VOCAB-007
+    term: CLASSIFICATION RECORD
+    governed_by: CS-THRESHOLD-001
+    enforcement_visible: true
+    proof: "CR-ID validation required; RULE-CLASS blocks missing CR-ID"
+
+  - term_id: VOCAB-008
+    term: LAYER DECLARATION
+    governed_by: CS-AI-BEHAVIOR-001
+    enforcement_visible: true
+    proof: "RULE-LAYER-DECLARATION in threshold/src/gate/rules.ts validates field presence"
+
+  - term_id: VOCAB-009
+    term: GOAL
+    governed_by: CS-GOAL-001
+    enforcement_visible: true
+    proof: "RULE-GOAL checks GOV-[YEAR]-GOAL-[SEQUENCE] format and existence"
+
+  - term_id: VOCAB-010
+    term: FALSIFICATION TEST
+    governed_by: CS-CREATION-001
+    enforcement_visible: true
+    proof: "Every constraint must have concrete test; tested in pre-tool-corespine-hook.sh"
+
+coverage_validation:
+  - check: "Every term has governance corespine"
+    result: PASS
+    count: 10/10
+
+  - check: "Every term has falsification test"
+    result: PASS
+    count: 10/10
+
+  - check: "Every term has enforcement hook reference"
+    result: PASS
+    count: 10/10
+
+  - check: "Every corespine has at least one term"
+    result: PASS
+    count: 4/4 corespines with terms
+
+  - check: "All term IDs unique"
+    result: PASS
+    count: 10 unique IDs
+
+  - check: "All corespine references exist in CORESPINE-REGISTRY.yaml"
+    result: PASS
+    references_verified: "CS-CREATION-001, CS-AI-BEHAVIOR-001, CS-THRESHOLD-001, CS-GOAL-001 all exist"
+
+next_queue:
+  queued_terms: ["RATIFICATION", "GOVERNOR", "VIOLATED", "INHERITED", "QUALIFIED"]
+  queued_count: 5
+  projected_total_after_queue: 15 terms
+  priority_next: "RATIFICATION (needed for corespine ratification tracking)"
+
+health_status:
+  schema_completeness: GREEN (100%)
+  governance_binding: GREEN (every term governed)
+  enforcement_proof: GREEN (every term has execution proof)
+  corespine_coverage: GREEN (4/4 corespines active)
+  vocabulary_state: VERIFIED
+
+metadata:
+  what_this_is: "A real-time count, not a narrative. Shows: term inventory, corespine binding, enforcement proof, completeness checks, and queued additions."
+  how_to_read: "Look at completeness_metrics for quick status. Look at schema_binding_proof for governance proof. Look at coverage_validation for gaps (none as of this timestamp)."
+  update_trigger: "Automatically re-generated whenever VOCABULARY-GRID.yaml or CORESPINE-REGISTRY.yaml changes"
+  next_update: "After queued_terms are formalized and added to VOCABULARY-GRID.yaml"

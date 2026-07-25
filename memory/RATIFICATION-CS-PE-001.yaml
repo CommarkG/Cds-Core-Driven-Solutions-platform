@@ -1,0 +1,179 @@
+---
+document_id: RATIFICATION-CS-PE-001
+version: 1.1
+created: 2026-07-15
+last_updated: 2026-07-20
+authority: Governor (Yariv Fink)
+ratified_by: Yariv Fink
+ratification_date: 2026-07-15
+corespine_ratified: CS-PE-001
+governance_element_id: GE-PE-001
+platform_element_schema: CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml
+schema_wire_date: "2026-07-20"
+
+ratification_context: |
+  Governor reviewed PE Expert Summary v2.0 (Claude-Sonnet-PE-Review-2026-07-14).
+  Approved Sonnet's best-recommendation answers to all 18 pre-ratification questions.
+  All answers are marked FLEXIBLE — adjustable via PE-CONFIG.yaml without code deployment.
+  CS-PE-001 is now RATIFIED. Phase B build is unblocked pending DecisionNode schema lock.
+
+governor_decisions:
+
+  # CATEGORY A: Formula & Scoring
+
+  Q1_formula_coefficients:
+    decision: "All weights at 1.0 (neutral). Adjust based on first 90-day simulation before PE goes ACTIVE."
+    value_weight: 1.0
+    urgency_weight: 1.0
+    risk_weight: 1.0
+    effort_weight: 1.0
+    verification_weight: 1.0
+    flexible: true
+    change_mechanism: "PE-CONFIG.yaml — no code change needed"
+
+  Q2_trust_modifiers:
+    decision: "Keep +20%/+10%/-10%. EXTERNAL stays at 0% (baseline, not penalized). Penalizing EXTERNAL would discourage new platform onboarding."
+    ADMIN: 1.2
+    TRUSTED: 1.1
+    EXTERNAL: 1.0
+    PROBATION: 0.9
+    flexible: true
+    change_mechanism: "PE-CONFIG.yaml — no code change needed"
+
+  Q3_cycle_interval:
+    decision: "1 hour for Phase B launch. Reduce to 15 min after PE proves stable across 4 weeks."
+    initial_value: 1
+    unit: hours
+    flexible: true
+    change_mechanism: "PE-CONFIG.yaml — no code change needed"
+
+  Q4_queue_depth:
+    decision: "Top-3 active for Phase B. Expand to 5 once velocity baseline established (after 30 days)."
+    initial_value: 3
+    flexible: true
+    change_mechanism: "PE-CONFIG.yaml — no code change needed"
+
+  Q5_urgency_decay_rate:
+    decision: "0.3/day applies to all work including user-facing. Urgency=10 decays to 0 in 33 days. Use decay_exempt_tags (USER_BLOCKING, SECURITY_CRITICAL) for work that must not decay."
+    decay_rate: 0.3
+    decay_exempt_tags: [USER_BLOCKING, SECURITY_CRITICAL]
+    flexible: true
+    change_mechanism: "PE-CONFIG.yaml — no code change needed"
+
+  Q6_override_limits:
+    decision: "All overrides logged. Soft limit: 3+ overrides in same 7-day window triggers auto-suggestion to Governor to adjust formula coefficients. Not a hard block."
+    soft_limit_per_week: 3
+    action_on_breach: "Auto-suggest formula review (not block)"
+    flexible: true
+    change_mechanism: "PE-CONFIG.yaml — soft_limit field"
+
+  # CATEGORY B: Governance & Authority
+
+  Q7_negative_score_policy:
+    decision: "Negative-scoring actions remain in backlog. After 30 days at negative score, auto-archive with notification to submitter. Governor can restore archived action manually."
+    policy: "auto-archive after 30 days"
+    restoration: "Governor manual restore"
+    flexible: true
+    change_mechanism: "PE-CONFIG.yaml — negative_score_archive_days field"
+
+  Q8_tiebreaker_order:
+    decision: "Approved as proposed: Ratification > Trust tier > Platform priority > Creation time > Action ID."
+    order: [ratification_state, trust_tier, platform_priority_tag, created_at, action_id]
+    flexible: true
+    change_mechanism: "PE-CONFIG.yaml — tiebreakers.order array (reorder without code change)"
+
+  Q9_suspended_platform_trigger:
+    decision: "PROBATION for 3 consecutive weekly cycles with no improvement triggers Governor brief for suspension decision. SUSPENDED is always a Governor decision — never automatic."
+    probation_to_suspension_trigger: "3 consecutive cycles below threshold in PROBATION"
+    suspension_authority: "Governor only — never automatic"
+    flexible: false
+    rationale: "Platform suspension is a constitutional action; must remain Governor-gated"
+
+  Q10_formula_change_authority:
+    decision: "CDS may model and present coefficient proposals to Governor. Governor approves. Platforms may not propose formula changes directly — must route through CDS."
+    can_propose: [CDS, Governor]
+    cannot_propose: [platforms]
+    approval_required: Governor
+    flexible: false
+    rationale: "Formula is governance layer; platform influence on it would be authority bypass"
+
+  Q11_simulation_requirement:
+    decision: "Required before PE goes ACTIVE (not before ratification). CDS runs scoring simulation against last 90 days of actions. Report presented to Governor before ACTIVE status."
+    required_before: "PE goes ACTIVE (Phase C)"
+    not_required_before: "Ratification or Phase B build"
+    flexible: false
+
+  Q12_lel_integration_threshold:
+    decision: "Confidence threshold: 0.8. Blanket Governor approval for the mechanism (not per-pattern). Governor may revoke blanket approval at any time. Each auto-adjustment logged with pattern_id and confidence_score."
+    lel_confidence_threshold: 0.8
+    approval_type: "blanket mechanism approval"
+    revocation: "Governor may revoke blanket approval; revert to per-pattern"
+    flexible: true
+    change_mechanism: "PE-CONFIG.yaml — lel_confidence_threshold field (once LEL integration built)"
+
+  # CATEGORY C: Implementation & Phase Transitions
+
+  Q13_phase_b_trigger:
+    decision: "Phase B begins when ALL of: CS-PE-001 ratified (DONE), DecisionNode schema locked (PENDING), PE-CONFIG.yaml created (DONE), Phase A ratification system working."
+    conditions:
+      - "CS-PE-001 RATIFIED: DONE (2026-07-15)"
+      - "DecisionNode schema locked: PENDING (Phase 1 blocker)"
+      - "PE-CONFIG.yaml created: DONE (2026-07-15)"
+      - "Phase A ratification system functional: PENDING"
+    flexible: false
+
+  Q14_pe_config_ownership:
+    decision: "Governor only may modify formula coefficients in PE-CONFIG.yaml. CDS reads but does not modify. Every change logged in PE-CONFIG.yaml change_log with: date, changed_by, field, old_value, new_value, reason."
+    modify_authority: Governor
+    read_authority: CDS
+    change_gate: "Logged entry in PE-CONFIG.yaml change_log (enforced by validate-pe-config-change.sh Phase B)"
+    flexible: false
+
+  Q15_backlog_migration:
+    decision: "Option A — Clean Start. All in-progress Phase A work completes before PE activates. Day 1 of PE: clean queue, all new submissions scored by PE. If Phase A wrap-up exceeds 2 weeks, Governor may switch to Option C (grandfather clause)."
+    primary_option: "Option A — Clean Start"
+    fallback_after: "2 weeks of Phase A wrap-up"
+    fallback_option: "Option C — Grandfather Clause"
+    flexible: true
+    change_mechanism: "Governor decision; update this field"
+
+  Q16_halt_notification:
+    decision: "Governor notified within 15 minutes of PE halt. On-call admin has authority to restore registry/config without Governor approval. If unresolvable in 1 hour, Governor escalation mandatory."
+    governor_notification_sla: "15 minutes"
+    oncall_authority: "Restore registry/config (not override governance)"
+    mandatory_escalation_after: "1 hour unresolved"
+    flexible: true
+    change_mechanism: "PE-CONFIG.yaml — halt_notification_sla_minutes field"
+
+  Q17_audit_log_retention:
+    decision: "12 months rolling retention. Governor and CDS admin may query all logs. Platforms may query their own actions' audit trail (not others'). No deletion permitted."
+    retention_months: 12
+    query_access:
+      all_logs: [Governor, CDS_admin]
+      own_actions_only: [platforms]
+    deletion: "Not permitted"
+    flexible: true
+    change_mechanism: "PE-CONFIG.yaml — audit.retention_months field"
+
+  Q18_pe_bootstrap_problem:
+    decision: "Governor creates GOV-PE-BOOTSTRAP-001: a manual priority list for the ratification queue until CS-PE-001 is ratified and PE is active. Once PE is ACTIVE, it takes over all queue decisions including ratification work. Bootstrap list is archived (not deleted) on PE activation day."
+    bootstrap_artifact: "GOV-PE-BOOTSTRAP-001 (Governor to create)"
+    bootstrap_scope: "Ratification queue only, during transition"
+    deactivation: "PE activation day — bootstrap list archived"
+    flexible: false
+    note: "GOV-PE-BOOTSTRAP-001 is the ONLY pre-PE prioritization mechanism. No other manual ordering permitted."
+
+phase_b_unblock:
+  status: "2 of 4 conditions met"
+  met:
+    - "CS-PE-001 RATIFIED (2026-07-15)"
+    - "PE-CONFIG.yaml created (2026-07-15)"
+  pending:
+    - "DecisionNode schema locked (Phase 1 blocker — highest priority)"
+    - "Phase A ratification system functional"
+
+metadata:
+  next_action: "Governor creates GOV-PE-BOOTSTRAP-001 (Q18). CDS prioritizes DecisionNode schema lock (Q13 blocker)."
+  pe_config_created: "2026-07-15"
+  pe_config_path: "memory/PE-CONFIG.yaml"
+  review_document: "Claude-Sonnet-PE-Review-2026-07-14 (Drive)"

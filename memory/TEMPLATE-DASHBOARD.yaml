@@ -1,0 +1,180 @@
+---
+document_id: TEMPLATE-DASHBOARD
+version: 1.0
+created: 2026-07-08T19:40:00Z
+last_updated: 2026-07-08T19:40:00Z
+authority: CDS Platform (data view from RESOLUTION-LIBRARY.yaml)
+purpose: "Real-time visibility into resolution library state: templates available, application tracking, success rates, escalation triggers"
+data_source: "memory/RESOLUTION-LIBRARY.yaml (single source of truth)"
+
+resolution_library_summary:
+  total_templates: 4
+  active_templates: 4
+  templates_with_applications: 1
+  templates_with_successful_applications: 0
+  measurement_timestamp: 2026-07-08T19:40:00Z
+  library_status: "OPERATIONAL — templates defined, success rate tracking active, first application tested"
+
+template_inventory:
+
+  MECHANICAL-CLAIM-WITHOUT-TEST:
+    pattern_id: MECHANICAL-CLAIM-WITHOUT-TEST
+    pattern_name: "Mechanical claim lacks falsification test"
+    status: ACTIVE
+    confidence_score: 0.7
+    sessions_confirmed: 2
+    structural_or_cosmetic: STRUCTURAL
+
+    resolution_action: "Add falsification_test field describing concrete blocking action"
+    escalation_trigger: "falsification test cannot be specified concretely OR gate parser rejects format"
+    prevention_hook: "pre-creation-corespine-hook.sh"
+    verified_by: "hardwiring-verification-gate.sh Level 2"
+
+    application_history:
+      times_applied: 1
+      times_successful: 0
+      success_rate: 0%
+      last_applied: 2026-07-08T18:47:19Z
+      last_result: FAIL
+      last_failure_reason: "Added falsification_test description but gate parser did not recognize format. Gate expects specific markdown format for test field."
+      escalation_status: "ESCALATED — awaiting Brain guidance on correct format"
+
+  HARDWIRED-CLAIM-WITHOUT-PROOF:
+    pattern_id: HARDWIRED-CLAIM-WITHOUT-PROOF
+    pattern_name: "Hardwired claim lacks proof of execution"
+    status: ACTIVE
+    confidence_score: 0.7
+    sessions_confirmed: 2
+    structural_or_cosmetic: STRUCTURAL
+
+    resolution_action: "Add proof_of_execution field showing gate actually ran"
+    escalation_trigger: "execution proof cannot be generated mechanically"
+    prevention_hook: "pre-creation-corespine-hook.sh"
+    verified_by: "sweep-all-artifacts.sh count drops on re-scan"
+
+    application_history:
+      times_applied: 0
+      times_successful: 0
+      success_rate: null
+      last_applied: null
+      last_result: null
+      status: "QUEUED — ready for application on next matching violation"
+
+  STRUCTURAL-CLAIM-WITHOUT-MECHANISM:
+    pattern_id: STRUCTURAL-CLAIM-WITHOUT-MECHANISM
+    pattern_name: "Structural claim lacks enforcement mechanism"
+    status: ACTIVE
+    confidence_score: 0.7
+    sessions_confirmed: 2
+    structural_or_cosmetic: STRUCTURAL
+
+    resolution_action: "Add enforcement_code field pointing to specific file and line where mechanism is enforced"
+    escalation_trigger: "mechanism genuinely does not exist yet"
+    prevention_hook: "pre-creation-corespine-hook.sh"
+    verified_by: "grep enforcement_code finds real file path and mechanism exists"
+
+    application_history:
+      times_applied: 0
+      times_successful: 0
+      success_rate: null
+      last_applied: null
+      last_result: null
+      status: "QUEUED — ready for application on next matching violation"
+
+  IMPOSSIBLE-CLAIM-WITHOUT-ENFORCEMENT:
+    pattern_id: IMPOSSIBLE-CLAIM-WITHOUT-ENFORCEMENT
+    pattern_name: "Impossible/must-claim lacks enforcement"
+    status: ACTIVE
+    confidence_score: 0.7
+    sessions_confirmed: 2
+    structural_or_cosmetic: STRUCTURAL
+
+    resolution_action: "Either (1) build the enforcement that makes the claim true, or (2) relabel claim as TELL not RULE"
+    escalation_trigger: "enforcement would require architectural change above CDS scope"
+    prevention_hook: "pre-creation-corespine-hook.sh"
+    verified_by: "claim disappears from sweep (becomes TELL) or gate exists in code"
+
+    application_history:
+      times_applied: 0
+      times_successful: 0
+      success_rate: null
+      last_applied: null
+      last_result: null
+      status: "QUEUED — ready for application on next matching violation"
+
+application_tracking:
+
+  by_result:
+    PASS: 0
+    FAIL: 1
+    PENDING: 0
+    QUEUED: 3
+
+  by_template:
+    MECHANICAL-CLAIM-WITHOUT-TEST: 1 application (FAIL)
+    HARDWIRED-CLAIM-WITHOUT-PROOF: 0 applications (queued)
+    STRUCTURAL-CLAIM-WITHOUT-MECHANISM: 0 applications (queued)
+    IMPOSSIBLE-CLAIM-WITHOUT-ENFORCEMENT: 0 applications (queued)
+
+success_rate_snapshot:
+  overall_success_rate: 0% (1 application, 0 successes)
+  overall_failure_rate: 100% (1 application, 1 failure)
+  templates_with_data: 1 (MECHANICAL-CLAIM-WITHOUT-TEST)
+  templates_pending_first_application: 3
+
+escalation_queue:
+  current_escalations: 1
+    - pattern: MECHANICAL-CLAIM-WITHOUT-TEST
+      issue: "Gate format specification needed"
+      escalated_to: Brain
+      escalation_reason: "First application failed due to format mismatch between what we provided and what gate expects"
+      awaiting_response: YES
+
+failure_analysis:
+  root_cause_categories:
+    - category: FORMAT_MISMATCH
+      count: 1
+      affected_templates: [MECHANICAL-CLAIM-WITHOUT-TEST]
+      description: "Gate parser expected specific markdown/YAML structure; template provided different format"
+      resolution_needed: Brain guidance on correct format specification
+
+prevention_gaps:
+  - template_id: MECHANICAL-CLAIM-WITHOUT-TEST
+    gap: "First application shows no automated format validation at template creation time"
+    recommendation: "Add format_specification field to template so CDS validates format before applying"
+
+next_queue:
+  templates_ready_for_first_application: [HARDWIRED-CLAIM-WITHOUT-PROOF, STRUCTURAL-CLAIM-WITHOUT-MECHANISM, IMPOSSIBLE-CLAIM-WITHOUT-ENFORCEMENT]
+  estimated_next_application: "As violations matching these patterns are detected in sweep"
+
+library_growth_rule:
+  trigger: "When CDS escalates a new violation type (not matching existing template)"
+  action: "Brain's response becomes new template entry"
+  timing: "Template added to RESOLUTION-LIBRARY.yaml BEFORE any other work"
+  validation: "Each new template must have resolution_action and escalation_trigger defined"
+
+health_status:
+  template_availability: GREEN (4 active templates defined)
+  template_application: YELLOW (1 tested, failed due to format; 3 queued)
+  escalation_handling: YELLOW (1 escalation open awaiting Brain response)
+  success_rate: RED (0% until first success)
+  readiness: OPERATIONAL (library functional, format guidance needed)
+
+blocking_items:
+  - template_id: MECHANICAL-CLAIM-WITHOUT-TEST
+    blocker: "Format specification for falsification_test field"
+    status: "ESCALATED to Brain"
+    impact: "All mechanical claim violations must wait for format guidance before resolution"
+    blocking_count: 1
+
+learning_metrics:
+  confidence_growth_potential: "All 4 templates at 0.7 confidence (2 sessions confirmed). Confidence rises to 0.8+ after 3+ successful applications."
+  application_velocity: "1 attempt in this session. Expected increase as violations flow through."
+  template_matching_accuracy: "Too early to measure (1 attempt). Will track in weekly Opus synthesis."
+
+metadata:
+  what_this_is: "A real-time application tracking dashboard. Shows which templates exist, how many times each has been applied, success/failure rates, and what's escalated."
+  how_to_read: "Look at application_tracking for volume. Look at success_rate_snapshot for effectiveness. Look at escalation_queue for blocking items. Look at failure_analysis for patterns."
+  update_trigger: "Automatically re-generated whenever RESOLUTION-LIBRARY.yaml application_history changes"
+  weekly_review: "Opus synthesis reviews times_applied and success_rate to identify patterns needing redesign"
+  next_update: "After MECHANICAL-CLAIM-WITHOUT-TEST escalation is resolved and format guidance is implemented"

@@ -1,0 +1,155 @@
+---
+document_id: CORESPINE-DASHBOARD
+version: 1.0
+created: 2026-07-08T19:35:00Z
+last_updated: 2026-07-08T19:35:00Z
+authority: CDS Platform (data view from CORESPINE-REGISTRY.yaml)
+purpose: "Real-time visibility into corespine governance state: ratification status, enforcement coverage, proposed constraints, blocking items"
+data_source: "memory/CORESPINE-REGISTRY.yaml (single source of truth)"
+
+corespine_inventory_summary:
+  total_corespines: 4
+  ratified: 1
+  partially_ratified: 1
+  pending_ratification: 2
+  proposed_constraints_pending: 3
+  measurement_timestamp: 2026-07-08T10:00:00Z
+
+corespine_status_breakdown:
+
+  CS-GOAL-001:
+    name: "Goal Ratification Corespine"
+    ratification_state: PENDING
+    domain: "platform goals"
+    enforcement_score: "0% (not yet active)"
+    spine_constraints_count: 2
+    active_constraints: 2
+    proposed_constraints: 1
+    allowed_operations: [Read, Write, Edit, Bash, Glob, Grep]
+    blocked_operations: [modify_ratified_goal, delete_goal_record]
+    hook_implementation: "pre-tool-corespine-hook.sh (design pattern active)"
+    enforcement_code: "threshold/src/gate/rules.ts → RULE-GOAL (line 54-85)"
+    blocking_item: "Awaiting Yariv ratification decision: now or during Phase A"
+    proposal_pending: "CS-GOAL-001-PROPOSED-1: Code enforcement equivalence (rules must read from registry)"
+
+  CS-CREATION-001:
+    name: "Creation Definition Corespine"
+    ratification_state: PENDING
+    domain: "any act of creation"
+    enforcement_score: "0% (design phase)"
+    spine_constraints_count: 1
+    active_constraints: 1
+    proposed_constraints: 1
+    allowed_operations: [Read, Write, Edit, Bash, Glob, Grep]
+    blocked_operations: [create_element_without_corespine_declaration, fork_corespine]
+    hook_implementation: "pre-tool-corespine-hook.sh (design pattern active)"
+    enforcement_code: "scripts/pre-tool-corespine-hook.sh (to be built Phase B)"
+    blocking_item: "Awaiting ratification before Phase B (build order)"
+    proposal_pending: "CS-CREATION-001-PROPOSED-1: Arm contradiction resolution (block at creation, escalate to Governor)"
+
+  CS-THRESHOLD-001:
+    name: "Threshold Enforcement Corespine"
+    ratification_state: RATIFIED
+    ratification_date: 2026-07-08
+    ratified_by: "Yariv Fink (Governor)"
+    domain: "all inputs and outputs"
+    enforcement_score: "100% (fully active)"
+    spine_constraints_count: 2
+    active_constraints: 2
+    proposed_constraints: 0
+    allowed_operations: [Read, Write, Edit, Bash, Glob, Grep]
+    blocked_operations: [modify_classification_record, delete_classification_record, bypass_threshold]
+    hook_implementation: "pre-tool-corespine-hook.sh (fully enforced)"
+    enforcement_code: "threshold/src/gate/rules.ts → RULE-CLASS (line 129-159) + RULE-QUAR (line 167-183)"
+    status: ACTIVE
+    ratification_record: "memory/RATIFICATION-CS-THRESHOLD-001.yaml"
+
+  CS-AI-BEHAVIOR-001:
+    name: "AI Behavior Corespine"
+    ratification_state: PARTIALLY_RATIFIED
+    ratification_date: 2026-07-08
+    ratified_by: "CDS Phase C (automatic partial via RULE-LAYER-DECLARATION enforcement)"
+    domain: "all AI reasoning and output"
+    enforcement_score: "40% (partial enforcement)"
+    spine_constraints_count: 1
+    active_constraints: 1
+    active_but_incomplete: "layer_declaration field enforced in type. reasoning_trace field present but not validated in output contract."
+    proposed_constraints: 1
+    allowed_operations: [Read, Write, Edit, Bash, Glob, Grep]
+    blocked_operations: [modify_lel_state_directly, self_promote_pattern_to_active]
+    hook_implementation: "pre-tool-corespine-hook.sh (partial enforcement)"
+    enforcement_code: "threshold/src/gate/rules.ts → RULE-LAYER-DECLARATION (line 463-513)"
+    blocking_item: "reasoning_trace validation not yet implemented (honest_status documented)"
+    proposal_pending: "CS-AI-BEHAVIOR-001-PROPOSED-1: Agent demotion policy (false_positive_rate > 0.2 triggers automatic PROVISIONAL)"
+
+enforcement_landscape:
+  fully_active:
+    - CS-THRESHOLD-001 (100%)
+
+  partial:
+    - CS-AI-BEHAVIOR-001 (40% — layer_declaration enforced, reasoning_trace pending)
+
+  pending_activation:
+    - CS-GOAL-001 (awaiting ratification)
+    - CS-CREATION-001 (awaiting ratification)
+
+ratification_required_before_phase_a:
+  count: 3
+  items:
+    - CS-GOAL-001
+    - CS-CREATION-001
+    - CS-AI-BEHAVIOR-001 (completion of reasoning_trace validation)
+
+proposed_constraints_pending_yariv:
+  - spine_constraint_id: CS-GOAL-001-PROPOSED-1
+    name: "Code enforcement equivalence"
+    severity: HIGH
+    description: "Rules must read constraints from registry at runtime, not hardcode validation logic"
+    ratification_decision_needed: YES
+
+  - spine_constraint_id: CS-CREATION-001-PROPOSED-1
+    name: "Arm contradiction resolution"
+    severity: CRITICAL
+    description: "Block arm-spine contradictions at creation time. Escalate to Governor. No silent resolution."
+    ratification_decision_needed: YES
+
+  - spine_constraint_id: CS-AI-BEHAVIOR-001-PROPOSED-1
+    name: "Agent demotion policy"
+    severity: MEDIUM
+    description: "Automatic PROVISIONAL demotion if false_positive_rate > 0.2. DEPRECATED requires Governor ratification."
+    ratification_decision_needed: YES
+
+health_status:
+  full_enforcement: GREEN (CS-THRESHOLD-001)
+  partial_enforcement: YELLOW (CS-AI-BEHAVIOR-001 — 60% gap documented)
+  pending_ratification: YELLOW (3 corespines awaiting governor decision)
+  proposed_constraints: ORANGE (3 pending — blocks Phase A activation)
+
+blocking_items:
+  - name: "Yariv ratification of CS-GOAL-001"
+    impact: "Blocks Phase A goal governance"
+    decision_needed: BINARY (now or during Phase A)
+
+  - name: "Yariv ratification of CS-CREATION-001"
+    impact: "Blocks creation protocol enforcement"
+    decision_needed: BINARY (now or during Phase A)
+
+  - name: "Yariv ratification of CS-AI-BEHAVIOR-001 proposed constraint (agent demotion)"
+    impact: "Blocks Pattern demotion automation"
+    decision_needed: YES/NO/MODIFY
+
+  - name: "Complete reasoning_trace validation in CS-AI-BEHAVIOR-001"
+    impact: "Completes AI behavior corespine"
+    decision_needed: IMPLEMENTATION (Brain guides format)
+
+next_phase_trigger:
+  phase_a_ready_when: "All 3 ratifications approved + reasoning_trace validation complete"
+  blocking_count: 3 ratifications + 1 implementation task
+  phase_a_work_blocked_until: All above complete
+
+metadata:
+  what_this_is: "A governance state dashboard. Shows what is ratified, what is partial, what is pending, what proposals are waiting for approval."
+  how_to_read: "Look at enforcement_landscape for current enforcement. Look at ratification_required_before_phase_a for blocking items. Look at proposed_constraints_pending_yariv for decisions needed."
+  blocking_items_source: "CORESPINE-REGISTRY.yaml metadata section + honest_status fields"
+  update_trigger: "Automatically re-generated whenever CORESPINE-REGISTRY.yaml ratification state or proposals change"
+  next_update: "After Yariv ratification decisions on CS-GOAL-001, CS-CREATION-001, CS-AI-BEHAVIOR-001-PROPOSED-1"

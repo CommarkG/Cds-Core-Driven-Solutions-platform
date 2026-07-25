@@ -1,0 +1,170 @@
+---
+config_id: PE-CONFIG
+version: 1.0
+created: 2026-07-15
+authority: "Governor (Yariv Fink) — only Governor may modify coefficients"
+ratification_record: "memory/RATIFICATION-CS-PE-001.yaml"
+change_requires: "Governor approval + entry in change_log below"
+change_gate: "pe/scripts/validate-pe-config-change.sh (Phase B build)"
+
+# ════════════════════════════════════════════════
+# FORMULA COEFFICIENTS
+# Governor changes these values to change PE behavior without code deployment.
+# All values ratified 2026-07-15. Start neutral; tune after 90-day simulation.
+# ════════════════════════════════════════════════
+
+formula:
+  # score = ((value × urgency_weight × urgency - risk_weight × risk)
+  #          / (effort_weight × effort + verification_weight × verification_cost))
+  #          × trust_tier_modifier
+
+  value_weight: 1.0        # Multiplier for value field (1.0 = neutral)
+  urgency_weight: 1.0      # Multiplier for urgency field (1.0 = neutral)
+  risk_weight: 1.0         # Multiplier for risk field (1.0 = full penalty)
+  effort_weight: 1.0       # Multiplier for effort field (1.0 = neutral)
+  verification_weight: 1.0 # Multiplier for verification_cost (1.0 = neutral)
+
+# ════════════════════════════════════════════════
+# TRUST MODIFIERS
+# Governor-approved 2026-07-15.
+# EXTERNAL stays at 1.0 (no penalty for new platforms — encourages onboarding).
+# ════════════════════════════════════════════════
+
+trust_modifiers:
+  ADMIN: 1.2        # +20% — CDS internal only
+  TRUSTED: 1.1      # +10% — vetted platforms meeting all 4 trust metrics
+  EXTERNAL: 1.0     # 0%   — new/unknown platforms (baseline, not penalized)
+  PROBATION: 0.9    # -10% — platforms demoted from TRUSTED
+  # SUSPENDED: blocked at threshold — cannot submit. Not a modifier.
+
+# ════════════════════════════════════════════════
+# URGENCY DECAY
+# 0.3/day: urgency=10 decays to 0 in 33 days. Applies to ALL work.
+# Use decay_exempt_tags to protect genuinely blocking work.
+# ════════════════════════════════════════════════
+
+urgency_decay:
+  decay_rate: 0.3           # Urgency units lost per day in queue
+  decay_minimum: 0          # Urgency floor — cannot go negative
+  decay_exempt_tags:
+    - USER_BLOCKING          # User is actively blocked until this resolves
+    - SECURITY_CRITICAL      # Active security incident
+
+# ════════════════════════════════════════════════
+# QUEUE SETTINGS
+# Phase B launch values. Expand after 30-day velocity baseline.
+# ════════════════════════════════════════════════
+
+queue:
+  active_depth: 3                   # Executing (1) + queued (2). Expand to 5 after 30 days if velocity supports.
+  cycle_interval_hours: 1           # Re-score interval. Reduce to 0.25 (15 min) after 4 stable weeks.
+  backlog_reevaluation_hours: 4     # Full backlog re-score interval
+
+# ════════════════════════════════════════════════
+# SCORING BOUNDS
+# ════════════════════════════════════════════════
+
+scoring_bounds:
+  min_effort: 1               # effort + verification_cost must be >= 1 (division by zero gate)
+  negative_score_archive_days: 30   # Actions scoring < 0 for this many days are auto-archived
+  # Theoretical max score: ~1200 (value=100, urgency=10, risk=0, effort=1, modifier=1.2)
+
+# ════════════════════════════════════════════════
+# TIEBREAKERS
+# Governor-approved order 2026-07-15.
+# Change order here = change policy (no code change needed).
+# ════════════════════════════════════════════════
+
+tiebreakers:
+  order:
+    - field: "ratification_state"
+      rank: [RATIFIED, HELD]
+    - field: "trust_tier"
+      rank: [ADMIN, TRUSTED, EXTERNAL, PROBATION]
+    - field: "platform_priority_tag"
+      rank: [CRITICAL, HIGH, MEDIUM, LOW, null]
+    - field: "created_at"
+      direction: ASC             # Oldest first — fairness to early requesters
+    - field: "action_id"
+      direction: ASC             # Alphabetical — unique tiebreaker
+
+# ════════════════════════════════════════════════
+# GOVERNOR OVERRIDE MONITORING
+# Soft limit — triggers formula review suggestion, not hard block.
+# ════════════════════════════════════════════════
+
+override_monitoring:
+  soft_limit_per_7_days: 3
+  action_on_breach: "auto_suggest_formula_review"  # Not a hard block
+
+# ════════════════════════════════════════════════
+# LEL INTEGRATION (Future — Phase B)
+# Governor blanket approval for mechanism. No per-pattern approval needed.
+# ════════════════════════════════════════════════
+
+lel_integration:
+  enabled: false                    # Activate when LEL integration built (Phase B)
+  confidence_threshold: 0.8        # Patterns above this may auto-adjust risk scores
+  approval_type: "blanket_mechanism" # Governor approved mechanism, not per-pattern
+  log_adjustments: true            # Every LEL adjustment logged with pattern_id + confidence_score
+
+# ════════════════════════════════════════════════
+# REGISTRY & FILE PATHS
+# PE halts (not degrades) if any required file is unreachable.
+# ════════════════════════════════════════════════
+
+registry:
+  corespine_registry_path: "memory/CORESPINE-REGISTRY.yaml"
+  platform_status_path: "memory/PLATFORM-STATUS.yaml"
+  platform_goal_path: "memory/PLATFORM-GOAL.md"
+  halt_if_unreachable: true        # Constitutional requirement — never degrade to default-allow
+
+# ════════════════════════════════════════════════
+# AUDIT LOG
+# PE halts if audit log unreachable — no silent audit failure.
+# ════════════════════════════════════════════════
+
+audit:
+  log_path: "pe/logs/queue-audit.jsonl"
+  retention_months: 12
+  halt_if_log_unreachable: true
+  log_fields_required:
+    - action_id
+    - old_position
+    - new_position
+    - reason
+    - timestamp
+    - cycle_id
+  query_access:
+    all_logs: [Governor, CDS_admin]
+    own_actions_only: [platforms]
+  deletion_permitted: false
+
+# ════════════════════════════════════════════════
+# HALT & NOTIFICATION
+# ════════════════════════════════════════════════
+
+halt_policy:
+  governor_notification_sla_minutes: 15
+  oncall_can_restore_without_governor: true   # Config/registry restore only — not governance override
+  mandatory_governor_escalation_after_minutes: 60
+
+# ════════════════════════════════════════════════
+# CHANGE LOG (Governor entries only)
+# ════════════════════════════════════════════════
+
+change_log:
+  - date: 2026-07-15
+    changed_by: "Yariv Fink (Governor)"
+    action: "Initial creation — all values ratified via RATIFICATION-CS-PE-001.yaml"
+    fields_set: "all"
+    rationale: "PE corespine CS-PE-001 ratified. PE-CONFIG.yaml created as required by spine constraint CS-PE-001-C1."
+
+metadata:
+  rationale: "All PE coefficients live here. Governor changes this file to change PE behavior. Code never changes for coefficient updates — only for formula structure changes (which require Governor decision)."
+  phase_b_build_targets:
+    - "pe/src/scoring-engine.ts (reads this file at runtime)"
+    - "pe/src/queue-manager.ts (reads queue settings from this file)"
+    - "pe/scripts/validate-pe-config-change.sh (enforces Governor-only writes)"
+    - "pe/logs/queue-audit.jsonl (created by scoring-engine at first run)"
+  next_review: "After 90-day simulation before PE goes ACTIVE (Phase C)"

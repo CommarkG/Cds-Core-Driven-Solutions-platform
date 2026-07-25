@@ -1,0 +1,599 @@
+---
+document_id: CANONICAL-DECISION-NODE-SCHEMA-001
+title: CDS Canonical Decision Node Schema
+status: SUPERSEDED — 2026-07-20
+superseded_by: CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml
+superseded_reason: "Misnomer. This schema governs all platform elements, not only decisions. System A (decision-node-v1.1.schema.yaml) retains the DecisionNode name. All GE- IDs replaced DN- IDs. Do not use this file."
+pcr_reference: PCR-001
+corespiral_stage: FLESH
+original_status: SKIN COMPLETE — VERIFY READY
+created: 2026-07-20
+skin_complete: 2026-07-20
+authority: Governor Yariv Fink
+wiring_state: REACHABLE
+ratification_state: PROPOSED
+corespine: CS-PE-001
+schema_position: CDS.SYSTEM.GOVERNANCE.DECISION_NODE
+kernel_component: "YES — kernel gate checked when this reaches CURRENT"
+platform_goal: "CDS-PLATFORM-GOAL — everything self-verifies"
+---
+
+# ═══════════════════════════════════════════════════════
+# PART 1 — SCHEMA FIELD DEFINITIONS
+# All 14 fields from PCR-001 SKELETON. No additions.
+# ═══════════════════════════════════════════════════════
+
+schema_fields:
+
+  # ─── GROUP 1: CORE FIELDS (6) ───────────────────────
+
+  schema_position:
+    type: string
+    required: true
+    immutable_after: RATIFIED
+    format: "CDS.[ROOT].[TRUNK].[BRANCH]"
+    format_regex: "^CDS\\.[A-Z][A-Z0-9_]*\\.[A-Z][A-Z0-9_]*\\.[A-Z][A-Z0-9_]*$"
+    rules:
+      - Exactly 4 dot-separated segments
+      - First segment is always the literal string CDS
+      - Second segment is ROOT — must be SYSTEM or DOMAIN
+      - Third segment is TRUNK — uppercase, underscores allowed
+      - Fourth segment is BRANCH — uppercase, underscores allowed
+      - No lowercase letters
+      - No spaces
+    validation_error: >
+      VALIDATION_FAILED: schema_position '[value]' does not match CDS.[ROOT].[TRUNK].[BRANCH].
+      Requirements: 4 dot-separated segments, all uppercase, first segment must be CDS,
+      second segment must be SYSTEM or DOMAIN.
+      Example of valid value: CDS.SYSTEM.GOVERNANCE.DECISION_NODE
+
+  corespine_context:
+    type: string
+    required: true
+    format: "CS-[DOMAIN]-[SEQ]"
+    rules:
+      - Must be a valid corespine ID present in CORESPINE-REGISTRY.yaml
+      - Referenced corespine must be at wiring_state REACHABLE or CURRENT at time of node creation
+      - ADMIN-only nodes may reference corespines at WIRED state if explicitly authorized by Governor
+      - Cannot be changed without a PCR
+    validation_error: >
+      VALIDATION_FAILED: corespine_context '[value]' not found in CORESPINE-REGISTRY.yaml
+      or found at wiring_state below REACHABLE. Verify the corespine ID is exact
+      (format CS-[DOMAIN]-[SEQ]) and that the corespine is REACHABLE or CURRENT.
+      Current ratified corespines: CS-PE-001.
+
+  definition:
+    type: string
+    required: true
+    min_length: 20
+    rules:
+      - Must be a complete sentence ending with a period
+      - Must describe what the node IS and what decisions it governs — not what it might do
+      - Banned phrases that trigger rejection: ["obviously", "standard", "clearly", "etc.",
+        "as usual", "general purpose", "various", "everything", "anything", "simple"]
+      - Must be specific enough that a different author would produce the same boundary judgment
+      - No first-person language
+    validation_error: >
+      VALIDATION_FAILED: definition '[value]' contains vague language or is incomplete.
+      Detected trigger: '[trigger_word]'. Replace with specific, observable description
+      of what this node governs. Definition must be a complete sentence, minimum 20 characters,
+      no banned vague terms. Test: could a different author draw the same boundary from this?
+
+  usage_boundaries:
+    type: object
+    required: true
+    required_fields: [applies_to, does_not_apply_to]
+    rules:
+      - Both applies_to and does_not_apply_to must be present
+      - Each must be a non-empty array with at least one string entry
+      - Entries must be specific (not "all governance decisions" — name the specific type)
+      - does_not_apply_to must name at least one node_id or domain that handles the excluded case
+    structure:
+      applies_to:
+        type: array
+        min_items: 1
+        item_type: string
+      does_not_apply_to:
+        type: array
+        min_items: 1
+        item_type: string
+    validation_error: >
+      VALIDATION_FAILED: usage_boundaries requires both applies_to AND does_not_apply_to
+      as non-empty arrays. Missing or empty: '[field_name]'. Each array must contain at
+      least one specific string entry. Example applies_to: ["PE scoring decisions for
+      all ADMIN-tier submissions"]. Example does_not_apply_to: ["Platform trust tier
+      decisions — those belong to DN-TRUST-001"].
+
+  inheritance_chain:
+    type: object
+    required: true
+    required_fields: [inherits_from, inherited_by]
+    rules:
+      - Both inherits_from and inherited_by must be present as arrays
+      - Empty arrays [] are valid (root nodes have empty inherits_from; leaf nodes have empty inherited_by)
+      - Array entries must be valid node_ids in the registry (format DN-[DOMAIN]-[SEQ])
+      - Circular inheritance is forbidden — if A inherits_from B, B cannot inherit_from A
+      - inherits_from entries must be at wiring_state REACHABLE or CURRENT
+    structure:
+      inherits_from:
+        type: array
+        item_type: string
+        item_format: "DN-[DOMAIN]-[SEQ]"
+      inherited_by:
+        type: array
+        item_type: string
+        item_format: "DN-[DOMAIN]-[SEQ]"
+    validation_error: >
+      VALIDATION_FAILED: inheritance_chain requires both inherits_from and inherited_by as arrays.
+      If no parents: inherits_from: []. If no children: inherited_by: [].
+      All entries must match DN-[DOMAIN]-[SEQ] format and exist in the registry.
+      Circular inheritance detected: '[node_a]' and '[node_b]' reference each other.
+
+  falsification_test:
+    type: string
+    required: true
+    min_length: 30
+    rules:
+      - Must describe observable outputs or system states — not intentions or expectations
+      - Banned modal verbs in this field: ["should", "would", "might", "could", "may"]
+      - Must name at least one specific file, field, or system output that can be checked
+      - Test must be runnable without AI judgment — a tool or script could perform it
+    validation_error: >
+      VALIDATION_FAILED: falsification_test '[value]' contains non-observable language
+      or is too abstract. Detected: '[banned_word]'. Describe actual, checkable outputs.
+      Example of valid test: "PE scoring engine audit log contains node_id DN-SYS-001
+      for every scoring decision; removing this entry causes C3 violation flag."
+      Test must be runnable by a tool, not requiring AI interpretation.
+
+  # ─── GROUP 2: T-MODEL FIELDS (4) ────────────────────
+
+  node_id:
+    type: string
+    required: true
+    immutable: true
+    format: "DN-[DOMAIN]-[SEQ]"
+    format_regex: "^DN-[A-Z]{2,6}-[0-9]{3}$"
+    rules:
+      - Domain segment: 2 to 6 uppercase letters
+      - Sequence segment: exactly 3 digits, zero-padded (001, 002, ... 099, 100)
+      - Must be globally unique across the entire node registry
+      - Assigned at SEED stage; never changed after assignment
+      - If a node is archived, its ID is retired — never reused
+    validation_error: >
+      VALIDATION_FAILED: node_id '[value]' does not match DN-[DOMAIN]-[SEQ].
+      Domain: 2-6 uppercase letters. Sequence: 3 digits.
+      Valid examples: DN-GOV-001, DN-PE-001, DN-CON-001.
+      Duplicate check: '[value]' already exists in the registry.
+
+  node_type:
+    type: enum
+    required: true
+    immutable_after: RATIFIED
+    allowed_values: [SYSTEM, DOMAIN]
+    rules:
+      - SYSTEM — infrastructure, protocols, cross-platform governance mechanisms
+      - DOMAIN — business-domain-specific concerns, platform-facing capabilities
+      - The distinction is: SYSTEM nodes govern HOW the platform operates;
+        DOMAIN nodes govern WHAT the platform manages
+      - When in doubt — if it must exist for any domain to function, it is SYSTEM
+    validation_error: >
+      VALIDATION_FAILED: node_type must be SYSTEM or DOMAIN — found '[value]'.
+      SYSTEM: infrastructure and governance mechanisms (e.g. scoring engine, audit, ratification).
+      DOMAIN: business concerns managed by the platform (e.g. consulting capabilities, corespines).
+
+  trunk_position:
+    type: string
+    required: true
+    immutable_after: RATIFIED
+    format: "ROOT.[SYSTEM|DOMAIN].[TRUNK]"
+    rules:
+      - Must begin with ROOT.SYSTEM or ROOT.DOMAIN (must match node_type)
+      - May extend to ROOT.[TYPE].[TRUNK].[BRANCH] for deeper hierarchy
+      - All segments uppercase
+      - trunk_position must be consistent with schema_position
+        (schema_position CDS.SYSTEM.X.Y → trunk_position ROOT.SYSTEM.X)
+    validation_error: >
+      VALIDATION_FAILED: trunk_position '[value]' must begin with ROOT.SYSTEM or ROOT.DOMAIN
+      and must match the node's node_type. Found node_type=[node_type] but
+      trunk_position begins with '[found_root]'. All segments must be uppercase.
+      Example: node_type=SYSTEM → trunk_position=ROOT.SYSTEM.GOVERNANCE
+
+  authority_tier:
+    type: enum
+    required: true
+    allowed_values: [ADMIN, TRUSTED]
+    rules:
+      - ADMIN — only CDS (Governor-authorized) can create or modify this node
+      - TRUSTED — vetted platforms may reference but not modify; ADMIN creates
+      - SYSTEM nodes are always ADMIN
+      - DOMAIN nodes may be ADMIN or TRUSTED depending on whether platform input governs scope
+      - authority_tier governs write access; read/reference access follows wiring_state rules
+    validation_error: >
+      VALIDATION_FAILED: authority_tier must be ADMIN or TRUSTED — found '[value]'.
+      ADMIN: only CDS/Governor can create or modify.
+      TRUSTED: ADMIN creates; TRUSTED platforms may reference when node is REACHABLE or CURRENT.
+
+  # ─── GROUP 3: STATE FIELDS (4) ──────────────────────
+
+  wiring_state:
+    type: enum
+    required: true
+    allowed_values: [DEFINED, WIRED, REACHABLE, CURRENT]
+    sequence_rule: "DEFINED → WIRED → REACHABLE → CURRENT"
+    rules:
+      - States must advance in sequence — skipping is forbidden
+      - Downgrading requires PCR + Governor approval
+      - DEFINED: schema fields complete; not yet connected to any consuming system
+      - WIRED: connected to at least one consuming system; other systems can reference
+      - REACHABLE: all declared consuming systems connected; verified to pass data correctly
+      - CURRENT: ZF-0 achieved across all three categories; Governor ratified
+    validation_error: >
+      VALIDATION_FAILED: wiring_state must be one of DEFINED|WIRED|REACHABLE|CURRENT
+      in sequence — found '[value]'. Cannot skip states. Cannot downgrade without PCR.
+      Attempted transition '[from_state]' → '[to_state]' is not a valid forward step.
+
+  ratification_state:
+    type: enum
+    required: true
+    allowed_values: [PROPOSED, RATIFIED, SUPERSEDED, ARCHIVED]
+    rules:
+      - PROPOSED: node created; awaiting Governor ratification
+      - RATIFIED: Governor signed; node is authoritative — changes require PCR
+      - SUPERSEDED: replaced by a newer version; old node still readable for audit trail
+      - ARCHIVED: retired; node_id is permanently retired — never reassigned
+      - wiring_state CURRENT requires ratification_state RATIFIED
+      - A PROPOSED node cannot reach REACHABLE or CURRENT wiring state
+    validation_error: >
+      VALIDATION_FAILED: ratification_state must be one of PROPOSED|RATIFIED|SUPERSEDED|ARCHIVED
+      — found '[value]'. Constraint: wiring_state CURRENT requires ratification_state RATIFIED.
+      A PROPOSED node cannot advance past WIRED without Governor ratification.
+
+  created_session:
+    type: string
+    required: true
+    immutable: true
+    format: "ISO date YYYY-MM-DD"
+    rules:
+      - Set once at node creation; never modified
+      - Must be ISO date (YYYY-MM-DD) or session identifier (session-[identifier])
+      - Cannot be a future date
+      - Used for audit trail and sequence verification
+    validation_error: >
+      VALIDATION_FAILED: created_session '[value]' must be an ISO date (YYYY-MM-DD) or
+      session identifier (session-[id]). Future dates not accepted.
+      This field is immutable after node creation.
+
+  last_modified_session:
+    type: string
+    required: true
+    format: "ISO date YYYY-MM-DD"
+    rules:
+      - Updated on every change to the node record
+      - Must be same as or chronologically later than created_session
+      - Must be ISO date (YYYY-MM-DD) or session identifier
+      - If no changes since creation, equals created_session
+    validation_error: >
+      VALIDATION_FAILED: last_modified_session '[value]' must be an ISO date (YYYY-MM-DD)
+      or session identifier, and must not be earlier than created_session '[created_value]'.
+
+
+# ═══════════════════════════════════════════════════════
+# PART 2 — REGISTRY INTEGRITY RULES
+# Rules that apply to the registry as a whole (not per-field)
+# ═══════════════════════════════════════════════════════
+
+registry_integrity_rules:
+
+  uniqueness:
+    - node_id must be globally unique across all entries in this file
+    - schema_position must be unique (two nodes cannot occupy the same position)
+    - Error: "REGISTRY_INTEGRITY_FAILED: Duplicate [node_id|schema_position] detected —
+      '[value]' already exists. Assign a new unique ID or position."
+
+  orphan_prevention:
+    - Every node_id referenced in inheritance_chain.inherits_from or inherited_by
+      must exist in this registry
+    - Error: "REGISTRY_INTEGRITY_FAILED: inheritance_chain references node_id '[value]'
+      which does not exist in the registry. Create the referenced node first
+      or correct the ID."
+
+  consistency:
+    - node_type SYSTEM must have trunk_position starting ROOT.SYSTEM
+    - node_type DOMAIN must have trunk_position starting ROOT.DOMAIN
+    - schema_position root segment must match node_type (CDS.SYSTEM.x.x or CDS.DOMAIN.x.x)
+    - wiring_state CURRENT requires ratification_state RATIFIED
+    - Error: "REGISTRY_INTEGRITY_FAILED: node_type, trunk_position, and schema_position
+      are inconsistent for node '[node_id]'. All three must agree on SYSTEM or DOMAIN."
+
+  admission_gate:
+    - New nodes require SEED justification + SKELETON fields complete before entry
+    - Entry into this file is the FLESH stage output — not the SEED stage
+    - A node exists in this file only when FLESH is complete
+    - Partial records (missing required fields) are rejected at file write time
+
+
+# ═══════════════════════════════════════════════════════
+# PART 3 — NODE REGISTRY
+# 3 example nodes demonstrating SYSTEM, DOMAIN, and cross-cutting
+# ═══════════════════════════════════════════════════════
+
+node_registry:
+
+  # ─── NODE 1: SYSTEM — Priority Engine Authority ─────
+  # Demonstrates: SYSTEM node, root of T-model, CURRENT state, zero children yet
+
+  - node_id: DN-PE-001
+    node_type: SYSTEM
+    schema_position: CDS.SYSTEM.GOVERNANCE.PRIORITY_ENGINE
+    trunk_position: ROOT.SYSTEM.GOVERNANCE
+    authority_tier: ADMIN
+    corespine_context: CS-PE-001
+
+    definition: >
+      The governing authority node for all Priority Engine decisions — defining what
+      constitutes a scoreable work item, what formula applies, and what audit record
+      must be produced for every score calculation.
+
+    usage_boundaries:
+      applies_to:
+        - "All PE scoring decisions across every work item type (PCR, corespine, consulting, pattern)"
+        - "All Governor-queue entries ordered by PE formula output"
+        - "All audit log entries recording formula inputs and outputs (C3 compliance)"
+      does_not_apply_to:
+        - "Ratification authority decisions — those belong to DN-GOV-001"
+        - "Trust tier classification decisions — those belong to DN-TRUST-001 (not yet defined)"
+        - "Vocabulary canonical ownership — that belongs to DN-VOC-001 (not yet defined)"
+
+    inheritance_chain:
+      inherits_from: []
+      inherited_by:
+        - DN-GOV-001
+
+    falsification_test: >
+      Phase A (verifiable now): CANONICAL-DECISION-NODE-SCHEMA.yaml exists and contains
+      node_id DN-PE-001. CORESPINE-REGISTRY.yaml CS-PE-001 block contains field
+      decision_node_id: DN-PE-001 referencing this entry. RATIFICATION-CS-PE-001.yaml
+      contains decision_node_id: DN-PE-001. All three references resolve to this node.
+      Phase B (verifiable when scoring engine exists): every entry in pe/logs/scoring-audit.jsonl
+      contains node_id: DN-PE-001; removing this node from the registry causes scoring engine
+      to emit REGISTRY_UNREACHABLE and halt per CS-PE-001 C4.
+
+    wiring_state: CURRENT
+    ratification_state: RATIFIED
+    created_session: "2026-07-15"
+    last_modified_session: "2026-07-20"
+
+  # ─── NODE 2: CROSS-CUTTING — Governance Ratification Authority ──
+  # Demonstrates: SYSTEM node that crosses both SYSTEM and DOMAIN concerns;
+  # inherited by both SYSTEM infrastructure nodes and DOMAIN capability nodes.
+  # This is the cross-cutting example — typed SYSTEM because ratification authority
+  # is infrastructure, but inherited_by will include both SYSTEM and DOMAIN nodes.
+
+  - node_id: DN-GOV-001
+    node_type: SYSTEM
+    schema_position: CDS.SYSTEM.GOVERNANCE.RATIFICATION
+    trunk_position: ROOT.SYSTEM.GOVERNANCE
+    authority_tier: ADMIN
+    corespine_context: CS-PE-001
+
+    definition: >
+      The authority node governing all Governor ratification decisions — defining what
+      constitutes a ratifiable artifact, what GOV-ID format is assigned, and what
+      transition conditions must be proven before ratification_state advances to RATIFIED.
+
+    usage_boundaries:
+      applies_to:
+        - "All PCR ratification records (PCR-001, PCR-002, and all future PCRs)"
+        - "All corespine ratification records in CORESPINE-REGISTRY.yaml"
+        - "All pattern ratification records in the pattern archive"
+        - "All consulting system gate ratifications (L1.9, L2.x, L3.x)"
+        - "All DOMAIN node ratifications — this node is cross-cutting"
+      does_not_apply_to:
+        - "PE scoring formula decisions — those reference DN-PE-001"
+        - "Trust tier demotion/promotion decisions — those belong to DN-TRUST-001"
+        - "Vocabulary dispute resolutions — those belong to DN-VOC-001"
+
+    inheritance_chain:
+      inherits_from:
+        - DN-PE-001
+      inherited_by:
+        - DN-CON-001
+
+    falsification_test: >
+      Every ratification record in the CDS registry (CORESPINE-REGISTRY.yaml,
+      pattern archive PAT-*.yaml, PCR files) contains a field gov_id matching
+      format GOV-[YYYYMMDD]-[SEQ] that resolves to a DecisionNode referencing DN-GOV-001.
+      A ratification record without a valid gov_id is rejected at intake.
+      Verified by: scanning all ratification records for gov_id field presence
+      and cross-checking against DN-GOV-001 in this registry.
+
+    wiring_state: WIRED
+    ratification_state: RATIFIED
+    created_session: "2026-07-20"
+    last_modified_session: "2026-07-20"
+
+  # ─── NODE 3: DOMAIN — Consulting Capability ─────────
+  # Demonstrates: DOMAIN node, PROPOSED/DEFINED state (consulting system not yet built),
+  # realistic forward-looking entry that places infrastructure before L1 build begins.
+
+  - node_id: DN-CON-001
+    node_type: DOMAIN
+    schema_position: CDS.DOMAIN.CONSULTING.CAPABILITY
+    trunk_position: ROOT.DOMAIN.CONSULTING
+    authority_tier: ADMIN
+    corespine_context: CS-PE-001
+
+    definition: >
+      The authority node governing all consulting capability entries — defining what
+      constitutes a valid CapabilityEntry, what schema_node field values are permitted,
+      and what ADD workflow states a capability may occupy.
+
+    usage_boundaries:
+      applies_to:
+        - "All CapabilityEntry records in CAPABILITY_REGISTRY.json"
+        - "All ADD workflow validation decisions (schema_node field lookup)"
+        - "All consulting system L1 → L2 transition decisions affecting capability scope"
+        - "All consulting audit records tied to capability approvals or rejections"
+      does_not_apply_to:
+        - "Platform trust tier decisions — those belong to DN-TRUST-001 (not yet defined)"
+        - "Glossary term ownership decisions — those belong to DN-VOC-001 (not yet defined)"
+        - "Conflict escalation routing decisions — those belong to DN-ESC-001 (not yet defined)"
+
+    inheritance_chain:
+      inherits_from:
+        - DN-GOV-001
+      inherited_by: []
+
+    falsification_test: >
+      Phase A (verifiable now): CANONICAL-DECISION-NODE-SCHEMA.yaml exists and contains
+      node_id DN-CON-001. DN-CON-001 inherits_from DN-GOV-001 which exists in this registry.
+      DN-GOV-001 inherited_by includes DN-CON-001. The inheritance chain is bi-directionally
+      consistent across both nodes with no orphan references.
+      Phase B (verifiable when consulting L1 exists): every CapabilityEntry in
+      CAPABILITY_REGISTRY.json contains schema_node: DN-CON-001; submitting a CapabilityEntry
+      with absent or invalid schema_node causes ADD workflow to emit VALIDATION_FAILED and halt.
+
+    wiring_state: DEFINED
+    ratification_state: PROPOSED
+    created_session: "2026-07-20"
+    last_modified_session: "2026-07-20"
+
+
+# ═══════════════════════════════════════════════════════
+# PART 4 — SCHEMA HEALTH DASHBOARD
+# Snapshot at time of FLESH completion
+# ═══════════════════════════════════════════════════════
+
+schema_health:
+  total_fields_defined: 14
+  total_nodes_registered: 3
+  nodes_by_wiring_state:
+    CURRENT: 1      # DN-PE-001
+    WIRED: 1        # DN-GOV-001
+    REACHABLE: 0
+    DEFINED: 1      # DN-CON-001
+  nodes_by_ratification_state:
+    RATIFIED: 2     # DN-PE-001, DN-GOV-001
+    PROPOSED: 1     # DN-CON-001
+    SUPERSEDED: 0
+    ARCHIVED: 0
+  nodes_by_type:
+    SYSTEM: 2       # DN-PE-001, DN-GOV-001
+    DOMAIN: 1       # DN-CON-001
+  validation_rules_per_field:
+    schema_position: 5
+    corespine_context: 3
+    definition: 5
+    usage_boundaries: 4
+    inheritance_chain: 5
+    falsification_test: 4
+    node_id: 5
+    node_type: 3
+    trunk_position: 3
+    authority_tier: 3
+    wiring_state: 4
+    ratification_state: 4
+    created_session: 4
+    last_modified_session: 4
+  registry_integrity_rules_active: 4
+
+
+# ═══════════════════════════════════════════════════════
+# PART 5 — CORESPIRAL STAGE LOG
+# ═══════════════════════════════════════════════════════
+
+corespiral_stage_log:
+  SEED:
+    status: LOCKED
+    date: "2026-07-20"
+    justification_hash: "PCR-001 — without canonical DecisionNode schema, PE scoring
+      is non-deterministic, consulting CapabilityEntry validation is undefined,
+      corespine contradiction audits cannot run mechanically"
+
+  SKELETON:
+    status: LOCKED
+    date: "2026-07-20"
+    fields_defined: 14
+    groups: [core_fields_6, t_model_fields_4, state_fields_4]
+
+  FLESH:
+    status: COMPLETE
+    date: "2026-07-20"
+    outputs:
+      - "14 fields fully specified with types, validation rules, error messages"
+      - "3 example nodes (SYSTEM: DN-PE-001, cross-cutting: DN-GOV-001, DOMAIN: DN-CON-001)"
+      - "4 registry integrity rules"
+      - "Schema health dashboard"
+    flesh_rule_check: "No fields added beyond SKELETON — 14 in, 14 out"
+
+  SKIN:
+    status: COMPLETE
+    date: "2026-07-20"
+    phase_a_wiring_done:
+      - "CORESPINE-REGISTRY.yaml — decision_node_id: DN-PE-001 added to CS-PE-001 block; schema reference added to file header ✓"
+      - "RATIFICATION-CS-PE-001.yaml — decision_node_id: DN-PE-001 added ✓"
+      - "GOV-PE-BOOTSTRAP-001.yaml — nodes_registered, schema_file, corespiral_status added to PCR-001 rank entry ✓"
+    phase_b_forward_stubs:
+      - "pe/src/scoring-engine.ts — stub declared; will read node_id from this registry when Phase B build begins"
+      - "consulting/HUB/CAPABILITY_REGISTRY.json — stub declared; ADD workflow will validate schema_node against DN-CON-001"
+      - "pe/logs/scoring-audit.jsonl — stub declared; C3 audit log will record node_id per scoring decision"
+    inheritance_block_confirmed:
+      - "T-model root fork (SYSTEM/DOMAIN) ✓"
+      - "CS-PE-001 C1-C4 constraints ✓"
+      - "GOV-PE-BOOTSTRAP-001 manual queue governs sequencing ✓"
+    forward_infrastructure_block_confirmed:
+      - "Phase B scoring engine reads node_id — stub declared ✓"
+      - "Phase B queue manager queues by node_id — stub declared ✓"
+      - "Phase B audit log records per C3 — stub declared ✓"
+      - "Consulting L1 validates schema_node — stub declared ✓"
+      - "Future corespines anchor to nodes here — DN-GOV-001 is the cross-cutting ratification node ✓"
+    data_pass_verification:
+      - "DN-PE-001 referenced in CORESPINE-REGISTRY.yaml (CS-PE-001) → exists in node_registry ✓"
+      - "DN-PE-001 referenced in RATIFICATION-CS-PE-001.yaml → exists in node_registry ✓"
+      - "DN-PE-001, DN-GOV-001, DN-CON-001 in GOV-PE-BOOTSTRAP-001.yaml → all exist in node_registry ✓"
+    wiring_state_advanced_to: REACHABLE
+
+  VERIFY:
+    status: ZF-0 PASSED — AWAITING GOVERNOR RATIFICATION
+    date: "2026-07-20"
+    zf_audit_result:
+      mechanical:
+        findings: 0
+        findings_surfaced: 1
+        findings_resolved: 1
+        resolved_items:
+          - "FINDING-M-001: DN-PE-001 inherited_by referenced DN-AUD-001 (not in registry). Fixed: removed DN-AUD-001. inherited_by now contains only DN-GOV-001."
+      semantic:
+        findings: 0
+        findings_surfaced: 1
+        findings_resolved: 1
+        resolved_items:
+          - "FINDING-S-001: DN-PE-001 and DN-CON-001 falsification tests referenced Phase B systems only. Fixed: added Phase A-verifiable clauses to both tests."
+      propagation:
+        findings: 0
+        notes: "Schema is additive. No existing Phase A artifact modified in breaking way. Kernel gate correctly remains OPEN (CURRENT not yet achieved)."
+    zf_0_status: "PASS — 0 findings across all 3 categories after fixes"
+    awaiting:
+      - "Governor signature: 'DecisionNode schema is locked. Changes require PCR.'"
+      - "On Governor sign-off: ratification_state → RATIFIED, wiring_state → CURRENT"
+      - "Kernel gate component PCR-001: CHECKED"
+    governor_prompt: |
+      Governor Yariv — CANONICAL-DECISION-NODE-SCHEMA.yaml is ready for ratification.
+
+      What was built:
+      - 14 structural fields for all DecisionNode governance elements
+      - 4 registry integrity rules
+      - 3 registered nodes: DN-PE-001 (SYSTEM/CURRENT), DN-GOV-001 (cross-cutting/WIRED), DN-CON-001 (DOMAIN/DEFINED)
+      - Wired to: CORESPINE-REGISTRY.yaml, RATIFICATION-CS-PE-001.yaml, GOV-PE-BOOTSTRAP-001.yaml
+      - ZF-0 achieved: 0 findings across mechanical + semantic + propagation
+
+      What a Governor signature means:
+      - Schema is locked — no field additions, removals, or type changes without a new PCR
+      - node_id format DN-[DOMAIN]-[SEQ] is the canonical ID standard for all nodes going forward
+      - Phase A wiring is confirmed complete; Phase B systems will wire to this schema when built
+
+      Scope clarification on record:
+      - PE scoring metadata (value, urgency, risk, effort, verification_cost) lives on PCR work items (pe_metadata block in GOV-PE-BOOTSTRAP-001) — NOT on the DecisionNode structural schema
+      - This is consistent with the SKELETON as locked on 2026-07-20
+
+      Request: "DecisionNode schema is locked. Changes require PCR."

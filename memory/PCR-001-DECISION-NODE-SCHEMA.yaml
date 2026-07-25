@@ -1,0 +1,98 @@
+---
+document_id: PCR-001
+type: Priority Change Request
+title: "Lock DecisionNode Canonical Schema"
+created: 2026-07-15
+created_by: CDS (submitted for Governor queue)
+authority: Governor (Yariv Fink)
+status: FLESH COMPLETE — SKIN in progress — awaiting Governor ratification for VERIFY
+
+# ════════════════════════════════════════════════
+# WHY THIS EXISTS
+# ════════════════════════════════════════════════
+
+why: |
+  PE cannot launch without a locked DecisionNode schema.
+  PE reads action metadata fields (value, urgency, risk, effort, verification_cost) directly
+  from DecisionNode at every scoring cycle. If schema changes after PE launches, scoring breaks.
+  This is the single hardest blocker between now and Phase B build start.
+
+# ════════════════════════════════════════════════
+# WHAT "DONE" MEANS
+# ════════════════════════════════════════════════
+
+completion_criteria:
+  - CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml written with all 14 SKELETON fields ✓ DONE 2026-07-20
+  - 3 example nodes registered (DN-PE-001, DN-GOV-001, DN-CON-001) ✓ DONE 2026-07-20
+  - Validation rules and error messages per field ✓ DONE 2026-07-20
+  - SKIN wiring to CORESPINE-REGISTRY, RATIFICATION-CS-PE-001, GOV-PE-BOOTSTRAP-001 ✓ DONE 2026-07-20
+  - SKIN stubs for Phase B systems documented in schema file ✓ DONE 2026-07-20
+  - Zero-findings audit passes on schema (VERIFY stage — pending)
+  - Governor ratification: "Schema is locked — no changes without PCR" (pending)
+  - wiring_state → CURRENT after VERIFY pass
+  ratification_required: true
+  ratification_gate: "Governor signature after ZF-0 achieved in VERIFY stage"
+  scope_note: |
+    SCOPE CLARIFICATION (2026-07-20): This schema defines the STRUCTURAL governance fields
+    of a DecisionNode (schema_position, corespine_context, node_id, etc.).
+    PE scoring metadata (value, urgency, risk, effort, verification_cost) lives on
+    PCR work items and GOV-PE-BOOTSTRAP-001 entries — NOT on the DecisionNode itself.
+    The old completion criteria listed PE scoring fields incorrectly. SKELETON (locked 2026-07-20)
+    is the authoritative scope. This note supersedes the original completion_criteria field list.
+
+# ════════════════════════════════════════════════
+# PE SCORING INPUTS (for when PE is active)
+# ════════════════════════════════════════════════
+
+pe_metadata:
+  value: 95           # Unlocks Phase B entirely — highest platform value
+  urgency: 9          # Phase B cannot start without this; every day delayed = PE stays offline
+  risk: 10            # Low — schema design is well-understood; risk is only in scope creep
+  effort: 16          # Estimated 2 working days (design + ZF audit + Governor review)
+  verification_cost: 8  # 1 day — cross-check against all PE fields + consulting system schema
+  trust_tier: ADMIN
+  platform_priority_tag: CRITICAL
+
+  # Calculated (for reference):
+  # base_score = ((95 x 9) - 10) / (16 + 8) = (855 - 10) / 24 = 845/24 = 35.2
+  # final_score = 35.2 x 1.2 (ADMIN) = 42.2
+  # HIGHEST SCORING ITEM IN PLATFORM — this goes first
+
+# ════════════════════════════════════════════════
+# SCOPE (what's IN, what's OUT)
+# ════════════════════════════════════════════════
+
+scope:
+  in_scope:
+    - Define all fields PE requires with types, ranges, and validation rules
+    - Add schema_position and corespine declarations (required by PLATFORM-GOAL.md principle 1)
+    - Add falsification test for each field
+    - Lock version to 1.0
+  out_of_scope:
+    - Implementing the PE scoring engine (Phase B, after this)
+    - Defining all OTHER platform schemas (only DecisionNode needed for Phase B trigger)
+    - Migrating existing data to schema (Phase B task)
+
+# ════════════════════════════════════════════════
+# DEPENDENCY MAP
+# ════════════════════════════════════════════════
+
+blocks:
+  - Phase B build start (pe/src/scoring-engine.ts cannot be written without locked schema)
+  - PE going ACTIVE (Phase C)
+  - Full consulting system queue integration
+
+blocked_by:
+  - Nothing — this can start immediately
+
+# ════════════════════════════════════════════════
+# RECOMMENDED EXECUTION
+# ════════════════════════════════════════════════
+
+recommended_approach:
+  step_1: "CDS drafts CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml with all required fields"
+  step_2: "ZF audit (zero-findings check across mechanical, semantic, propagation categories)"
+  step_3: "Governor reviews and ratifies (signs version 1.0 LOCKED)"
+  step_4: "Phase B build start authorized"
+
+  sequencing: "This is the FIRST item in GOV-PE-BOOTSTRAP-001 (manual priority list before PE activates)"
