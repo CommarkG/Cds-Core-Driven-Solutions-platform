@@ -87,6 +87,15 @@ corespines:
         status: "PROPOSED_PENDING_RATIFICATION"
         source: "Session 2026-07-08: Brain guidance on Q2"
 
+      - constraint_id: "CS-CREATION-001-C3"
+        name: "Graphify mandatory at external system creation"
+        description: "Any act of creating an external-facing system, app, or SaaS must include Graphify integration (behind-wall, CLI-only mode) before first production commit. Wall integrity check must pass before Phase B build begins."
+        hard_coded_check: "CDS-GRAPHIFY-MANDATORY-PROTOCOL.md — Phase B entry gate checklist. Any external system without a passed wall check is BLOCKED."
+        falsification_test: "External system repo without graphify-out/ directory and passed wall check is flagged at Phase B entry gate. CDS-GRAPHIFY-MANDATORY-PROTOCOL.md checklist produces blocking output."
+        status: "ACTIVE"
+        ratification_reference: "Governor 2026-07-25 — hardwired demand"
+        source: "Session 2026-07-25: Governor demand — Graphify mandatory in all external systems"
+
   - id: "CS-THRESHOLD-001"
     name: "Threshold Enforcement Corespine"
     domain: "all inputs and outputs"

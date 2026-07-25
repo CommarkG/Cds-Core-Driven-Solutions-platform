@@ -23,10 +23,10 @@ It is the minimum system that can validate itself.
 
 | Component | Why It Is Kernel | Current State | Verified |
 |-----------|-----------------|--------------|---------|
-| Canonical DecisionNode schema (PCR-001) | All PE scoring references decision nodes. Cannot score what is not canonically defined. Without this, scoring is non-deterministic. | EXECUTING — SEED + SKELETON complete (2026-07-20) | NO |
+| Canonical Platform Element schema (PCR-001) | All PE scoring references platform elements. Cannot score what is not canonically defined. Without this, scoring is non-deterministic. | CURRENT ✓ — ratified 2026-07-25 | YES |
 | CS-PE-001 ratified formula + PE-CONFIG.yaml | The scoring engine implements this formula. Formula must be locked before code is written. Coefficients must be externalized before hardcoding occurs. | CURRENT ✓ | YES |
 | Governor ratification gate (GOV-PE-BOOTSTRAP-001) | Every kernel output must have a ratification path. Without a ratification gate, kernel outputs are unverifiable — they exist but carry no authority. | CURRENT ✓ | YES |
-| Phase A ratification system (PCR-002) | The ratification pattern that produced CS-PE-001 must be proven repeatable. One verified ratification cycle proves the pattern works. Without this, CS-PE-001 is a one-off, not a system. | EXECUTING — CS-GOAL-001 cycle in progress | NO |
+| Phase A ratification system (PCR-002) | The ratification pattern that produced CS-PE-001 must be proven repeatable. Three verified ratification cycles prove the pattern works. | CURRENT ✓ — ratified 2026-07-25 | YES |
 
 ---
 
@@ -51,11 +51,11 @@ KERNEL COMPONENT                                STATUS
 
 CS-PE-001 formula + PE-CONFIG.yaml             [CURRENT] ✓
 GOV-PE-BOOTSTRAP-001                            [CURRENT] ✓
-PCR-002 Phase A ratification system             [IN PROGRESS — CS-GOAL-001 cycle]
-PCR-001 DecisionNode schema                     [IN PROGRESS — SEED+SKELETON done; FLESH next]
+PCR-001 Platform Element schema                 [CURRENT] ✓ — ratified 2026-07-25
+PCR-002 Phase A ratification system             [CURRENT] ✓ — ratified 2026-07-25
 ────────────────────────────────────────────────────────────────────────────────
-KERNEL GATE STATUS                              [OPEN — 2 of 4 verified]
-PHASE B CODE                                    [BLOCKED — kernel gate open]
+KERNEL GATE STATUS                              [CLOSED ✓ — all 4 verified 2026-07-25]
+PHASE B CODE                                    [AUTHORIZED — pending Phase A→B gate (5/6)]
 ```
 
 ---
