@@ -1,6 +1,6 @@
 ---
 document_id: CDS-CISEM-SYSTEM-SELF-ASSESSMENT
-title: CDS System Self-Assessment — Multi-Model Setup Description for CISEM Review
+title: "CDS System Self-Assessment - Multi-Model Setup Description for CISEM Review"
 version: 1.0
 date: 2026-07-26
 authority: CDS Orchestrator (Governor: Yariv Fink)
