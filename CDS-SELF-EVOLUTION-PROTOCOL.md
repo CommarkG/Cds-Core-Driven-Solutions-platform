@@ -2,6 +2,8 @@
 document_id: CDS-SELF-EVOLUTION-PROTOCOL-001
 title: CDS Self-Evolution Protocol — Governance Hardening Cycle
 status: RATIFIED — 2026-07-20
+superseded_note: "The 5-step enrich cycle defined here is ENHANCED (not replaced) by CDS-WEEKLY-EVOLUTION-ENGINE.md. The Weekly Engine implements this protocol mechanically as a Saturday cloud agent (Layer 5). Use CDS-WEEKLY-EVOLUTION-ENGINE.md as the operational reference; use this document for the conceptual foundation of the cycle."
+relationship_to_weekly_engine: FOUNDATION_DOCUMENT
 authority: Governor Yariv Fink
 wiring_state: CURRENT
 corespine: CS-PE-001

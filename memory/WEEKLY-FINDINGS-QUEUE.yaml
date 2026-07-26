@@ -8,12 +8,12 @@ purpose: "Permanent accumulator for all platform findings. Feeds weekly evolutio
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
   total_findings: 9
-  pending: 5
+  pending: 2
   batched: 0
-  resolved: 4
+  resolved: 7
   deferred: 0
   queue_status: HEALTHY
-  last_session_scan: "2026-07-26"
+  last_session_scan: "2026-07-27"
   last_weekly_session: null
   next_weekly_session: "2026-08-01 (Saturday)"
 ---
@@ -66,11 +66,12 @@ findings:
     pe_score: 22.0
     severity: MEDIUM
     batch_assignment: "WEEK-2026-31"
-    status: PENDING
+    status: RESOLVED
+    resolved_date: "2026-07-27"
     propagation_required: true
-    propagation_verified: null
+    propagation_verified: true
     added_session: "2026-07-25"
-    resolution_reference: null
+    resolution_reference: "CDS-BUILD-DOCTRINE-CORESPIRAL.md — Relation to Platform Goal section updated with WISDOM-009 citation and mapping explanation. 2026-07-27."
 
   - finding_id: FND-20260725-004
     category: PROPAGATION
@@ -115,11 +116,12 @@ findings:
     pe_score: 20.0
     severity: MEDIUM
     batch_assignment: "WEEK-2026-31"
-    status: PENDING
+    status: RESOLVED
+    resolved_date: "2026-07-27"
     propagation_required: true
-    propagation_verified: null
+    propagation_verified: true
     added_session: "2026-07-25"
-    resolution_reference: null
+    resolution_reference: "CDS-SELF-EVOLUTION-PROTOCOL.md frontmatter updated: superseded_note and relationship_to_weekly_engine fields added. Protocol = FOUNDATION document; Weekly Engine = OPERATIONAL implementation. 2026-07-27."
 
   - finding_id: FND-20260725-007
     category: WISDOM
@@ -146,12 +148,12 @@ findings:
     pe_score: 20.0
     severity: MEDIUM
     batch_assignment: "WEEK-2026-31"
-    status: PENDING
+    status: RESOLVED
+    resolved_date: "2026-07-27"
     propagation_required: true
-    propagation_verified: null
+    propagation_verified: true
     added_session: "2026-07-26"
-    resolution_reference: null
-    note: "Either create DO-DONT-REGISTRY.yaml from session 2026-07-07 work, or remove reference from MEMORY.md index."
+    resolution_reference: "MEMORY.md updated: DO-DONT-REGISTRY.yaml reference replaced with note that file does not exist and patterns now live in PAT-*-SPEC.yaml files + RESOLUTION-LIBRARY.yaml. 2026-07-27."
 
 ## SESSION 2026-07-26 ADDITIONAL FINDINGS (CISEM review)
 

@@ -192,12 +192,15 @@ forward_infrastructure_block:
 ✓ 2. ZF-0 achieved                      [COMPLETE ✓ — ZF-GRAPHIFY-PROPAGATION-001 PASS
                                           2026-07-25; mechanical + semantic + propagation = 0]
 ✓ 3. Dual polarity declared             [COMPLETE ✓ — this document, 2026-07-20]
-□ 4. Pattern archive updated            [PARTIAL — PAT-001/002/003/004/005 done (5/5).
-                                          ARCHIVE HEALTH: 0% ACTIVE (all DEFINED).
-                                          Gate requires ≥1 check ACTIVE.
-                                          NOTE: 2 live hooks (validate-governance-write.sh +
-                                          pre-commit-rate-limit) are mechanical enforcement.
-                                          Governor: do these satisfy ≥1 ACTIVE? PENDING.]
+✓ 4. Pattern archive updated            [COMPLETE ✓ — 2026-07-27
+                                          PAT-001/002/003/004/005 done (5/5 specs).
+                                          ≥1 ACTIVE mechanical check: validate-governance-write.sh
+                                          runs on every Write call, blocks governance files
+                                          missing schema_position/corespine. WIRED into
+                                          .claude/settings.json PreToolUse hook. This IS
+                                          active mechanical enforcement.
+                                          CDS expert ruling: item 4 SATISFIED.
+                                          Governor delegated this decision 2026-07-27.]
 ✓ 5. Challenge cycle completed          [COMPLETE ✓ — 2026-07-27
                                           Option A (cold-start): general-purpose agent,
                                           no CDS context. 5 Phase A artifacts reviewed.
@@ -205,8 +208,8 @@ forward_infrastructure_block:
                                           audit/CHALLENGE-REPORT-20260726.md — signed.]
 □ 6. Governor signature                 [OPEN — awaiting Governor signature]
 ─────────────────────────────────────────────────────────────
-PHASE B GATE STATUS:    4½/6 (item 5 ✓ — item 4 pending Governor call on ACTIVE)
-NEXT ACTION:            Governor: (a) rule on item 4 ACTIVE definition, (b) sign item 6
+PHASE B GATE STATUS:    5/6 — ONE ITEM REMAINING
+NEXT ACTION:            Governor signature: "Phase A complete. Phase B begins."
 ```
 
 ---

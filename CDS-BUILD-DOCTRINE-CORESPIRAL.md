@@ -102,3 +102,5 @@ Item is eligible to be inherited by next work
 Platform goal: **everything self-verifies.**
 
 This doctrine is how SEED-stage artifacts eventually become self-verifying. The VERIFY stage (Stage 5) is the mechanical proof that the artifact verifies itself. Without this doctrine, verification is aspirational. With it, verification is a gate.
+
+**Governing wisdom:** WISDOM-009 (CDS-SYSTEM-WISDOM.md): *"Wiring is essential as the implementation itself."* Every implementation produces two deliverables: the artifact (FLESH) and a ZF propagation sweep confirming all upstream/downstream elements are updated (SKIN+VERIFY). SKIN stage in this doctrine IS the wiring mandate from WISDOM-009. They are the same principle, expressed at different levels.
