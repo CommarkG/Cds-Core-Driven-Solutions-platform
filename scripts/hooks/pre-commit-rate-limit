@@ -1,0 +1,57 @@
+#!/bin/bash
+# pre-commit-rate-limit
+# Git pre-commit hook — enforces session rate limits mechanically
+# Blocks commit if per-session creation limits are exceeded
+#
+# INSTALL: git config core.hooksPath scripts/hooks
+# (Run once in the repo root after cloning)
+
+set -euo pipefail
+
+# Rate limits (matches CDS-WEEKLY-EVOLUTION-ENGINE.md)
+MAX_PAT_SPECS=3
+MAX_WISDOM_ADDITIONS=2
+MAX_CORESPINE_CONSTRAINTS=1
+
+VIOLATIONS=""
+
+# ── PAT specs ─────────────────────────────────────────────────────────────────
+PAT_COUNT=$(git diff --staged --name-only | grep -c "^memory/PAT-[0-9]*-SPEC\.yaml$" || true)
+if [ "$PAT_COUNT" -gt "$MAX_PAT_SPECS" ]; then
+  VIOLATIONS="${VIOLATIONS}\n  PAT-SPEC count: $PAT_COUNT (limit: $MAX_PAT_SPECS)"
+fi
+
+# ── Wisdom principles ─────────────────────────────────────────────────────────
+# Count new WISDOM-NNN — headings added in staged CDS-SYSTEM-WISDOM.md
+if git diff --staged --name-only | grep -q "CDS-SYSTEM-WISDOM\.md"; then
+  WISDOM_COUNT=$(git diff --staged -- CDS-SYSTEM-WISDOM.md \
+    | grep "^+" | grep -c "^+## WISDOM-[0-9]" || true)
+  if [ "$WISDOM_COUNT" -gt "$MAX_WISDOM_ADDITIONS" ]; then
+    VIOLATIONS="${VIOLATIONS}\n  New wisdom principles: $WISDOM_COUNT (limit: $MAX_WISDOM_ADDITIONS)"
+  fi
+fi
+
+# ── Corespine constraints ─────────────────────────────────────────────────────
+# Count new constraint_id: CS-*-C* lines added in staged CORESPINE-REGISTRY.yaml
+if git diff --staged --name-only | grep -q "memory/CORESPINE-REGISTRY\.yaml"; then
+  CS_COUNT=$(git diff --staged -- memory/CORESPINE-REGISTRY.yaml \
+    | grep "^+" | grep -c "constraint_id: CS-" || true)
+  if [ "$CS_COUNT" -gt "$MAX_CORESPINE_CONSTRAINTS" ]; then
+    VIOLATIONS="${VIOLATIONS}\n  New corespine constraints: $CS_COUNT (limit: $MAX_CORESPINE_CONSTRAINTS)"
+  fi
+fi
+
+# ── Report ────────────────────────────────────────────────────────────────────
+if [ -n "$VIOLATIONS" ]; then
+  echo ""
+  echo "RATE LIMIT EXCEEDED — commit blocked"
+  echo "CDS session rate limits (CDS-WEEKLY-EVOLUTION-ENGINE.md) exceeded:"
+  echo -e "$VIOLATIONS"
+  echo ""
+  echo "These limits exist to keep the Governor's ratification queue manageable."
+  echo "Park the excess items in WEEKLY-FINDINGS-QUEUE.yaml for next session."
+  echo "To override (Governor approval required): git commit --no-verify"
+  exit 1
+fi
+
+exit 0

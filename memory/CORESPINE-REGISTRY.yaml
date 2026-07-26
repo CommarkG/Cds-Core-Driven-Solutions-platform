@@ -96,6 +96,16 @@ corespines:
         ratification_reference: "Governor 2026-07-25 — hardwired demand"
         source: "Session 2026-07-25: Governor demand — Graphify mandatory in all external systems"
 
+      - constraint_id: "CS-CREATION-001-C4"
+        name: "Governance artifact must declare schema_position and corespine at Write time"
+        description: "Any .yaml or .md file with YAML frontmatter (--- block) written into the CDS governance repo must contain schema_position and corespine fields. Missing declaration = Write is blocked. Checked by Claude Code PreToolUse hook before the Write tool executes."
+        hard_coded_check: ".claude/hooks/validate-governance-write.sh — runs on every Write tool call, checks frontmatter fields, blocks Write if fields are absent."
+        falsification_test: "Attempt to Write a .yaml file with --- frontmatter but no schema_position field. The PreToolUse hook fires, Write is blocked, error message emitted with required field format."
+        status: "ACTIVE"
+        wire_date: "2026-07-26"
+        ratification_reference: "Governor 2026-07-26 — CISEM improvement item 2 approved"
+        source: "Session 2026-07-26: CISEM external review recommendation — wiring-state enforcement at Write-time"
+
   - id: "CS-THRESHOLD-001"
     name: "Threshold Enforcement Corespine"
     domain: "all inputs and outputs"

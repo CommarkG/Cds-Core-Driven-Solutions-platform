@@ -176,12 +176,42 @@ It is not a reminder — it is a gate.
 
 ---
 
+## WISDOM-010 — Autonomous Writers Need Branch Isolation
+
+**Principle:** An autonomous agent committing to a shared branch is a second writer
+with no coordination signal. Under any concurrent use pattern — human session + Saturday
+cloud agent, two cloud agents, or a push mid-session — the result is a silent git race:
+one writer's commit is rebased over or overwritten by another's, and neither side
+knows. The cost is discovered only when the Governor notices a finding that was marked
+RESOLVED is back as PENDING.
+
+**The rule:** Autonomous agents (cloud, scheduled, CI-triggered) commit to their own
+named branch (`evolution/weekly-[YYYY]-[WW]`), not to `master` directly.
+The human session merges when ready. This is not a workflow preference — it is a
+data integrity constraint.
+
+**Mechanical enforcement:**
+- Cloud agent prompt mandates `git checkout -b evolution/weekly-$(date +%Y-%V)` before staging changes
+- Cloud agent commits and pushes to its own branch; NEVER to master
+- A `git push --force` to master from a cloud agent is blocked by repository branch protection rules (Phase B)
+- Human merges the evolution branch after reviewing the weekly report
+
+**Falsification test:** Simulate: cloud agent commits to master at the same second as
+a human session pushes. With branch isolation: no conflict, two branches, clean merge.
+Without: one commit silently overwritten or a non-fast-forward error with partial data loss.
+
+**Governor note (2026-07-26 — from CISEM external review):**
+> "Two writers sharing one branch without a lock = silent data loss risk.
+> Autonomous writers need either branch isolation or write-before-pull discipline."
+
+---
+
 ## WISDOM HEALTH
 
 ```
-Total wisdom principles:  9
-Principles with mechanical enforcement: 9 / 9
-Principles with falsification tests:    9 / 9
+Total wisdom principles:  10
+Principles with mechanical enforcement: 10 / 10
+Principles with falsification tests:    10 / 10
 WISDOM HEALTH: 100%
 ```
 

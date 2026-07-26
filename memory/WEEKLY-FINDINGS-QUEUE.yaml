@@ -7,8 +7,8 @@ authority: CDS (Governor oversight)
 purpose: "Permanent accumulator for all platform findings. Feeds weekly evolution sessions."
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
-  total_findings: 8
-  pending: 4
+  total_findings: 9
+  pending: 5
   batched: 0
   resolved: 4
   deferred: 0
@@ -153,7 +153,25 @@ findings:
     resolution_reference: null
     note: "Either create DO-DONT-REGISTRY.yaml from session 2026-07-07 work, or remove reference from MEMORY.md index."
 
-## BATCH PLAN
+## SESSION 2026-07-26 ADDITIONAL FINDINGS (CISEM review)
+
+  - finding_id: FND-20260726-002
+    category: PROPAGATION
+    description: "Live dependency graph (Graphify-fed dependency-graph.yaml) does not exist. Propagation completeness relies on manual grepping. Phase B must produce dependency-graph.yaml as first deliverable before other build work begins."
+    affected_artifacts:
+      - "graphify-out/ (not yet populated)"
+      - "dependency-graph.yaml (does not exist)"
+    pe_score: 38.0
+    severity: HIGH
+    batch_assignment: "PHASE-B-INIT"
+    status: PENDING
+    propagation_required: false
+    propagation_verified: null
+    added_session: "2026-07-26"
+    resolution_reference: null
+    note: "CISEM improvement item 3. Deferred to Phase B — Phase A has no code to graph. Spec in CISEM-IMPROVEMENT-RESPONSE.md."
+
+## BATCH PLAN (updated 2026-07-26)
 
   WEEK-2026-31 (2026-08-01):
     findings_resolved: [FND-20260725-002, FND-20260725-007, FND-20260725-004, FND-20260725-001]
@@ -165,4 +183,9 @@ findings:
   WEEK-2026-32 (2026-08-08):
     findings: [FND-20260725-005]
     count: 1
-    note: "System A schema lock — Governor decision required. Schedule as part of broader Phase B prep."
+    note: "System A schema lock — Governor decision required."
+
+  PHASE-B-INIT (first Phase B session):
+    findings: [FND-20260726-002]
+    count: 1
+    note: "Dependency graph — first deliverable of Phase B, before other build work."
