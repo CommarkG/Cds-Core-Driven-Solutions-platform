@@ -8,20 +8,36 @@ purpose: "Real-time visibility into corespine governance state: ratification sta
 data_source: "memory/CORESPINE-REGISTRY.yaml (single source of truth)"
 
 corespine_inventory_summary:
-  total_corespines: 4
-  ratified: 1
+  total_corespines: 5
+  ratified: 3
   partially_ratified: 1
-  pending_ratification: 2
+  pending_ratification: 1
   proposed_constraints_pending: 3
-  measurement_timestamp: 2026-07-08T10:00:00Z
+  measurement_timestamp: 2026-07-26T00:00:00Z
 
 corespine_status_breakdown:
 
+  CS-PE-001:
+    name: "Priority Engine Governance Corespine"
+    ratification_state: RATIFIED
+    ratification_date: 2026-07-15
+    ratified_by: "Yariv Fink (Governor)"
+    domain: "priority scoring, queue management, work ordering"
+    enforcement_score: "0% (ratified, implementation pending Phase B)"
+    spine_constraints_count: 4
+    active_constraints: 4
+    proposed_constraints: 1
+    governance_element_id: "GE-PE-001"
+    ratification_record: "memory/RATIFICATION-CS-PE-001.yaml"
+    status: RATIFIED — IMPLEMENTATION PENDING PHASE B
+
   CS-GOAL-001:
     name: "Goal Ratification Corespine"
-    ratification_state: PENDING
+    ratification_state: RATIFIED
+    ratification_date: 2026-07-25
+    ratified_by: "Yariv Fink (Governor)"
     domain: "platform goals"
-    enforcement_score: "0% (not yet active)"
+    enforcement_score: "0% (ratified, implementation pending Phase B)"
     spine_constraints_count: 2
     active_constraints: 2
     proposed_constraints: 1
@@ -29,7 +45,7 @@ corespine_status_breakdown:
     blocked_operations: [modify_ratified_goal, delete_goal_record]
     hook_implementation: "pre-tool-corespine-hook.sh (design pattern active)"
     enforcement_code: "threshold/src/gate/rules.ts → RULE-GOAL (line 54-85)"
-    blocking_item: "Awaiting Yariv ratification decision: now or during Phase A"
+    ratification_record: "memory/RATIFICATION-CS-GOAL-001.yaml"
     proposal_pending: "CS-GOAL-001-PROPOSED-1: Code enforcement equivalence (rules must read from registry)"
 
   CS-CREATION-001:
@@ -86,12 +102,15 @@ enforcement_landscape:
   fully_active:
     - CS-THRESHOLD-001 (100%)
 
+  ratified_pending_phase_b:
+    - CS-PE-001 (0% enforcement — ratified 2026-07-15, implementation is Phase B scoring engine)
+    - CS-GOAL-001 (0% enforcement — ratified 2026-07-25, implementation is Phase B hook)
+
   partial:
     - CS-AI-BEHAVIOR-001 (40% — layer_declaration enforced, reasoning_trace pending)
 
-  pending_activation:
-    - CS-GOAL-001 (awaiting ratification)
-    - CS-CREATION-001 (awaiting ratification)
+  pending_ratification:
+    - CS-CREATION-001 (awaiting ratification — Phase B prerequisite)
 
 ratification_required_before_phase_a:
   count: 3

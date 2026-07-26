@@ -1,0 +1,84 @@
+---
+pattern_id: PAT-004
+pattern_name: "Impossible/must-claim without enforcement"
+severity: CRITICAL
+sessions_confirmed: 3
+first_observed: "2026-07-07"
+recurrence_count: 9
+status: COMPLETE
+output_1_status: STORED
+output_2_status: DEFINED
+source_library: RESOLUTION-LIBRARY (IMPOSSIBLE-CLAIM-WITHOUT-ENFORCEMENT)
+---
+
+## Output 1 — Pattern Statement
+
+A governance artifact asserts that something is impossible or prohibited ("no X can reach Y",
+"cannot be bypassed", "is forbidden", "impossible without Z") without any enforcement code
+or gate that actually blocks the prohibited action. The prohibition exists as a declaration
+only — it is violated the moment someone does the "impossible" thing and nothing stops them.
+
+**Observed in:** Corespine constraint descriptions, security boundary declarations,
+gate requirements, Phase A architecture documents.
+**When it appears:** When designing architecture before Phase B builds the enforcement.
+Especially common when corespine constraints are written ahead of their implementation hooks.
+**Why it persists:** "Impossible" feels like a stronger word than "should not."
+It sounds mechanical without being mechanical. Nothing in the writing process forces the
+author to check whether a blocking mechanism exists.
+**Cost:** One successful bypass of an "impossible" claim destroys the credibility of every
+other governance claim. A platform where "impossible" means "documented but unblocked" is
+not governed — it is documented.
+
+**Distinct from PAT-003:** PAT-003 covers structural claims ("this is required") without
+enforcement. PAT-004 specifically covers impossibility/prohibition claims ("this cannot happen",
+"this is forbidden", "no X without Y") — higher severity because these claims imply a hard
+block that does not exist.
+
+---
+
+## Output 2 — Mechanical Check Specification
+
+```yaml
+mechanical_check:
+  trigger: >
+    Before any governance artifact is submitted for ratification. Also at session-start
+    audit when scanning existing artifacts for compliance.
+
+  detection: >
+    For each artifact containing impossibility or prohibition language (phrases:
+    "cannot", "no X can", "impossible without", "forbidden", "never reaches",
+    "blocked by", "cannot bypass", "is prevented from", "must not", "will not"):
+    Check whether an enforcement_code field exists OR a gate reference exists that
+    points to a real file + line that performs the blocking.
+    If the claim exists and:
+      - No enforcement_code field present, OR
+      - enforcement_code field is null, "Phase B", "to be built", or "TBD", OR
+      - The referenced file does not exist on disk
+    → VIOLATION.
+
+  failure_output: >
+    BLOCKED: artifact '[artifact_id]' contains impossibility claim without active enforcement.
+    Claim found: '[claim_text]'
+    Choose one:
+      Option A: Add enforcement_code pointing to existing file + line that performs the block.
+      Option B: Relabel claim as TELL (aspiration, not enforced) with status: ANTICIPATED.
+      Option C: Open a PCR to build the enforcement; link PCR-ID in claim.
+    "Phase B" and "to be built" are NOT valid enforcement references.
+
+  enforcement_layer: pre-ratification
+
+  false_positive_risk: MEDIUM
+  false_positive_reason: >
+    Some impossibility claims describe logical impossibility (structural schema constraint)
+    not a runtime enforcement block. Example: "An element without schema_position cannot
+    be registered" — where registration itself requires schema_position. These are
+    architecturally enforced by definition, not by code. Flag for human review if
+    the claim references a schema field gate rather than a code gate.
+
+check_status: DEFINED
+ratification_reference: null
+ratification_date: null
+wired_date: null
+active_date: null
+consecutive_clean_sessions: 0
+```

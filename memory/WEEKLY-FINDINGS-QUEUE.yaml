@@ -1,18 +1,19 @@
 ---
 document_id: WEEKLY-FINDINGS-QUEUE
-version: 1.0
+version: 1.1
 created: 2026-07-25
-updated_at: 2026-07-25
+updated_at: 2026-07-26
 authority: CDS (Governor oversight)
 purpose: "Permanent accumulator for all platform findings. Feeds weekly evolution sessions."
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
-  total_findings: 7
-  pending: 7
+  total_findings: 8
+  pending: 4
   batched: 0
-  resolved: 0
+  resolved: 4
   deferred: 0
   queue_status: HEALTHY
+  last_session_scan: "2026-07-26"
   last_weekly_session: null
   next_weekly_session: "2026-08-01 (Saturday)"
 ---
@@ -28,16 +29,17 @@ findings:
     description: "PAT-004 and PAT-005 not yet written — rate limit hit this session. Patterns from RESOLUTION-LIBRARY still missing Output 2 specs."
     affected_artifacts:
       - "memory/RESOLUTION-LIBRARY.yaml"
-      - "memory/PAT-004-SPEC.yaml (does not exist yet)"
-      - "memory/PAT-005-SPEC.yaml (does not exist yet)"
+      - "memory/PAT-004-SPEC.yaml"
+      - "memory/PAT-005-SPEC.yaml"
     pe_score: 28.0
     severity: HIGH
     batch_assignment: "WEEK-2026-31"
-    status: PENDING
+    status: RESOLVED
+    resolved_date: "2026-07-26"
     propagation_required: false
-    propagation_verified: null
+    propagation_verified: true
     added_session: "2026-07-25"
-    resolution_reference: null
+    resolution_reference: "memory/PAT-004-SPEC.yaml + memory/PAT-005-SPEC.yaml — both written 2026-07-26"
 
   - finding_id: FND-20260725-002
     category: STALE
@@ -48,11 +50,12 @@ findings:
     pe_score: 35.0
     severity: HIGH
     batch_assignment: "WEEK-2026-31"
-    status: PENDING
+    status: RESOLVED
+    resolved_date: "2026-07-26"
     propagation_required: true
-    propagation_verified: null
+    propagation_verified: true
     added_session: "2026-07-25"
-    resolution_reference: null
+    resolution_reference: "memory/CORESPINE-DASHBOARD.yaml updated 2026-07-26 — total 5, ratified 3 (CS-THRESHOLD-001, CS-PE-001, CS-GOAL-001). CS-PE-001 entry added. measurement_timestamp updated."
 
   - finding_id: FND-20260725-003
     category: WISDOM
@@ -78,11 +81,12 @@ findings:
     pe_score: 30.0
     severity: HIGH
     batch_assignment: "WEEK-2026-31"
-    status: PENDING
+    status: RESOLVED
+    resolved_date: "2026-07-26"
     propagation_required: false
-    propagation_verified: null
+    propagation_verified: true
     added_session: "2026-07-25"
-    resolution_reference: null
+    resolution_reference: "PAT-004/005 written 2026-07-26. CDS-PHASE-TRANSITION-PROTOCOL.md updated — item 4 marked PARTIAL (5/5 specs written, ACTIVE hooks pending Phase B). ARCHIVE HEALTH: 0% ACTIVE / 100% DEFINED."
 
   - finding_id: FND-20260725-005
     category: VIOLATION
@@ -125,19 +129,38 @@ findings:
     pe_score: 32.0
     severity: HIGH
     batch_assignment: "WEEK-2026-31"
-    status: PENDING
+    status: RESOLVED
+    resolved_date: "2026-07-26"
     propagation_required: false
-    propagation_verified: null
+    propagation_verified: true
     added_session: "2026-07-25"
+    resolution_reference: "CDS-PHASE-TRANSITION-PROTOCOL.md — Challenge Cycle Format Definition added 2026-07-26. 3 valid options (cold-start Claude, cross-platform review, Governor-designated). Challenge prompt template written. CHALLENGE-REPORT-[DATE].md format defined. Governor disposition requirements specified."
+
+## SESSION 2026-07-26 FINDINGS
+
+  - finding_id: FND-20260726-001
+    category: STALE
+    description: "MEMORY.md references DO-DONT-REGISTRY.yaml as a primary governance file but the file does not exist on disk. Stale index reference."
+    affected_artifacts:
+      - "C:/Users/finky/.claude/projects/.../memory/MEMORY.md"
+    pe_score: 20.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-31"
+    status: PENDING
+    propagation_required: true
+    propagation_verified: null
+    added_session: "2026-07-26"
     resolution_reference: null
+    note: "Either create DO-DONT-REGISTRY.yaml from session 2026-07-07 work, or remove reference from MEMORY.md index."
 
 ## BATCH PLAN
 
   WEEK-2026-31 (2026-08-01):
-    findings: [FND-20260725-002, FND-20260725-007, FND-20260725-004, FND-20260725-001, FND-20260725-006, FND-20260725-003]
-    count: 6
-    priority_order: by pe_score descending
-    estimated_session_time: 45 min
+    findings_resolved: [FND-20260725-002, FND-20260725-007, FND-20260725-004, FND-20260725-001]
+    findings_pending: [FND-20260725-003, FND-20260725-006, FND-20260726-001]
+    resolved_by_session_2026-07-26: 4
+    remaining_pending_count: 3
+    estimated_session_time: 20 min (3 findings remain)
 
   WEEK-2026-32 (2026-08-08):
     findings: [FND-20260725-005]

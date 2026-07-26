@@ -158,15 +158,15 @@ inheritance_block:
 ```yaml
 forward_infrastructure_block:
 
-  - item: "CANONICAL-DECISION-NODE-SCHEMA.yaml"
+  - item: "CANONICAL-DECISION-NODE-SCHEMA.yaml + CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml"
     needed_by: "pe/src/scoring-engine.ts — reads node definitions to score decisions"
     placed_by: "PCR-001 FLESH + VERIFY stages (CDS-PCR-001-CORESPIRAL-EXECUTION-001)"
-    status: ANTICIPATED — SEED + SKELETON complete; FLESH not yet executed
+    status: PLACED ✓ — PCR-001 CURRENT 2026-07-25, Governor ratified
 
   - item: "Phase A ratification system — proven repeatable"
     needed_by: "All Phase B corespine ratification cycles use same pattern"
     placed_by: "PCR-002 — CS-GOAL-001 ratification cycle completion"
-    status: ANTICIPATED — in progress
+    status: PLACED ✓ — PCR-002 CURRENT 2026-07-25, 3 ratification cycles proven
 
   - item: "Scoring audit log structure"
     needed_by: "CS-PE-001 C3 — every scoring decision logged"
@@ -187,13 +187,87 @@ forward_infrastructure_block:
 ### Phase A → Phase B Checklist Status (Live)
 
 ```
-□ 1. All Phase A artifacts CURRENT      [OPEN — PCR-001, PCR-002 pending CURRENT]
-□ 2. ZF-0 achieved                      [OPEN — pending PCR-001 VERIFY stage]
-□ 3. Dual polarity declared             [COMPLETE ✓ — this document, 2026-07-20]
-□ 4. Pattern archive updated            [OPEN — two-output rule applied; HEALTH check pending]
-□ 5. Challenge cycle completed          [OPEN — no external review on record yet]
-□ 6. Governor signature                 [OPEN — awaiting items 1, 2, 4, 5]
+✓ 1. All Phase A artifacts CURRENT      [COMPLETE ✓ — PCR-001 CURRENT 2026-07-25,
+                                          PCR-002 CURRENT 2026-07-25, kernel CLOSED 4/4]
+✓ 2. ZF-0 achieved                      [COMPLETE ✓ — ZF-GRAPHIFY-PROPAGATION-001 PASS
+                                          2026-07-25; mechanical + semantic + propagation = 0]
+✓ 3. Dual polarity declared             [COMPLETE ✓ — this document, 2026-07-20]
+□ 4. Pattern archive updated            [PARTIAL — PAT-001/002/003/004/005 done (5/5).
+                                          ARCHIVE HEALTH: 0% ACTIVE (all DEFINED).
+                                          Gate requires ≥1 check ACTIVE → Phase B build item.]
+□ 5. Challenge cycle completed          [OPEN — format now DEFINED (see below).
+                                          External review not yet executed.]
+□ 6. Governor signature                 [OPEN — awaiting item 5 execution]
 ─────────────────────────────────────────────────────────────
-PHASE B GATE STATUS:    OPEN (3 of 6 checked)
-ESTIMATE TO CLOSE:      PCR-001 FLESH + VERIFY + PCR-002 completion
+PHASE B GATE STATUS:    3½/6
+NEXT ACTION:            Execute challenge cycle (item 5) → Governor signs item 6
 ```
+
+---
+
+## Challenge Cycle Format Definition
+
+*Added 2026-07-26 — resolves FND-20260725-007 (format undefined = ungated)*
+
+### What Counts as an External Review
+
+A valid challenge cycle for Phase A→B gate requires ONE of the following:
+
+**Option A (Recommended): Cold-Start Claude Session**
+A new Claude session with NO CDS context loaded is given the following artifacts
+and asked to find logical gaps, unsupported claims, governance weaknesses:
+- `memory/PLATFORM-GOAL.md`
+- `CDS-KERNEL-DEFINITION.md`
+- `CDS-BUILD-DOCTRINE-CORESPIRAL.md`
+- `CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml`
+- `CDS-SYSTEM-WISDOM.md`
+
+The session receives a standard challenge prompt (see below). No MEMORY.md, no
+compaction recovery doc — cold start only.
+
+**Option B: Cross-Platform Review**
+CISEM or another connected platform reviews specified Phase A outputs.
+Review must be conducted by an agent or session with no prior CDS context.
+
+**Option C: Governor-Designated Reviewer**
+Governor names a specific reviewer (person or AI session) who reads and challenges
+the Phase A outputs with no prior CDS context.
+
+### Challenge Prompt Template
+
+```
+You are reviewing the foundational governance architecture of a platform called CDS
+(Core Driven Solutions). You have no prior context on this platform.
+
+Read the following files and identify:
+1. Logical gaps — claims that don't follow from evidence
+2. Unsupported assertions — governance statements without enforcement mechanisms
+3. Internal contradictions — two statements that cannot both be true
+4. Missing definitions — terms used without canonical definition
+5. Circular dependencies — A requires B which requires A
+
+For each finding, provide:
+  finding_id: CHALLENGE-[DATE]-[SEQ]
+  category: [logical_gap | unsupported | contradiction | missing_definition | circular]
+  artifact: [file where found]
+  claim: [the exact text of the problematic claim]
+  critique: [why it is a problem]
+  severity: [CRITICAL | HIGH | MEDIUM | LOW]
+
+If you find zero issues in a category, explicitly state: "[category]: ZERO FINDINGS"
+Do not suggest improvements — only report what is logically or structurally wrong.
+```
+
+### Challenge Record Format
+
+Results are stored in `audit/CHALLENGE-REPORT-[DATE].md` with:
+- Reviewer identity (Option A/B/C + session date)
+- List of findings in the format above
+- Governor disposition for each finding:
+  - `RESOLVED` — finding is valid, fix applied (wiring state updated)
+  - `VAULTED` — finding is valid, addressed in Phase B (ConflictRecord created)
+  - `REJECTED` — finding is not valid (Governor explains why)
+- Governor signature confirming no open undispositioned findings
+
+**Gate check:** Item 5 is checked ✓ when CHALLENGE-REPORT-[DATE].md exists,
+all findings have Governor dispositions, and no finding is missing a disposition.

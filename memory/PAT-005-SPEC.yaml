@@ -1,0 +1,85 @@
+---
+pattern_id: PAT-005
+pattern_name: "Derived index not updated when source changes"
+severity: HIGH
+sessions_confirmed: 3
+first_observed: "2026-07-08"
+recurrence_count: 7
+status: COMPLETE
+output_1_status: STORED
+output_2_status: DEFINED
+source_library: "RESOLUTION-LIBRARY (aligned with WISDOM-008: Derived Indexes Prevent Drift)"
+---
+
+## Output 1 — Pattern Statement
+
+A derived index (dashboard, summary, count, or status snapshot) falls out of sync with
+the registry it derives from because no mechanism forces the index to update when the
+source changes. The index silently shows stale data — old counts, incorrect ratification
+states, missing new entries — while appearing to be the authoritative reference.
+
+**Observed in:** CORESPINE-DASHBOARD.yaml vs CORESPINE-REGISTRY.yaml (ratified count wrong
+after CS-GOAL-001 ratification), MEMORY.md index (references DO-DONT-REGISTRY.yaml which
+doesn't exist on disk), CORESPINE-REGISTRY.yaml (CS-PE-001 entry positioned inside
+proposed_ratifications block instead of corespines array).
+**When it appears:** After any ratification, new entry, or status change in a registry.
+The source is updated; the derived index is not because there is no trigger.
+**Why it persists:** Updating the source feels like completing the work. The derived index
+is a "reflection" that doesn't feel like part of the same update. No gate blocks ratification
+if the dashboard disagrees.
+**Cost:** Governance decisions made from a stale index are made on false data.
+A count of "1 ratified corespine" when the actual number is 3 misrepresents the platform's
+maturity to the Governor and any external reviewer.
+
+**Connection to WISDOM-008:** "An index written by hand drifts. An index derived from
+its source stays true." The fix is not discipline — it is making the index mechanically
+derived so divergence is impossible.
+
+---
+
+## Output 2 — Mechanical Check Specification
+
+```yaml
+mechanical_check:
+  trigger: >
+    After any update to a source registry (CORESPINE-REGISTRY.yaml, CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml,
+    WEEKLY-FINDINGS-QUEUE.yaml, or any file designated as a source for a derived index).
+    Also at session-start audit to detect accumulated drift.
+
+  detection: >
+    For each pair (source_file, derived_index_file):
+      1. Read the source_file — extract all entries of the tracked type (corespines, elements, findings).
+      2. Count by status category (ratified, pending, etc.).
+      3. Read the derived_index_file — extract the same counts from its summary fields.
+      4. Compare: if any count differs between source and derived index → VIOLATION.
+      5. Also check: derived_index_file.measurement_timestamp vs source_file.last_updated.
+         If source is newer than index → VIOLATION (staleness detected).
+
+    Tracked pairs:
+      - source: memory/CORESPINE-REGISTRY.yaml → derived: memory/CORESPINE-DASHBOARD.yaml
+      - source: CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml → derived: memory/SCHEMA-DASHBOARD.yaml (if exists)
+      - source: memory/WEEKLY-FINDINGS-QUEUE.yaml → derived: queue_health block in same file (self-check)
+
+  failure_output: >
+    DRIFT DETECTED: '[derived_index_file]' is out of sync with '[source_file]'.
+    Discrepancies:
+      - [field]: derived shows [X], source has [Y]
+      - measurement_timestamp: [derived_date] vs source last_updated: [source_date]
+    Update '[derived_index_file]' to reflect current source state before session ends.
+    Do not ratify any artifact that references the stale index until the index is corrected.
+
+  enforcement_layer: session-start-scan + post-registry-update
+
+  false_positive_risk: LOW
+  false_positive_reason: >
+    A newly created source file with no derived index yet is not a violation — it is a
+    gap (no index exists yet). Only trigger on established pairs where the derived index
+    exists but has stale data.
+
+check_status: DEFINED
+ratification_reference: null
+ratification_date: null
+wired_date: null
+active_date: null
+consecutive_clean_sessions: 0
+```
