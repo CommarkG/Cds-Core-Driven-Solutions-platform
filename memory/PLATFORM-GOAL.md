@@ -96,6 +96,12 @@ Layer 1 (hard-code) enforces absolutely. Layer 2 (AI judgment) reasons within th
 bounds Layer 1 sets. Layer 3 (enforcement check) verifies Layer 2 operated within
 bounds. No layer bypasses the layer above it.
 
+*Note on naming:* "Layer 1/2/3" here refers to the trust-tier execution model
+(hard-code → AI-judgment → enforcement-check). This is distinct from the
+architectural layer model (Constitutional / Governance / Execution) described in the
+Architecture section above. The trust-tier model describes HOW any given decision is
+processed; the architectural model describes WHERE in the platform that processing occurs.
+
 **Completion-as-Top-Priority with Intelligent Park Routing**
 Finish what is started before adding what is new. When something cannot be completed
 now, park it with explicit conditions for return — not abandoned, not lost, waiting with

@@ -5,7 +5,7 @@ status: RATIFIED — 2026-07-20
 authority: Governor Yariv Fink
 wiring_state: CURRENT
 corespine: CS-PE-001
-schema_position: CDS.ARCHITECTURE.KERNEL
+schema_position: CDS.SYSTEM.ARCHITECTURE.KERNEL
 platform_goal: CDS-PLATFORM-GOAL — everything self-verifies
 ---
 
@@ -32,11 +32,16 @@ It is the minimum system that can validate itself.
 
 ## The Kernel Gate Rule
 
-**Phase B code does not begin until all 4 kernel components are at wiring state CURRENT.**
+**Phase B code does not begin until ALL of the following are true:**
+1. All 4 kernel components are at wiring state CURRENT
+2. All 6 items on the Phase A→B transition checklist are verified
+3. Governor signs: "Phase A complete. Phase B begins."
 
 This means: pe/src/scoring-engine.ts and pe/src/queue-manager.ts are not written until:
 - PCR-001 DecisionNode schema is CURRENT
 - PCR-002 Phase A ratification system is CURRENT
+- CDS-PHASE-TRANSITION-PROTOCOL.md checklist: all 6 items checked
+- Governor signature received
 
 This rule is not a preference. Writing code against an unverified kernel bakes in the
 kernel's gaps at every layer above it. Every line of code that references an unverified
@@ -97,11 +102,13 @@ Step 2: Verify PCR-002 — Phase A ratification system
 
 Step 3: Kernel gate closes
         All 4 components at CURRENT
-        Phase B code authorized to begin
+        Phase B systems may now be PLANNED AND DESIGNED (authorized to plan)
+        Phase B CODE WRITING does not begin yet — awaits Step 4 Governor signature
         Phase A → Phase B transition checklist: item 1 checked
 
 Step 4: Phase A → Phase B transition protocol runs
         Per CDS-PHASE-TRANSITION-PROTOCOL-001
         All 6 checklist items verified
         Governor signs: "Phase A complete. Phase B begins."
+        Phase B code writing begins HERE — not at Step 3
 ```

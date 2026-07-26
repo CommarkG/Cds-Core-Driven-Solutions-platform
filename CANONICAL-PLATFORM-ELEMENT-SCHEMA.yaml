@@ -3,7 +3,7 @@ document_id: CANONICAL-PLATFORM-ELEMENT-SCHEMA-001
 title: CDS Canonical Platform Element Schema
 supersedes: CANONICAL-DECISION-NODE-SCHEMA-001 (misnomer — scope is all platform elements, not only decisions)
 pcr_reference: PCR-001
-corespiral_stage: FLESH
+corespiral_stage: VERIFY
 status: RATIFIED — CURRENT — 2026-07-25
 created: 2026-07-20
 skin_complete: 2026-07-20

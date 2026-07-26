@@ -48,7 +48,7 @@ Only a CURRENT artifact can be inherited by what follows it.
 
 1. **No stage is skipped** under any condition, including time pressure or PE urgency score.
 2. **No artifact is declared CURRENT** without passing Stage 5 VERIFY gate with Governor signature.
-3. **No artifact begins its inheritance chain** from an artifact below CURRENT.
+3. **No artifact may be ACTIVATED** (advance to REACHABLE or CURRENT wiring state) while inheriting from a parent below CURRENT. Inheritance chain declarations made at SEED/SKELETON stage are design-time architecture statements — they document intended structure before wiring. The constraint fires when the child element attempts to advance past WIRED into REACHABLE.
 4. **FLESH never adds undeclared fields.** If a new field is discovered during FLESH, return to SKELETON, update it, then continue. FLESH is a bounded execution — not a discovery phase.
 5. **SKIN always declares both:** what is inherited from prior work (locked) AND what infrastructure this artifact places for what follows (anticipated).
 6. **SEED is not skipped for "small" items.** Size does not determine whether SEED is required. Impact on the inheritance chain does.

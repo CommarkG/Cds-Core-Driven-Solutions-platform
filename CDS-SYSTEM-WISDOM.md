@@ -41,12 +41,16 @@ updating the other, the duplicate is detectable by a scan. Zero duplicates = zer
 Separation of producer and verifier must be enforced by the architecture, not by intent.
 
 **Mechanical enforcement:** ZF audits run as a separate stage from implementation.
-The same session that writes a FLESH artifact does not declare its own ZF-0.
-VERIFY is a distinct stage — its outputs are Governor-reviewed before CURRENT is assigned.
+The same session that writes a FLESH artifact may PRODUCE the VERIFY audit — but
+may not DECLARE ZF-0. Declaration is a Governor function. The independence is between
+EXECUTION of the audit (session) and DECLARATION of the result (Governor only).
+VERIFY outputs are Governor-reviewed before CURRENT is assigned. Self-declaration is invalid.
 
-**Falsification test:** CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml's VERIFY stage was run
-by the same session that wrote FLESH — but Governor ratifies. The independence
-is enforced by requiring Governor signature on ZF-0 before wiring_state advances.
+**Falsification test:** CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml's VERIFY stage was
+conducted by the same session that wrote FLESH — but ZF-0 was declared only upon
+Governor ratification signature. A session claiming wiring_state: CURRENT without
+a Governor signature on record is invalid regardless of audit contents.
+The distinction: session produces evidence; Governor declares verdict.
 
 ---
 
@@ -210,9 +214,12 @@ Without: one commit silently overwritten or a non-fast-forward error with partia
 
 ```
 Total wisdom principles:  10
-Principles with mechanical enforcement: 10 / 10
+Principles with mechanical enforcement: 9 / 10
+  (WISDOM-010: agent branch isolation ACTIVE; branch protection rule = Phase B)
+Principles with mechanical enforcement (fully active):    9
+Principles with mechanical enforcement (partially active): 1 (WISDOM-010)
 Principles with falsification tests:    10 / 10
-WISDOM HEALTH: 100%
+WISDOM HEALTH: 90% active enforcement (10/10 declared, 9/10 fully enforced)
 ```
 
 ---
