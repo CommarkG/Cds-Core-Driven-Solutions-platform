@@ -1,0 +1,32 @@
+---
+document_id: RATIFICATION-PHASE-A-TO-B
+gov_id: GOV-20260727-001
+artifact_id: PHASE-A-TO-B
+artifact_file: CDS-PHASE-TRANSITION-PROTOCOL.md
+ratification_date: 2026-07-27
+ratified_by: Yariv Fink
+schema_position: CDS.GOVERNANCE.RATIFICATION.PHASE-A-TO-B
+corespine: CS-GOAL-001
+wiring_state: CURRENT
+---
+
+# Ratification Record — PHASE-A-TO-B
+
+## What Was Ratified
+
+Phase A → Phase B transition. All 6 gate items verified. Phase B code writing authorized.
+
+## Governor Signature
+
+**Ratified by:** Yariv Fink
+**Date:** 2026-07-27
+**GOV-ID:** GOV-20260727-001
+
+Governor statement: "Phase A complete. Phase B begins."
+
+## Downstream Effects
+
+Next steps after this ratification:
+- Update wiring_state in CDS-PHASE-TRANSITION-PROTOCOL.md to CURRENT
+- Run ZF propagation check to identify consuming files
+- Add to MEMORY.md index if not already present

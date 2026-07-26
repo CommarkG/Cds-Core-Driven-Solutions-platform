@@ -206,10 +206,13 @@ forward_infrastructure_block:
                                           no CDS context. 5 Phase A artifacts reviewed.
                                           25 findings. All Governor-dispositioned.
                                           audit/CHALLENGE-REPORT-20260726.md — signed.]
-□ 6. Governor signature                 [OPEN — awaiting Governor signature]
+✓ 6. Governor signature                 [COMPLETE ✓ — 2026-07-27
+                                         "Phase A complete. Phase B begins."
+                                         GOV-ID: GOV-20260727-001
+                                         Ratification: memory/RATIFICATION-PHASE-A-TO-B.yaml]
 ─────────────────────────────────────────────────────────────
-PHASE B GATE STATUS:    5/6 — ONE ITEM REMAINING
-NEXT ACTION:            Governor signature: "Phase A complete. Phase B begins."
+PHASE B GATE STATUS:    6/6 — CLOSED ✓ 2026-07-27
+PHASE B STATUS:         ACTIVE — code writing authorized
 ```
 
 ---
