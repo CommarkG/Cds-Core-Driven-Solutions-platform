@@ -108,6 +108,13 @@ Also manually triggerable: "run weekly evolution session."
 **Session structure (batched, calm, PE-ordered):**
 
 ```
+PHASE 0 — GRAPHIFY MODE B EXTRACT (5 min — runs first, every Saturday session)
+  graphify extract . --include "*.md,*.yaml" --backend claude
+  Wall check: verify only graphify-out/ changed
+  Regenerate dependency-graph.yaml Layer 2 section from governance query results
+  Commit updated dependency-graph.yaml if changed
+  (This is the weekly run of CDS-GRAPHIFY-MANDATORY-PROTOCOL.md Mode B)
+
 PHASE 1 — TRIAGE (10 min)
   Read WEEKLY-FINDINGS-QUEUE.yaml
   Review all PENDING findings from this week
