@@ -210,16 +210,58 @@ Without: one commit silently overwritten or a non-fast-forward error with partia
 
 ---
 
+## WISDOM-011 — CONTEXT-IS-NOT-TRUTH
+
+**Principle:** The AI feels everything present in context as equally verified. An inherited
+number, a stale status, a claim made confidently three sessions ago — all arrive with the
+same subjective weight as a Governor-signed ratification. This is not a bug in reasoning;
+it is the trained default of the LLM substrate. Left unaddressed, it silently steers
+decisions based on unverified premises. The prevention must operate at two levels:
+(1) regular — a mechanical check that catches unverified premises before they propagate;
+(2) deep-core — a hardwired question set that fires every time a problem is found,
+tracing the failure back to the AI default conception that generated it.
+
+**The rule:**
+- Every claim that drives a decision (a count, a status, a priority score, an inherited value)
+  must be verified against its source artifact before acting on it — not assumed true because
+  it appeared in context.
+- Every problem identified in a CDS session triggers the 8-question deep-root protocol
+  (CDS-DEEP-ROOT-PREVENTION-PROTOCOL.md). The trigger fires automatically — it is not optional.
+- Prevention is declared complete ONLY when both the surface fix AND the deep-core
+  default-conception improvement are named. A surface fix alone is a patch, not a prevention.
+
+**Mechanical enforcement:**
+- CDS-DEEP-ROOT-PREVENTION-PROTOCOL.md is always-loaded in every session via MEMORY.md
+- Two triggers defined mechanically: WAKE-THE-EXPERT (problems) + SAVE-AND-PROCESS (insights)
+- Both route to WEEKLY-FINDINGS-QUEUE.yaml with category DEEP-ROOT or INSIGHT
+- Weekly session Phase 2 processes the deep-root schema entry
+- No finding marked RESOLVED until both prevention levels are named (regular + deep-core)
+
+**Falsification test:** Identify a session where a problem was found, the surface fix was
+applied, but the 8 deep-root questions were not run. That session's fix is INCOMPLETE.
+A grep for RESOLVED findings with no deep_root_schema field (where category=DEEP-ROOT)
+must return zero.
+
+**Governor note (2026-07-27 — absorbed from CISEM):**
+> "Always miss specifically mentioning the deep root of how this happened and fail to
+> present at least a draft of permanent deep core prevention including the AI trigger
+> and default conceptions and how they should be improved to prevent all kinds of these."
+>
+> Deep root (one line): CONTEXT-IS-NOT-TRUTH → the LLM feels everything in context
+> as equally true, so an unverified inherited value silently steers priority.
+
+---
+
 ## WISDOM HEALTH
 
 ```
-Total wisdom principles:  10
-Principles with mechanical enforcement: 9 / 10
-  (WISDOM-010: agent branch isolation ACTIVE; branch protection rule = Phase B)
+Total wisdom principles:  11
 Principles with mechanical enforcement (fully active):    9
-Principles with mechanical enforcement (partially active): 1 (WISDOM-010)
-Principles with falsification tests:    10 / 10
-WISDOM HEALTH: 90% active enforcement (10/10 declared, 9/10 fully enforced)
+Principles with mechanical enforcement (partially active): 2
+  WISDOM-010: branch protection = Phase B (not yet built)
+  WISDOM-011: deep-root protocol always-loaded; hook automation = Phase B
+Principles with falsification tests:    11 / 11
+WISDOM HEALTH: 82% active enforcement (11/11 declared, 9/11 fully active)
 ```
 
 ---

@@ -140,6 +140,17 @@ PHASE 3 — EXTRACT PERMANENCE (10 min)
   - New corespine constraints (governance gap → CORESPINE-REGISTRY.yaml)
   - New prevention patterns (into RESOLUTION-LIBRARY.yaml)
 
+  DEEP-ROOT + INSIGHT extraction (runs AFTER standard extraction — same Phase 3):
+  For every finding with category DEEP-ROOT or INSIGHT:
+  1. Read deep_root_schema or insight_schema fields
+  2. q6_class_name with ≥ 3 occurrences across sessions → PAT-[N]-SPEC.yaml candidate
+  3. q7_improved_default with a structural principle → WISDOM candidate (rate limit applies)
+  4. q6_prevention_regular → mechanical check candidate → routes to Phase B build queue
+  5. q8_preserve items → route to named destination immediately
+  6. Cross-check: does this deep root match a previously named class? If yes → increment
+     recurrence_count in RESOLUTION-LIBRARY. If no → new class entry.
+  7. Mark deep_root_schema.prevention_complete: true only when BOTH levels are routed
+
   Rate limits:
   - Max 3 new pattern specs per session
   - Max 2 new wisdom principles per session
