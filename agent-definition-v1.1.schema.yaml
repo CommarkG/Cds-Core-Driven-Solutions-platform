@@ -1,0 +1,121 @@
+---
+schema_id: "SCHEMA-AGENT-DEFINITION-001"
+name: "AgentDefinitionSchema"
+version: "1.1.0"
+status: "LOCKED — Governor signed 2026-07-27 (GOV-20260727-002)"
+created: "2026-07-07"
+last_updated: "2026-07-07"
+depth_level: 1
+correction_note: "v1.1 removes self-declared 'OPUS-AUDIT-APPROVED' status and embedded verdict text from v1.0. Field count corrected from claimed 6 to actual 8 (created_at/created_by were omitted from the prior count)."
+
+description: |
+  Depth 1. Defines a single agent's contract: which model runs it, what its
+  flow is (input → steps → output), and what counts as success. Answers the
+  question the SSOT Audit found unformalized: agents were named (Extraction,
+  Harvesting, Meta-Agent) but never given a reproducible definition. Also
+  encodes the Producer/Auditor/Verifier role separation as a required field,
+  so no agent can be instantiated without declaring which role it plays and
+  what it is structurally forbidden to see.
+
+fields:
+  id:
+    type: string
+    format: "AGENT-{role}-{seq}"
+    example: "AGENT-auditor-001"
+    required: true
+    description: "Unique identifier for this agent definition"
+
+  name:
+    type: string
+    max_length: 100
+    required: true
+    description: "Human-readable agent name"
+
+  role:
+    type: enum
+    values: ["producer", "auditor", "verifier"]
+    required: true
+    description: |
+      Which of the three non-mergeable roles this agent occupies.
+      An agent instance may only hold one role. A single conversation/session
+      may not act as two roles for the same artifact.
+
+  model:
+    type: string
+    required: true
+    example: "claude-opus-4-8"
+    description: "Which model runs this agent. Must be a real, current model string — not inferred or assumed."
+
+  definition:
+    type: string
+    max_length: 500
+    required: true
+    description: "One paragraph: what this agent does, in what context, testable."
+
+  flow:
+    type: object
+    required: true
+    properties:
+      input:
+        type: string
+        description: "What this agent receives (e.g., 'artifact + fixed rubric')"
+      forbidden_input:
+        type: string
+        description: "What this agent must NOT receive (e.g., 'producer's reasoning or conclusion')"
+      steps:
+        type: array
+        items: string
+        description: "Ordered actions the agent takes"
+      output:
+        type: string
+        description: "What this agent produces (e.g., 'findings table only, no prose')"
+    description: "The agent's contract, stated concretely enough to test."
+
+  created_at:
+    type: datetime
+    required: true
+
+  created_by:
+    type: string
+    required: true
+
+validation_rules:
+  - name: "role_input_must_exclude_forbidden"
+    rule: "If role = auditor or verifier, flow.forbidden_input must be non-empty and must name what the producer/other role generated (reasoning, conclusion, narrative)"
+    severity: "HARD"
+
+  - name: "output_must_be_structured_for_non_producer_roles"
+    rule: "If role = auditor, flow.output must specify a table/structured format, not free prose"
+    severity: "HARD"
+
+  - name: "model_must_be_named_not_assumed"
+    rule: "model field must be an explicit string; 'TBD' or absence is not permitted"
+    severity: "HARD"
+
+test_case_example:
+  id: "AGENT-auditor-001"
+  name: "Schema Auditor"
+  role: "auditor"
+  model: "claude-opus-4-8"
+  definition: "Reviews a schema file against the fixed rubric (gap/contradiction/duplication/optimization) plus the current corpus of ratified decisions. Never receives the producer's reasoning."
+  flow:
+    input: "schema file + fixed rubric + corpus of ratified decisions"
+    forbidden_input: "producer's reasoning, framing, or proposed conclusion"
+    steps:
+      - "Check each field against corpus for gaps"
+      - "Check each field against corpus for contradictions"
+      - "Check each field against existing schemas for duplication"
+      - "Check each section for expand-vs-create optimization"
+    output: "findings table only (type, location, description, severity, evidence, suggested fix) — no narrative summary beyond the table"
+  created_at: "2026-07-07T00:00:00Z"
+  created_by: "producer"
+
+success_criteria:
+  - criterion: "Given the same artifact, two independently-run auditor instances produce materially the same findings"
+    measurable: true
+    test: "Run this agent definition twice, blind, on one schema; compare tables for convergence"
+  - criterion: "Auditor output contains zero references to producer's stated reasoning"
+    measurable: true
+    test: "Grep auditor output for producer-only terms (e.g., recommendation labels); must be zero"
+
+status: "active"

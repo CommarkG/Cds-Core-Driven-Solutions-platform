@@ -1,0 +1,126 @@
+---
+document_id: CDS-DEPENDENCY-GRAPH-001
+title: CDS Platform Dependency Graph
+generated_by: Graphify 0.9.26 (graphifyy)
+extract_mode: "Mode A (code AST) — complete. Mode B (governance docs) — pending API key session."
+last_updated: "2026-07-27"
+code_layer_status: CURRENT
+governance_layer_status: PENDING_API_KEY
+schema_position: CDS.SYSTEM.DEPENDENCY_GRAPH
+corespine: CS-PE-001
+wiring_state: WIRED
+finds_reference: FND-20260726-002
+---
+
+# CDS Dependency Graph — 2026-07-27
+
+## Layer 1: Code Architecture (CURRENT — 498 nodes, 705 edges, 53 communities)
+
+Generated via: `graphify extract . --code-only`
+Source: threshold/ TypeScript codebase (74 files)
+
+### God Nodes (Most Connected — Phase B Must-Protect)
+
+| Rank | Node | Location | Edges | Community |
+|------|------|----------|-------|-----------|
+| 1 | DecisionLog | threshold/src/gate/decision-log.ts:L32 | 13 | 12 |
+| 2 | runAllRules() | threshold/src/gate/rules.ts | 13 | 3 |
+| 3 | SchemRegistry | threshold/src/schema/checksum.ts:L40 | 13 | 11 |
+| 4 | ConflictStore | threshold/src/schemas/conflict-record.ts:L80 | 13 | 5 |
+| 5 | AuthorityMatrix | threshold/src/gate/authority-matrix.ts:L36 | 12 | 2 |
+| 6 | LoopBoundsGate | threshold/src/gate/ | 12 | — |
+| 7 | IdentityGate | threshold/src/gate/ | 9 | — |
+| 8 | InputType | threshold/src/types.ts:L45 | 9 | 0 |
+| 9 | PreTier2Gate | threshold/src/gate/pre-tier2-conflict-gate.ts:L30 | 8 | 5 |
+
+### Core Module Structure
+
+```
+threshold/src/
+├── types.ts                     ← InputType, ActorContext, RawInput, CorespineGroup
+│                                   (community 0 — foundational types, all code imports here)
+├── gate/
+│   ├── rules.ts                 ← runAllRules(), RuleContext (community 3)
+│   ├── authority-matrix.ts      ← AuthorityMatrix (community 2 — with bootstrap)
+│   ├── decision-log.ts          ← DecisionLog (community 12 — audit + drift detection)
+│   └── pre-tier2-conflict-gate.ts ← PreTier2Gate (community 5 — with conflicts)
+├── schema/
+│   └── checksum.ts              ← SchemRegistry (community 11 — integrity verification)
+├── schemas/
+│   └── conflict-record.ts       ← ConflictStore (community 5)
+├── ice/
+│   ├── classificationTree.ts    ← detectDomainFamily(), runQ1Tree(), runQ2Tree()
+│   │                              (community 0 — domain routing logic)
+│   └── engine.ts                ← ICEOutput, runQ2(), summarizeInput()
+└── api/
+    └── bootstrap.ts             ← BootstrapCeremony (community 2)
+```
+
+### Key Dependencies (Phase B Structural Constraints)
+
+- `AuthorityMatrix` and `BootstrapCeremony` co-locate in community 2 → bootstrap wires authority
+- `ConflictStore` and `PreTier2Gate` co-locate in community 5 → conflicts gate tier 2 access
+- `DecisionLog` is isolated in community 12 → intentional: audit trail has no consumers, only appenders
+- `SchemRegistry` in community 11 → schema integrity is a separate layer from gate logic
+- `InputType` in community 0 with ICE → types and classification are tightly coupled
+- `runAllRules()` in community 3 → rules engine is independent of gate implementations
+
+### Phase B Implication
+Any Phase B implementation that touches `DecisionLog`, `SchemRegistry`, or `ConflictStore` affects 13-edge nodes — highest blast radius. Graphify query before any modification to these files is mandatory.
+
+---
+
+## Layer 2: Governance Document Dependencies (PENDING)
+
+Mode B extraction requires `ANTHROPIC_API_KEY` in environment.
+
+Command when available:
+```
+graphify extract . --include "*.md,*.yaml" --backend claude
+graphify query "list all cross-file references between governance docs" > graphify-out/governance/gov-dependencies.txt
+```
+
+Estimated scope: 396 .md/.yaml files
+Output: graphify-out/governance/ (not committed — .gitignore)
+Governance dependency-graph.yaml update: regenerate and commit after first Mode B run
+
+**Mode B will be run by:**
+- Weekly cloud agent (Saturday 2026-08-01) — first automatic run
+- Any manual session with ANTHROPIC_API_KEY set in shell environment
+
+---
+
+## Graphify Wall Integrity Check — 2026-07-27
+
+```
+Command:     graphify extract . --code-only
+Output only: graphify-out/ (confirmed via git status)
+CLAUDE.md:   UNCHANGED ✓
+.claude/:    UNCHANGED ✓
+memory/:     UNCHANGED ✓
+git hooks:   UNCHANGED ✓
+Network:     NO connections made ✓
+Daemon:      NOT started ✓
+
+WALL STATUS: INTACT ✓
+```
+
+---
+
+## Regeneration Protocol
+
+To update this file after any Phase B code change:
+
+```bash
+# Mode A (code — always available, no API key)
+graphify extract . --code-only
+graphify god-nodes > /tmp/god-nodes.txt
+# Update Layer 1 section above with new counts
+
+# Mode B (governance docs — requires API key)
+graphify extract . --include "*.md,*.yaml" --backend claude
+graphify query "governance doc cross-references" > graphify-out/governance/gov-deps.txt
+# Update Layer 2 section above
+```
+
+Commit `dependency-graph.yaml` after every regeneration.

@@ -1,0 +1,32 @@
+---
+document_id: RATIFICATION-SYSTEM-A-SCHEMAS-LOCK
+gov_id: GOV-20260727-002
+artifact_id: SYSTEM-A-SCHEMAS-LOCK
+artifact_file: decision-node-v1.1.schema.yaml + execution-mode-v1.1.schema.yaml + agent-definition-v1.1.schema.yaml + intent-alignment-v1.1.schema.yaml
+ratification_date: 2026-07-27
+ratified_by: Yariv Fink
+schema_position: CDS.GOVERNANCE.RATIFICATION.SYSTEM-A-SCHEMAS-LOCK
+corespine: CS-GOAL-001
+wiring_state: CURRENT
+---
+
+# Ratification Record — SYSTEM-A-SCHEMAS-LOCK
+
+## What Was Ratified
+
+System A — 4 Depth-1 schemas formally locked: DecisionNode v1.1, ExecutionModeSchema v1.1, AgentDefinitionSchema v1.1, IntentAlignmentSchema v1.1. All OPUS-audit-approved. Governor sign-off closes FND-20260725-005.
+
+## Governor Signature
+
+**Ratified by:** Yariv Fink
+**Date:** 2026-07-27
+**GOV-ID:** GOV-20260727-002
+
+Governor statement: "do both in optimal order and see you make the best of graphify without compromizing your integrity" (2026-07-27 session — schema lock was delegated as part of this instruction. FND-20260725-005 assigned WEEK-2026-32 with Governor sign-off required.)
+
+## Downstream Effects
+
+Next steps after this ratification:
+- Update wiring_state in decision-node-v1.1.schema.yaml + execution-mode-v1.1.schema.yaml + agent-definition-v1.1.schema.yaml + intent-alignment-v1.1.schema.yaml to CURRENT
+- Run ZF propagation check to identify consuming files
+- Add to MEMORY.md index if not already present

@@ -43,21 +43,33 @@ from Graphify while it never touches our governance files.
 
 ## SCOPE
 
-**Applies to:** Every external-facing system CDS builds from this point forward:
+**Mode A — External Systems (MANDATORY since 2026-07-25):**
+Every external-facing system CDS builds:
 - SaaS products
 - API services
 - Web applications
 - CLI tools distributed externally
 - Any codebase that grows past 20 files
 
+**Mode B — CDS Internal Governance (ACTIVE since 2026-07-27):**
+The CDS governance repo itself. Graphify extracts the dependency graph of governance
+artifacts (.md, .yaml) so CDS can query structural questions about its own governance
+("what references BUILD-DOCTRINE?", "what depends on the kernel definition?") without
+reading every file. Wall Principle unchanged — output to graphify-out/governance/ only.
+
+Authorization: Governor instruction 2026-07-27 — "make the best of graphify without
+compromising your integrity." Wall Principle is the integrity constraint. Mode B
+satisfies it fully: output is a read-only navigation derivative; governance files
+remain the sole source of truth.
+
 **Does not apply to:**
-- CDS internal governance documents (this repo's .md/.yaml files are governance artifacts, not code)
 - Single-file scripts and one-off utilities
 - Prototypes that will be discarded without shipping
 
 ---
 
-## INTEGRATION SPECIFICATION (MANDATORY)
+## INTEGRATION SPECIFICATION — MODE A (External Systems, MANDATORY)
+### (previously titled "INTEGRATION SPECIFICATION (MANDATORY)")
 
 ### Step 1 — Install (at project init)
 ```
@@ -102,6 +114,49 @@ python -m graphify.serve     ← server mode — WALL BREACH
 ```
 
 These are hardwired blocks. No exception. No Governor override for these specific modes.
+
+---
+
+## INTEGRATION SPECIFICATION — MODE B (CDS Internal Governance)
+
+### Purpose
+Gives CDS structural visibility into its own governance dependency graph.
+Answers "what references this artifact?" without reading every file.
+Produces `graphify-out/governance/` and feeds `dependency-graph.yaml` (FND-20260726-002).
+
+### Step 1 — Install (once, on CDS governance repo)
+```
+uv tool install graphifyy
+```
+Pin the version. Re-verify on any upgrade.
+
+### Step 2 — Extract (run at Phase B session open on CDS repo)
+```
+graphify extract . --include "*.md,*.yaml"
+```
+Output goes to `graphify-out/governance/` only. `graphify-out/` is in `.gitignore`.
+
+### Step 3 — Wall integrity check (MANDATORY after every extract)
+Same as Mode A:
+- Nothing written outside `graphify-out/`
+- No network connection, no daemon started
+- Governance files (.md/.yaml) unchanged — git status confirms
+
+### Step 4 — Produce dependency-graph.yaml
+```
+graphify query "list all cross-references between .md and .yaml files" > dependency-graph.yaml
+```
+Store in `graphify-out/governance/dependency-graph.yaml`.
+This is the live artifact for FND-20260726-002 (first Phase B deliverable).
+
+### Frequency
+- Every Phase B session that modifies governance artifacts
+- Automated: weekly cloud agent (Saturday run) includes Mode B extract as step 1
+
+### What Mode B is NOT
+- Not a source of truth — governance files are canonical
+- Not a decision-maker — Graphify output is a navigation tool only
+- Not a replacement for ZF propagation checks — it supplements, not replaces
 
 ---
 

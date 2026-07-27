@@ -1,0 +1,101 @@
+---
+schema_id: "SCHEMA-EXECUTION-MODE-001"
+name: "ExecutionModeSchema"
+version: "1.1.0"
+status: "LOCKED — Governor signed 2026-07-27 (GOV-20260727-002)"
+created: "2026-07-07"
+last_updated: "2026-07-07"
+depth_level: 1
+correction_note: "v1.1 removes self-declared 'OPUS-AUDIT-APPROVED' status and embedded verdict text from v1.0 — that pattern violates the Producer/Auditor separation this schema itself encodes for agents. Field count corrected from claimed 5 to actual 7 (created_at/created_by were omitted from the prior count)."
+
+description: |
+  Depth 1. Defines how a single decision is routed: hardcode, agent, or hybrid.
+  This is the schema that answers "should this run as a skill or an agent?" —
+  the question the SSOT Audit found unanswered. Self-contained: references
+  DecisionNode by id only, no other undefined schema.
+
+fields:
+  id:
+    type: string
+    format: "EM-{domain}-{seq}"
+    example: "EM-features-001"
+    required: true
+    description: "Unique identifier for this execution-mode decision"
+
+  applies_to:
+    type: string
+    format: "DN-*"
+    required: true
+    description: "The DecisionNode this execution mode governs (reference by id only)"
+
+  definition:
+    type: string
+    max_length: 500
+    required: true
+    description: |
+      One paragraph. What is being routed, and on what basis. Must be testable —
+      state the deciding condition, not a vague preference.
+
+  routing_criteria:
+    type: object
+    required: true
+    properties:
+      deterministic_input_available:
+        type: boolean
+        description: "Can the routing decision be made from fixed, known inputs (rules, thresholds, existing data) with no generation or judgment required?"
+      requires_judgment:
+        type: boolean
+        description: "Does resolving this decision require interpretation, generation, or contextual reasoning that cannot be reduced to a fixed rule?"
+    description: |
+      The only two questions that determine routing. If deterministic_input_available
+      is true and requires_judgment is false: route = hardcode. If requires_judgment
+      is true: route = agent. If both true: route = hybrid (hardcode decides IF,
+      agent decides HOW — see test case).
+
+  route:
+    type: enum
+    values: ["hardcode", "agent", "hybrid"]
+    required: true
+    description: "The resolved routing decision, derived from routing_criteria"
+
+  created_at:
+    type: datetime
+    required: true
+
+  created_by:
+    type: string
+    required: true
+
+validation_rules:
+  - name: "route_must_match_criteria"
+    rule: "route field must be logically derivable from routing_criteria (hardcode requires deterministic_input_available=true AND requires_judgment=false; agent requires requires_judgment=true; hybrid requires both flags true)"
+    severity: "HARD"
+
+  - name: "applies_to_must_exist"
+    rule: "applies_to must reference an existing DecisionNode id"
+    severity: "HARD"
+
+  - name: "definition_must_be_specific"
+    rule: "definition must not use vague language ('as needed', 'when appropriate') — must state the concrete deciding condition"
+    severity: "HARD"
+
+test_case_example:
+  id: "EM-escalation-001"
+  applies_to: "DN-support-escalation_trigger-001"
+  definition: "Determines whether a client escalation fires, and how the escalation message is drafted. Triggering is deterministic (fixed thresholds on unresolved_blockers and days_since_contact). Message drafting requires contextual judgment."
+  routing_criteria:
+    deterministic_input_available: true
+    requires_judgment: true
+  route: "hybrid"
+  created_at: "2026-07-07T00:00:00Z"
+  created_by: "producer"
+
+success_criteria:
+  - criterion: "Can route 10 real CDS decisions to hardcode/agent/hybrid with zero ambiguity"
+    measurable: true
+    test: "Map 10 decisions from the corpus; each resolves to exactly one route with no contested cases"
+  - criterion: "No decision requires a route outside the three enum values"
+    measurable: true
+    test: "Enum coverage check across all mapped decisions"
+
+status: "active"

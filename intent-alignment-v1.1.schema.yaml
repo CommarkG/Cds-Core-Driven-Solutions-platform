@@ -1,0 +1,108 @@
+---
+schema_id: "SCHEMA-INTENT-ALIGNMENT-001"
+name: "IntentAlignmentSchema"
+version: "1.1.0"
+status: "LOCKED — Governor signed 2026-07-27 (GOV-20260727-002)"
+created: "2026-07-07"
+last_updated: "2026-07-07"
+depth_level: 1
+correction_note: "v1.1 removes self-declared 'OPUS-AUDIT-APPROVED' status and embedded verdict text from v1.0. Field count corrected from claimed 7 to actual 9 (created_at/created_by were omitted from the prior count)."
+
+description: |
+  Depth 1. Verifies that what actually happened at output matches the stated
+  intent of a DecisionNode. This is the safety mechanism the SSOT Audit and
+  Strategic Realignment referenced procedurally ("blocking workflow enforces
+  schema-first thinking") but never schematized. Self-contained: references
+  DecisionNode by id only.
+
+fields:
+  id:
+    type: string
+    format: "IA-{type}-{seq}"
+    example: "IA-output-001"
+    required: true
+    description: "Unique identifier for this alignment check"
+
+  applies_to:
+    type: string
+    format: "DN-*"
+    required: true
+    description: "The DecisionNode whose output is being checked (reference by id only)"
+
+  stated_intent:
+    type: string
+    max_length: 500
+    required: true
+    description: "What the DecisionNode's definition said would happen. Should be copied verbatim from DecisionNode.definition, not reworded."
+
+  actual_outcome:
+    type: string
+    max_length: 500
+    required: true
+    description: "What was actually produced or observed, stated as fact, not interpretation."
+
+  alignment_result:
+    type: enum
+    values: ["aligned", "partial", "misaligned"]
+    required: true
+    description: |
+      aligned: outcome matches stated_intent with no material gap.
+      partial: outcome achieves part of stated_intent; gap is named in evidence.
+      misaligned: outcome contradicts or fails stated_intent.
+
+  evidence:
+    type: string
+    max_length: 500
+    required: true
+    description: "The specific comparison that produced the alignment_result. Not a restatement of the result — the reasoning."
+
+  feedback_route:
+    type: enum
+    values: ["none", "harvest_as_wisdom", "flag_for_yariv", "trigger_retrofit"]
+    required: true
+    description: |
+      Where this result goes next. aligned — typically none or harvest_as_wisdom
+      (if the pattern is reusable). partial/misaligned — flag_for_yariv or
+      trigger_retrofit depending on severity.
+
+  created_at:
+    type: datetime
+    required: true
+
+  created_by:
+    type: string
+    required: true
+
+validation_rules:
+  - name: "stated_intent_must_precede_outcome"
+    rule: "stated_intent must be recorded at DecisionNode creation, not written after actual_outcome is known (prevents retroactive intent-fitting)"
+    severity: "HARD"
+
+  - name: "misaligned_requires_feedback_route"
+    rule: "If alignment_result = misaligned, feedback_route may not be 'none'"
+    severity: "HARD"
+
+  - name: "evidence_must_be_specific"
+    rule: "evidence must name the specific point of match or mismatch, not a general statement like 'it worked' or 'it didn't'"
+    severity: "HARD"
+
+test_case_example:
+  id: "IA-output-001"
+  applies_to: "DN-features-real_time-001"
+  stated_intent: "Real-time collaboration means users see each other's changes within 500ms of action."
+  actual_outcome: "Measured round-trip latency in test environment: 620ms average across 100 rapid updates."
+  alignment_result: "partial"
+  evidence: "Stated intent required <500ms; measured outcome is 620ms — 120ms over threshold. Mechanism works (sync completes, no data loss) but latency target not met."
+  feedback_route: "trigger_retrofit"
+  created_at: "2026-07-07T00:00:00Z"
+  created_by: "verifier"
+
+success_criteria:
+  - criterion: "Can classify 10 real outputs as aligned/partial/misaligned with zero ambiguous cases"
+    measurable: true
+    test: "Map 10 real DecisionNode outcomes; each resolves to exactly one alignment_result with named evidence"
+  - criterion: "Every misaligned result has a non-none feedback_route"
+    measurable: true
+    test: "Query all IntentAlignment records where alignment_result=misaligned; verify feedback_route != none"
+
+status: "active"

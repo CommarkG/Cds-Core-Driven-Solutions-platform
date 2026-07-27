@@ -1,0 +1,124 @@
+---
+schema_id: "SCHEMA-DECISION-NODE-001"
+name: "DecisionNode"
+version: "1.1.0"
+status: "LOCKED — Governor signed 2026-07-27 (GOV-20260727-002)"
+created: "2026-07-07"
+last_updated: "2026-07-07"
+depth_level: 1
+supersedes: "SCHEMA-DECISION-NODE-001 v1.0.0 (22-field draft, atom/hub conflated)"
+
+description: |
+  Depth 1. The atom only: what is a decision? No relationship graph, no
+  execution routing, no agent contract, no alignment check — those live in
+  ExecutionModeSchema, AgentDefinitionSchema, IntentAlignmentSchema, and the
+  future DecisionHub (Depth 2), each referencing this node by id only.
+  This version replaces the prior 22-field draft, which conflated atom
+  (this decision) with hub (how decisions relate to each other).
+
+fields:
+  id:
+    type: string
+    format: "DN-{domain}-{seq}"
+    example: "DN-features-real_time-001"
+    required: true
+    description: "Unique identifier for this decision"
+
+  title:
+    type: string
+    max_length: 100
+    required: true
+    description: "Human-readable decision title"
+
+  definition:
+    type: string
+    max_length: 500
+    required: true
+    description: |
+      One paragraph. Must be specific (no "obviously", "as usual"), testable,
+      and must state what success looks like. This is the field
+      IntentAlignmentSchema.stated_intent copies verbatim.
+
+  domain:
+    type: enum
+    values: ["features", "security", "consolidation", "architecture", "performance", "user_research", "stability", "api", "support", "governance", "deployment"]
+    required: true
+    description: "Which CDS domain this decision belongs to"
+
+  evidence:
+    type: string
+    max_length: 500
+    required: true
+    description: "Facts or context that led to this decision, stated as fact not opinion"
+
+  status:
+    type: enum
+    values: ["draft", "active", "resolved", "archived"]
+    default: "draft"
+    required: true
+
+  success_criteria:
+    type: string
+    max_length: 500
+    required: true
+    description: "How we know this decision was made correctly. Must be measurable, not aspirational."
+
+  created_at:
+    type: datetime
+    required: true
+
+  created_by:
+    type: string
+    required: true
+
+  reference_to:
+    type: array
+    items: string
+    format: "DN-*"
+    description: "IDs of other DecisionNodes this one depends on (inert pointer, not a resolved relationship — resolution is DecisionHub's job, Depth 2)"
+
+  referenced_by:
+    type: array
+    items: string
+    format: "DN-*"
+    description: "IDs of other DecisionNodes that depend on this one (inert pointer, same caveat as above)"
+
+validation_rules:
+  - name: "definition_must_be_specific"
+    rule: "definition must not contain vague language ('obviously', 'everyone knows', 'as usual')"
+    severity: "HARD"
+
+  - name: "definition_must_be_testable"
+    rule: "definition must describe what success looks like, not just what exists"
+    severity: "HARD"
+
+  - name: "success_criteria_must_be_measurable"
+    rule: "success_criteria must state a number, threshold, or binary check — not an adjective like 'good' or 'better'"
+    severity: "HARD"
+
+  - name: "id_format_enforced"
+    rule: "id must match DN-{domain}-{seq} where domain matches the domain field"
+    severity: "HARD"
+
+test_case_example:
+  id: "DN-features-real_time-001"
+  title: "Real-Time Collaboration Feature"
+  definition: "Users see each other's changes within 500ms of action. Includes cursor position, document edits, presence status."
+  domain: "features"
+  evidence: "CSP's existing sync solution measured at 620ms average, above the 500ms threshold at which users report noticing lag in usability testing."
+  status: "active"
+  success_criteria: "Measured round-trip latency <500ms in test environment, verified across 100 rapid updates with zero data loss."
+  created_at: "2026-07-07T00:00:00Z"
+  created_by: "yariv"
+  reference_to: ["DN-architecture-sync_protocol-001"]
+  referenced_by: []
+
+success_criteria:
+  - criterion: "Can define 10 decisions with zero ambiguity in domain assignment"
+    measurable: true
+    test: "Map 10 decisions from actual CDS backlog (not invented) to this schema; each resolves to exactly one domain"
+  - criterion: "Every decision's success_criteria is measurable, not aspirational"
+    measurable: true
+    test: "Scan all success_criteria fields for numeric threshold or binary check; flag any that are adjectives only"
+
+status: "active"

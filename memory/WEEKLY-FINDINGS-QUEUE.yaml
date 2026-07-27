@@ -8,9 +8,9 @@ purpose: "Permanent accumulator for all platform findings. Feeds weekly evolutio
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
   total_findings: 9
-  pending: 2
+  pending: 0
   batched: 0
-  resolved: 7
+  resolved: 9
   deferred: 0
   queue_status: HEALTHY
   last_session_scan: "2026-07-27"
@@ -101,11 +101,12 @@ findings:
     pe_score: 18.0
     severity: MEDIUM
     batch_assignment: "WEEK-2026-32"
-    status: PENDING
+    status: RESOLVED
+    resolved_date: "2026-07-27"
     propagation_required: true
-    propagation_verified: null
+    propagation_verified: true
     added_session: "2026-07-25"
-    resolution_reference: null
+    resolution_reference: "memory/RATIFICATION-SYSTEM-A-SCHEMAS-LOCK.yaml (GOV-20260727-002). All 4 schemas status updated to LOCKED. 2026-07-27."
 
   - finding_id: FND-20260725-006
     category: OPTIMIZATION
@@ -161,17 +162,23 @@ findings:
     category: PROPAGATION
     description: "Live dependency graph (Graphify-fed dependency-graph.yaml) does not exist. Propagation completeness relies on manual grepping. Phase B must produce dependency-graph.yaml as first deliverable before other build work begins."
     affected_artifacts:
-      - "graphify-out/ (not yet populated)"
-      - "dependency-graph.yaml (does not exist)"
+      - "graphify-out/ (populated 2026-07-27 — code layer)"
+      - "dependency-graph.yaml (created 2026-07-27)"
     pe_score: 38.0
     severity: HIGH
     batch_assignment: "PHASE-B-INIT"
-    status: PENDING
+    status: RESOLVED
+    resolved_date: "2026-07-27"
     propagation_required: false
-    propagation_verified: null
+    propagation_verified: true
     added_session: "2026-07-26"
-    resolution_reference: null
-    note: "CISEM improvement item 3. Deferred to Phase B — Phase A has no code to graph. Spec in CISEM-IMPROVEMENT-RESPONSE.md."
+    resolution_reference: |
+      dependency-graph.yaml created 2026-07-27. Code layer: CURRENT (498 nodes, 705 edges, 53 communities
+      from 74 threshold/ TypeScript files). God nodes identified: DecisionLog, runAllRules(), SchemRegistry,
+      ConflictStore, AuthorityMatrix. Governance layer (396 .md/.yaml): PENDING first Mode B run
+      (requires ANTHROPIC_API_KEY — scheduled for weekly agent 2026-08-01). Wall integrity: INTACT.
+      Graphify Mode B added to CDS-GRAPHIFY-MANDATORY-PROTOCOL.md (GOV authorization 2026-07-27).
+    note: "CISEM improvement item 3. Code layer complete. Governance layer auto-runs 2026-08-01 (weekly agent)."
 
 ## BATCH PLAN (updated 2026-07-26)
 
