@@ -7,7 +7,9 @@ wiring_state: CURRENT
 corespine: CS-PE-001
 schema_position: CDS.SYSTEM.GOVERNANCE.WISDOM
 platform_goal: CDS-PLATFORM-GOAL — everything self-verifies
-version: 1.0
+version: 1.1
+last_updated: 2026-08-01
+update_note: "WISDOM-012 added (WEEK-2026-31 weekly session — extracted from FND-20260801-003)"
 ---
 
 # CDS System Wisdom
@@ -252,16 +254,50 @@ must return zero.
 
 ---
 
+## WISDOM-012 — SCHEDULED AGENTS DECLARE THEIR PREREQUISITES
+
+**Principle:** A scheduled autonomous agent that requires an external resource (API key,
+credential, network endpoint, environment variable) but lacks it at launch will silently
+produce incomplete work — appearing to run while unable to fulfil its charter.
+The agent cannot refuse to run, cannot self-repair, and cannot notify if the resource gap
+is not caught before execution. The consequence is a session transcript that shows work
+completed while the most critical step (the one needing the resource) was silently skipped.
+
+**The rule:** Every scheduled agent declares a resource contract in its configuration:
+required environment variables, external service dependencies, minimum permissions.
+The scheduler verifies contract satisfaction before launching the agent.
+An unsatisfied resource requirement is a BLOCKED launch, not a partial run.
+
+**Mechanical enforcement:**
+- Weekly engine schedule configuration declares `required_env: [ANTHROPIC_API_KEY]`
+- Scheduler reads the contract and checks environment before launching the agent
+- If any declared resource is absent: agent is NOT launched; Governor is notified with
+  which resource is missing and which phase is blocked
+- Phase 0 (graphify Mode B) emits PHASE_0_BLOCKED with reason, not silent completion
+
+**Falsification test:** Remove ANTHROPIC_API_KEY from cloud agent environment and trigger
+the weekly evolution session. The scheduled agent must NOT proceed to Phase 0 silently.
+It must either: (A) refuse to launch with a BLOCKED status listing the missing resource,
+OR (B) begin with a PHASE_0_BLOCKED message in the report noting Mode B was skipped
+with the specific reason. Silent omission of Phase 0 is a WISDOM-012 violation.
+
+**Extracted from:** FND-20260801-003 (weekly evolution engine, 2026-08-01 — first automated run
+revealed ANTHROPIC_API_KEY absent in cloud agent environment, causing Phase 0 to be silently
+unavailable without any prior contract check).
+
+---
+
 ## WISDOM HEALTH
 
 ```
-Total wisdom principles:  11
-Principles with mechanical enforcement (fully active):    9
-Principles with mechanical enforcement (partially active): 2
+Total wisdom principles:  12
+Principles with mechanical enforcement (fully active):     9
+Principles with mechanical enforcement (partially active): 3
   WISDOM-010: branch protection = Phase B (not yet built)
   WISDOM-011: deep-root protocol always-loaded; hook automation = Phase B
-Principles with falsification tests:    11 / 11
-WISDOM HEALTH: 82% active enforcement (11/11 declared, 9/11 fully active)
+  WISDOM-012: resource contract checking = Phase B (scheduler config not yet built)
+Principles with falsification tests:    12 / 12
+WISDOM HEALTH: 75% active enforcement (12/12 declared, 9/12 fully active)
 ```
 
 ---
@@ -281,4 +317,5 @@ Submit to Governor for ratification as part of the next session's work package.
 Rate limit: maximum 2 new wisdom principles per session (prevents inflation).
 
 ---
-Version 1.0 — 9 principles — ratified 2026-07-25 | Governor: Yariv Fink
+Version 1.0 — 11 principles — ratified 2026-07-25 | Governor: Yariv Fink
+Version 1.1 — 12 principles — WISDOM-012 extracted 2026-08-01 | Weekly Evolution Engine (WEEK-2026-31)

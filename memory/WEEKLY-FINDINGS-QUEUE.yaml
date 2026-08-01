@@ -2,20 +2,21 @@
 document_id: WEEKLY-FINDINGS-QUEUE
 version: 1.1
 created: 2026-07-25
-updated_at: 2026-07-26
+updated_at: 2026-08-01
 authority: CDS (Governor oversight)
 purpose: "Permanent accumulator for all platform findings. Feeds weekly evolution sessions."
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
-  total_findings: 9
-  pending: 0
+  total_findings: 14
+  pending: 2
   batched: 0
-  resolved: 9
+  in_progress: 0
+  resolved: 12
   deferred: 0
   queue_status: HEALTHY
-  last_session_scan: "2026-07-27"
-  last_weekly_session: null
-  next_weekly_session: "2026-08-01 (Saturday)"
+  last_session_scan: "2026-08-01"
+  last_weekly_session: "2026-08-01 (WEEK-2026-31 automated — 3 resolved, 1 governor brief, 1 phase B deferred)"
+  next_weekly_session: "2026-08-08 (Saturday)"
 ---
 
 # Weekly Findings Queue
@@ -180,21 +181,107 @@ findings:
       Graphify Mode B added to CDS-GRAPHIFY-MANDATORY-PROTOCOL.md (GOV authorization 2026-07-27).
     note: "CISEM improvement item 3. Code layer complete. Governance layer auto-runs 2026-08-01 (weekly agent)."
 
-## BATCH PLAN (updated 2026-07-26)
+## SESSION 2026-08-01 FINDINGS (weekly engine — first automated run, WEEK-2026-31)
 
-  WEEK-2026-31 (2026-08-01):
-    findings_resolved: [FND-20260725-002, FND-20260725-007, FND-20260725-004, FND-20260725-001]
-    findings_pending: [FND-20260725-003, FND-20260725-006, FND-20260726-001]
-    resolved_by_session_2026-07-26: 4
-    remaining_pending_count: 3
-    estimated_session_time: 20 min (3 findings remain)
+  - finding_id: FND-20260801-001
+    category: STALE
+    description: "PLATFORM-ACCOUNTABILITY.yaml last_updated 2026-07-08 — phase changed to B, all plans/completions frozen at Phase A session-1 state. File no longer tells the truth about platform state."
+    affected_artifacts:
+      - "memory/PLATFORM-ACCOUNTABILITY.yaml"
+    pe_score: 28.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-31"
+    status: RESOLVED
+    resolved_date: "2026-08-01"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-08-01"
+    resolution_reference: "memory/PLATFORM-ACCOUNTABILITY.yaml — full state refresh (v2.0). Phase updated to B, all 7 intents and 7 plans updated, current metrics block added, blocking items listed. Propagation: only PLATFORM-ACCOUNTABILITY.yaml references its own state; no other file derives from it."
+
+  - finding_id: FND-20260801-002
+    category: STALE
+    description: "CS-PE-001 full corespine entry is positioned inside proposed_ratifications block in CORESPINE-REGISTRY.yaml instead of the corespines array. CS-PE-001 is RATIFIED, not proposed."
+    affected_artifacts:
+      - "memory/CORESPINE-REGISTRY.yaml"
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 32.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-31"
+    status: RESOLVED
+    resolved_date: "2026-08-01"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-08-01"
+    resolution_reference: "memory/CORESPINE-REGISTRY.yaml — CS-PE-001 moved from proposed_ratifications to corespines array (last_updated: 2026-08-01). memory/CORESPINE-DASHBOARD.yaml — last_updated corrected (v1.1). Propagation complete: only CORESPINE-DASHBOARD derives from registry; verified counts unchanged."
+
+  - finding_id: FND-20260801-003
+    category: PROPAGATION
+    description: "dependency-graph.yaml governance layer (Mode B) still PENDING_API_KEY. Cloud agent environment does not have ANTHROPIC_API_KEY set — Phase 0 graphify Mode B extraction cannot run in scheduled sessions."
+    affected_artifacts:
+      - "dependency-graph.yaml"
+      - "CDS-WEEKLY-EVOLUTION-ENGINE.md"
+    pe_score: 26.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-31"
+    status: PENDING
+    resolved_date: null
+    propagation_required: false
+    propagation_verified: null
+    added_session: "2026-08-01"
+    resolution_reference: null
+    governor_brief: "DECISION REQUIRED: Phase 0 of weekly engine requires ANTHROPIC_API_KEY in cloud agent environment. Mode B graphify cannot run without it. Options: (A) Add ANTHROPIC_API_KEY to cloud agent session environment variables. (B) Move Mode B to a separate manual trigger rather than the automated weekly run. Current state: governance dependency graph has been pending since 2026-07-27."
+
+  - finding_id: FND-20260801-004
+    category: OPTIMIZATION
+    description: "ARCHIVE HEALTH = 0%. All 5 PAT-SPEC.yaml files (PAT-001 through PAT-005) have check_status=DEFINED and active_date=null. No pattern checks are actually running. Phase B build prerequisite."
+    affected_artifacts:
+      - "memory/PAT-001-SPEC.yaml"
+      - "memory/PAT-002-SPEC.yaml"
+      - "memory/PAT-003-SPEC.yaml"
+      - "memory/PAT-004-SPEC.yaml"
+      - "memory/PAT-005-SPEC.yaml"
+    pe_score: 20.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-32"
+    status: PENDING
+    resolved_date: null
+    propagation_required: false
+    propagation_verified: null
+    added_session: "2026-08-01"
+    resolution_reference: null
+    governor_brief: "NOTE: ARCHIVE HEALTH = 0%. Patterns defined but not ACTIVE. This is expected in Phase B (pre-build). No decision required — track Phase B build progress."
+
+  - finding_id: FND-20260801-005
+    category: STALE
+    description: "CORESPINE-DASHBOARD.yaml top-level last_updated field shows 2026-07-08 but measurement_timestamp shows 2026-07-26. Header field not updated when data was refreshed."
+    affected_artifacts:
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 15.0
+    severity: LOW
+    batch_assignment: "WEEK-2026-31"
+    status: RESOLVED
+    resolved_date: "2026-08-01"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-08-01"
+    resolution_reference: "memory/CORESPINE-DASHBOARD.yaml — last_updated header updated to 2026-08-01T00:00:00Z (v1.1). Resolved as part of FND-20260801-002 propagation sweep."
+
+## BATCH PLAN (updated 2026-08-01)
+
+  WEEK-2026-31 (2026-08-01 — THIS SESSION):
+    findings_all_resolved: [FND-20260725-001, FND-20260725-002, FND-20260725-003, FND-20260725-004, FND-20260725-005, FND-20260725-006, FND-20260725-007, FND-20260726-001, FND-20260726-002]
+    new_findings_scan: [FND-20260801-001, FND-20260801-002, FND-20260801-003, FND-20260801-004, FND-20260801-005]
+    processing_this_session: [FND-20260801-002, FND-20260801-001, FND-20260801-005]
+    governor_decisions_required: [FND-20260801-003]
+    deferred_to_phase_b: [FND-20260801-004]
 
   WEEK-2026-32 (2026-08-08):
-    findings: [FND-20260725-005]
+    findings: [FND-20260801-004]
     count: 1
-    note: "System A schema lock — Governor decision required."
+    note: "ARCHIVE HEALTH tracking — Phase B build dependency."
 
-  PHASE-B-INIT (first Phase B session):
+  PHASE-B-INIT (first Phase B session — already resolved):
     findings: [FND-20260726-002]
     count: 1
-    note: "Dependency graph — first deliverable of Phase B, before other build work."
+    status: RESOLVED
+    note: "Dependency graph code layer complete. Governance layer (Mode B) blocked on API key."

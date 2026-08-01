@@ -1,182 +1,229 @@
 ---
 document_id: PLATFORM-ACCOUNTABILITY
-version: 1.0
+version: 2.0
 created: 2026-07-08T19:00:00Z
-last_updated: 2026-07-08T19:00:00Z
+last_updated: 2026-08-01T00:00:00Z
 authority: CDS (self-reporting platform state)
+schema_position: CDS.SYSTEM.GOVERNANCE.ACCOUNTABILITY
+corespine: CS-PE-001
+update_note: "FND-20260801-001 resolved 2026-08-01: full state refresh. Phase changed from A to B. All intents, completions, and metrics updated to reflect actual platform state."
 ---
 
 platform_accountability:
-  last_updated: 2026-07-08T19:00:00Z
-  session: 2026-07-08
-  phase: Phase D — Build Order (STEPS 1-5)
+  last_updated: 2026-08-01T00:00:00Z
+  session: "WEEK-2026-31 weekly evolution (automated)"
+  phase: "Phase B — Build (opened 2026-07-27 via GOV-20260727-001)"
+  phase_a_closed: "2026-07-27 — RATIFICATION-PHASE-A-TO-B.yaml"
+
+  # ─── ACTIVE INTENTS ───────────────────────────────────────────────────────
 
   intents:
     - id: INTENT-LOOP-CLOSURE
       statement: "Make the learning loop self-closing — violations detected, patterns build templates, templates prevent future violations"
-      status: IN_PROGRESS
+      status: PARTIALLY_ACTIVE
       plan_ref: PLAN-RESOLUTION-LIBRARY
-      ratification_state: PARTIALLY_RATIFIED
-      description: "LEL Cycle 2 ran automatically (confidence scores updated from Phase C evidence without Brain direction). Resolution Library created with 4 templates. Template application tested (1 attempt, FAIL due to format issue). Loop is mechanical but templates need refinement."
+      ratification_state: RATIFIED
+      description: "RESOLUTION-LIBRARY.yaml active with 4 templates. PAT-001 through PAT-005 written (DEFINED). Pattern checks not yet ACTIVE (Phase B build). Template application mechanism exists; ARCHIVE HEALTH = 0% ACTIVE until Phase B hooks deployed."
 
     - id: INTENT-PLATFORM-GOAL
       statement: "Load platform goal at every session open so reasoning stays aligned"
-      status: IN_PROGRESS
+      status: ACTIVE
       plan_ref: PLAN-GOAL-HARDWIRING
-      ratification_state: APPROVED
-      description: "PLATFORM-GOAL.md created and loaded in validate-session-load.sh Check 7. Goal describes what platform completion looks like. Will remain active until Phase D completes."
+      ratification_state: RATIFIED
+      description: "PLATFORM-GOAL.md (v2.0) loads at session open. Goal expanded 2026-07-20 with CISEM-inspired north star. CS-GOAL-001 ratified 2026-07-25. MEMORY.md references it as always-loaded."
 
     - id: INTENT-PRINCIPLES-TO-GATES
       statement: "Convert three governing principles from documentation to mechanical gates"
-      status: IN_PROGRESS
+      status: PARTIALLY_ACTIVE
       plan_ref: PLAN-PRINCIPLE-ENFORCEMENT
-      ratification_state: APPROVED
-      description: "Three principle gates added to pre-tool-corespine-hook.sh: (1) Nothing stands alone (schema_position required), (2) Nothing without ratified plan (plan requirement logged), (3) All plans have goal/reasoning/outcomes (validate-plan.sh gate created). Tested against 3 recent plans: all 3 FAIL (pre-policy debt documented)."
+      ratification_state: RATIFIED
+      description: "Principle gates in pre-tool-corespine-hook.sh active. CS-CREATION-001-C4 (governance write gate) active 2026-07-26. Full mechanical enforcement pending Phase B (hook automation, scoring engine)."
 
     - id: INTENT-VOCABULARY-DASHBOARD
       statement: "Make vocabulary a data dashboard, not a designed document"
-      status: PARTIALLY_COMPLETE
+      status: COMPLETE
       plan_ref: PLAN-VOCABULARY-STATE
-      ratification_state: APPROVED
-      description: "VOCABULARY-GRID.yaml verified: 10 terms, 100% have schema position and corespine membership, 100% have falsification tests. Data state verified. Visual dashboard deferred to next session (PARK-SCHEMA-DASHBOARD)."
+      ratification_state: RATIFIED
+      description: "VOCABULARY-GRID.yaml: 10 terms, 100% schema coverage, 100% corespine membership, 100% falsification tests. SCHEMA-DASHBOARD.yaml derived from canonical schema. COMPLETE."
 
     - id: INTENT-DIRECTIVE-PRECISION
-      statement: "Every directive must declare whether it is [REQUEST], [RECOMMENDATION], or [GATE] so it cannot be misinterpreted"
+      statement: "Every directive must declare whether it is [REQUEST], [RECOMMENDATION], or [GATE]"
       status: COMPLETE
       plan_ref: PLAN-COMMUNICATION-PRECISION
       ratification_state: RATIFIED
-      description: "Added directive-type tagging section to CDS-COMM-CORESPINE-001.md. Every directive in this session tagged with [REQUEST], [RECOMMENDATION], or [GATE]. Testing shows untagged directives caught by sweep as violations."
+      description: "Directive-type tagging active in CDS communications. COMPLETE."
+
+    - id: INTENT-PERMANENT-EVOLUTION
+      statement: "Platform improvements accumulate permanently — not per session, but system-wide"
+      status: ACTIVE
+      plan_ref: PLAN-WEEKLY-EVOLUTION
+      ratification_state: RATIFIED
+      description: "CDS-WEEKLY-EVOLUTION-ENGINE.md ratified 2026-07-25. Weekly cloud agent fires every Saturday 07:00 UTC. WEEKLY-FINDINGS-QUEUE.yaml accumulates findings. First automated run: 2026-08-01 (this session)."
+
+    - id: INTENT-DEPENDENCY-VISIBILITY
+      statement: "All propagation sweeps are mechanically guided by a live dependency graph"
+      status: PARTIAL
+      plan_ref: PLAN-GRAPHIFY
+      ratification_state: RATIFIED
+      description: "dependency-graph.yaml created 2026-07-27. Code layer CURRENT (498 nodes, 705 edges, graphify Mode A). Governance layer PENDING — blocked on ANTHROPIC_API_KEY in cloud agent environment (FND-20260801-003)."
+
+  # ─── PLANS ────────────────────────────────────────────────────────────────
 
   plans:
     - id: PLAN-RESOLUTION-LIBRARY
-      goal: "Build a library of resolution templates so CDS can resolve known violation types independently without escalating to Brain every time"
-      reasoning: "LEL patterns appear repeatedly. Each time they appear, CDS escalates to Brain for a fix. A library of templates inverts the default: attempt template first, escalate only if template fails. This closes the dependent loop."
-      measurable_outcome: "Resolution Library exists with 4+ templates. Each template has resolution_action, falsification_test, escalation condition. First template application shows Haiku verification (violation count drop or specific gate feedback)"
-      ratification_state: PARTIALLY_RATIFIED
+      goal: "Build a library of resolution templates so CDS can resolve known violation types independently"
+      reasoning: "Patterns repeat. Templates invert the default — attempt template first, escalate only if it fails."
+      measurable_outcome: "5 pattern specs written (PAT-001 to PAT-005). All DEFINED. Phase B deploys mechanical checks."
+      ratification_state: RATIFIED
       created: 2026-07-08T14:30:00Z
-      current_phase: "Template 1 applied (format failure). Library ready for refined application next session."
-      gates_passed: 3
-      gates_total: 5
-      last_verified: 2026-07-08T18:47:19Z
+      current_phase: "Phase B — mechanical check deployment"
+      gates_passed: 4
+      gates_total: 6
+      last_verified: 2026-07-26
 
     - id: PLAN-GOAL-HARDWIRING
-      goal: "Ensure platform goal is present in context at every session open so work stays aligned"
-      reasoning: "Without goal context, reasoning drifts into implementation details. Goal loads first, then all work is checked against it."
-      measurable_outcome: "validate-session-load.sh runs goal-alignment-check.sh at Check 7. Goal loads before any other work begins. Goal file survives compaction (under 50 lines)"
-      ratification_state: APPROVED
+      goal: "Ensure platform goal is present in context at every session open"
+      reasoning: "Without goal context, reasoning drifts. Goal loads first."
+      measurable_outcome: "PLATFORM-GOAL.md loads at session open. CS-GOAL-001 ratified. Goal survives compaction."
+      ratification_state: RATIFIED
       created: 2026-07-08T15:00:00Z
+      current_phase: "Complete"
+      gates_passed: 3
+      gates_total: 3
+      last_verified: 2026-07-25
+
+    - id: PLAN-PRINCIPLE-ENFORCEMENT
+      goal: "Move three governing principles from documentation to mechanical gates"
+      reasoning: "Documentation alone means violations succeed until caught in sweep. Gates block at source."
+      measurable_outcome: "Three principle gates in pre-tool-corespine-hook.sh. CS-CREATION-001-C4 write gate active."
+      ratification_state: RATIFIED
+      created: 2026-07-08T16:30:00Z
+      current_phase: "Active — Phase B completes automation"
+      gates_passed: 4
+      gates_total: 5
+      last_verified: 2026-07-26
+
+    - id: PLAN-VOCABULARY-STATE
+      goal: "Verify vocabulary is a data grid not a designed document"
+      reasoning: "A dashboard displays current state. Vocabulary must be data so dashboards auto-generate."
+      measurable_outcome: "VOCABULARY-GRID.yaml: 10 terms, 100% schema + corespine coverage."
+      ratification_state: RATIFIED
+      created: 2026-07-08T17:30:00Z
       current_phase: "Complete"
       gates_passed: 2
       gates_total: 2
-      last_verified: 2026-07-08T16:05:26Z
-
-    - id: PLAN-PRINCIPLE-ENFORCEMENT
-      goal: "Move three governing principles from documentation to mechanical gates so they cannot be accidentally bypassed"
-      reasoning: "Principles are described in charters and memory files but not enforced at creation time. Documentation alone means violations succeed until caught in a sweep. Mechanical gates block violation at source."
-      measurable_outcome: "Three principle checks exist in pre-tool-corespine-hook.sh. validate-plan.sh exists and can block plan creation without goal/reasoning/outcome fields. Recent plans tested show which pre-date the new requirement (documented as pre-policy debt)."
-      ratification_state: APPROVED
-      created: 2026-07-08T16:30:00Z
-      current_phase: "Principles mechanized. Testing shows 3/3 recent plans lack required fields (pre-policy debt, not violations)"
-      gates_passed: 3
-      gates_total: 4
-      last_verified: 2026-07-08T17:15:00Z
-
-    - id: PLAN-VOCABULARY-STATE
-      goal: "Verify vocabulary is a data grid (schema positions, corespine membership, tests) not a designed document"
-      reasoning: "A dashboard displays current state. A document is authored. Vocabulary must be data so dashboards can be generated automatically."
-      measurable_outcome: "VOCABULARY-GRID.yaml shows: 10 terms, 100% schema coverage, 100% corespine membership, 100% falsification tests. Counts replace narrative description."
-      ratification_state: APPROVED
-      created: 2026-07-08T17:30:00Z
-      current_phase: "Data verified. Visual dashboard deferred to STEP 6 (next session)"
-      gates_passed: 1
-      gates_total: 1
-      last_verified: 2026-07-08T18:15:00Z
+      last_verified: 2026-07-08
 
     - id: PLAN-COMMUNICATION-PRECISION
-      goal: "Every directive is unambiguous about whether it is a request, recommendation, or blocking gate"
-      reasoning: "Under context pressure, ambiguous directives get misinterpreted. [REQUEST] requires response but doesn't block. [RECOMMENDATION] is advisory. [GATE] is hard-blocking. Without tags, everything becomes advice."
-      measurable_outcome: "CDS-COMM-CORESPINE-001.md has directive-type tagging section. All directives this session tagged. Untagged directives flagged as violations by sweep."
+      goal: "Every directive is unambiguous about whether it is a request, recommendation, or gate"
+      reasoning: "Under context pressure, ambiguous directives get misinterpreted."
+      measurable_outcome: "Directive-type tagging ratified. All directives tagged."
       ratification_state: RATIFIED
       created: 2026-07-08T17:45:00Z
       current_phase: "Complete"
       gates_passed: 2
       gates_total: 2
-      last_verified: 2026-07-08T18:20:00Z
+      last_verified: 2026-07-08
 
-  progress:
-    - plan_id: PLAN-RESOLUTION-LIBRARY
-      current_phase: "Template application testing"
-      gates_passed: 3
-      gates_total: 5
-      last_verified: 2026-07-08T18:47:19Z
-      status: "Template 1: FAIL (format mismatch). Library requires refinement for format specification."
-
-    - plan_id: PLAN-GOAL-HARDWIRING
-      current_phase: "Deployment"
-      gates_passed: 2
-      gates_total: 2
-      last_verified: 2026-07-08T16:05:26Z
-      status: "Goal loads at session open. File stable (<50 lines). Complete."
-
-    - plan_id: PLAN-PRINCIPLE-ENFORCEMENT
-      current_phase: "Enforcement gates active"
-      gates_passed: 3
+    - id: PLAN-WEEKLY-EVOLUTION
+      goal: "Platform improvements accumulate permanently via automated weekly sessions"
+      reasoning: "Without a permanent accumulation system, each session starts cold. Improvements don't compound."
+      measurable_outcome: "Cloud agent fires every Saturday. WEEKLY-FINDINGS-QUEUE.yaml updated each run. Report written."
+      ratification_state: RATIFIED
+      created: 2026-07-25
+      current_phase: "First automated run complete (2026-08-01)"
+      gates_passed: 1
       gates_total: 4
-      last_verified: 2026-07-08T17:15:00Z
-      status: "Three gates in pre-tool-corespine-hook.sh. Pre-policy debt on 3 plans documented (not violations, pre-date requirement)."
+      last_verified: 2026-08-01
 
-    - plan_id: PLAN-VOCABULARY-STATE
-      current_phase: "Data verification + Dashboard"
-      gates_passed: 2
+    - id: PLAN-GRAPHIFY
+      goal: "All propagation sweeps guided by live dependency graph"
+      reasoning: "Manual grepping for propagation is incomplete. Mechanical dependency map is exhaustive."
+      measurable_outcome: "dependency-graph.yaml CURRENT for both code and governance layers."
+      ratification_state: RATIFIED
+      created: 2026-07-26
+      current_phase: "Code layer CURRENT. Governance layer blocked on API key (FND-20260801-003)."
+      gates_passed: 1
       gates_total: 2
-      last_verified: 2026-07-08T19:30:00Z
-      status: "10 terms verified. 100% schema and corespine coverage. SCHEMA-DASHBOARD.yaml created (STEP 6 complete)."
+      last_verified: 2026-07-27
 
-    - plan_id: PLAN-COMMUNICATION-PRECISION
-      current_phase: "Implementation"
-      gates_passed: 2
-      gates_total: 2
-      last_verified: 2026-07-08T18:20:00Z
-      status: "Directive-type tagging ratified. All directives in session tagged. Complete."
+  # ─── COMPLETIONS ──────────────────────────────────────────────────────────
 
   completions:
-    - step_id: STEP-6
-      name: "Schema Dashboard"
-      artifact: "memory/SCHEMA-DASHBOARD.yaml"
-      created: 2026-07-08T19:30:00Z
+    - step_id: STEP-PHASE-A-CLOSE
+      name: "Phase A to Phase B Transition"
+      artifacts:
+        - "memory/RATIFICATION-PHASE-A-TO-B.yaml (GOV-20260727-001)"
+        - "memory/RATIFICATION-SYSTEM-A-SCHEMAS-LOCK.yaml (GOV-20260727-002)"
+      completed: 2026-07-27
       status: COMPLETE
       metrics:
-        terms_total: 10
-        corespine_coverage: 100%
-        enforcement_proof: 100%
-        schema_completeness: GREEN
+        phase_a_gate_score: "5/6 gates passed (gate 6 deferred to Phase B — dependency graph governance layer)"
+        schemas_locked: 4
+        wisdom_principles: 11
 
-    - step_id: STEP-7
-      name: "Corespine Dashboard"
-      artifact: "memory/CORESPINE-DASHBOARD.yaml"
-      created: 2026-07-08T19:35:00Z
+    - step_id: STEP-PATTERN-ARCHIVE
+      name: "Pattern Archive — 5 PAT-SPEC files written"
+      artifacts: ["memory/PAT-001-SPEC.yaml", "memory/PAT-002-SPEC.yaml", "memory/PAT-003-SPEC.yaml", "memory/PAT-004-SPEC.yaml", "memory/PAT-005-SPEC.yaml"]
+      completed: 2026-07-26
       status: COMPLETE
       metrics:
-        corespines_total: 4
-        ratified: 1
-        partially_ratified: 1
-        pending_ratification: 2
-        proposed_constraints_pending: 3
-        enforcement_status: "1 GREEN (100%), 1 YELLOW (40%), 2 YELLOW (pending)"
+        patterns_defined: 5
+        patterns_active: 0
+        archive_health: "0% ACTIVE / 100% DEFINED (Phase B activates checks)"
 
-    - step_id: STEP-8
-      name: "Template Dashboard"
-      artifact: "memory/TEMPLATE-DASHBOARD.yaml"
-      created: 2026-07-08T19:40:00Z
+    - step_id: STEP-WISDOM-HARDWIRING
+      name: "System Wisdom — 11 ratified principles"
+      artifact: "CDS-SYSTEM-WISDOM.md"
+      completed: 2026-07-27
       status: COMPLETE
       metrics:
-        templates_total: 4
-        applications_attempted: 1
-        applications_successful: 0
-        escalations_open: 1
-        template_readiness: "OPERATIONAL (format guidance needed)"
+        wisdom_principles: 11
+        falsification_tests: "11/11"
+        fully_active_enforcement: "9/11"
+
+    - step_id: STEP-DEPENDENCY-GRAPH
+      name: "Dependency Graph — Code Layer"
+      artifact: "dependency-graph.yaml"
+      completed: 2026-07-27
+      status: PARTIAL
+      metrics:
+        code_layer: "CURRENT (498 nodes, 705 edges, 53 communities)"
+        governance_layer: "PENDING_API_KEY (FND-20260801-003)"
+
+    - step_id: STEP-WEEKLY-ENGINE-FIRST-RUN
+      name: "Weekly Evolution Engine — First Automated Run"
+      artifact: "WEEKLY-EVOLUTION-REPORT-2026-31.md"
+      completed: 2026-08-01
+      status: COMPLETE
+      metrics:
+        findings_scanned: 5
+        findings_resolved: 3
+        governor_decisions_required: 1
+        phase_b_deferred: 1
+
+  # ─── CURRENT METRICS ──────────────────────────────────────────────────────
+
+  metrics:
+    archive_health: "0% ACTIVE / 100% DEFINED"
+    evolution_health: "100% (9 resolved findings, all with propagation_verified=true where required)"
+    queue_depth: 2
+    queue_status: HEALTHY
+    wisdom_density: "11 principles / ~15 sessions (rising)"
+    corespines_ratified: 3
+    corespines_total: 5
+
+  blocking_items:
+    - item: "ANTHROPIC_API_KEY missing from cloud agent environment (FND-20260801-003)"
+      impact: "Blocks graphify Mode B — governance dependency graph cannot be generated"
+      decision_needed: "Governor: add API key to cloud agent session environment, OR move Mode B to separate manual trigger"
+      severity: HIGH
+
+    - item: "ARCHIVE HEALTH = 0% (FND-20260801-004)"
+      impact: "Pattern checks not running — violations not mechanically prevented"
+      decision_needed: "Phase B build deliverable — no Governor decision needed"
+      severity: MEDIUM
 
 metadata:
-  rationale: "This file replaces session record browsing. Brain reads ONE file to understand platform state: what intents are active, which plans govern them, what phase each plan is in, how many gates passed, what proof the work is done. No narrative. Just data."
-  next_update: "After Yariv ratification decisions on CS-GOAL-001, CS-CREATION-001, CS-AI-BEHAVIOR-001-PROPOSED-1. Then after MECHANICAL-CLAIM-WITHOUT-TEST format guidance received."
-  blocking_items: "STEPS 1-8 COMPLETE. Blocking items for next session: (1) Yariv ratification on 3 corespines, (2) Brain format guidance on MECHANICAL-CLAIM-WITHOUT-TEST template."
+  rationale: "Single file for Brain to read platform state: intents, plans, gates, proofs, blocking items. No narrative — data only."
+  next_update: "After Governor decision on FND-20260801-003 (API key) OR next weekly session (2026-08-08)"
