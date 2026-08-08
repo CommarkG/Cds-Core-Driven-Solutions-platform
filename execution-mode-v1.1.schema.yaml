@@ -3,8 +3,11 @@ schema_id: "SCHEMA-EXECUTION-MODE-001"
 name: "ExecutionModeSchema"
 version: "1.1.0"
 status: "LOCKED — Governor signed 2026-07-27 (GOV-20260727-002)"
+wiring_state: CURRENT
+schema_position: CDS.SYSTEM.SCHEMA.EXECUTION-MODE
+corespine: CS-CREATION-001
 created: "2026-07-07"
-last_updated: "2026-07-07"
+last_updated: "2026-08-08"
 depth_level: 1
 correction_note: "v1.1 removes self-declared 'OPUS-AUDIT-APPROVED' status and embedded verdict text from v1.0 — that pattern violates the Producer/Auditor separation this schema itself encodes for agents. Field count corrected from claimed 5 to actual 7 (created_at/created_by were omitted from the prior count)."
 

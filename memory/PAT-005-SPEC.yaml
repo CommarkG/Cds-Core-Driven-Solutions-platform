@@ -2,9 +2,10 @@
 pattern_id: PAT-005
 pattern_name: "Derived index not updated when source changes"
 severity: HIGH
-sessions_confirmed: 3
+sessions_confirmed: 4
 first_observed: "2026-07-08"
-recurrence_count: 7
+recurrence_count: 8
+last_recurrence: "2026-08-08 — CS-PE-001 ratified corespine placed inside proposed_ratifications block instead of corespines array (FND-20260808-001)"
 status: COMPLETE
 output_1_status: STORED
 output_2_status: DEFINED

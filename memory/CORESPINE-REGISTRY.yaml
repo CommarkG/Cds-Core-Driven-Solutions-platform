@@ -2,7 +2,7 @@
 registry_id: CORESPINE-REGISTRY
 version: 1.1
 created: 2026-07-08
-last_updated: 2026-07-20
+last_updated: 2026-08-08
 authority: "Brain (CDS Governor oversight via Yariv)"
 purpose: "Single source of truth for all corespines and their spine constraints"
 hook_design: "All corespines enforced via pre-tool-corespine-hook.sh on EVERY tool call (reads, writes, searches, creates)"
@@ -182,29 +182,6 @@ corespines:
         status: "PROPOSED_PENDING_RATIFICATION"
         source: "Session 2026-07-08: Brain guidance on Q4"
 
-metadata:
-  ratification_required_before_phase_a: 3
-  proposed_pending_count: 3
-  active_enforced_count: 4
-  designed_not_enforced_count: 1
-  next_review: "Upon Yariv ratification of Phase A"
-
-proposed_ratifications:
-  - spine_constraint_id: "CS-GOAL-001-PROPOSED-1"
-    description: "Code enforcement equivalence: rules must read from registry"
-    proposed_by: "CDS session 2026-07-08"
-    severity: "HIGH"
-
-  - spine_constraint_id: "CS-CREATION-001-PROPOSED-1"
-    description: "Arm contradiction resolution: block at creation, escalate to Governor"
-    proposed_by: "CDS session 2026-07-08"
-    severity: "CRITICAL"
-
-  - spine_constraint_id: "CS-AI-BEHAVIOR-001-PROPOSED-1"
-    description: "Agent demotion policy: automatic on false_positive_rate > 0.2"
-    proposed_by: "CDS session 2026-07-08"
-    severity: "MEDIUM"
-
   - id: "CS-PE-001"
     name: "Priority Engine Governance Corespine"
     domain: "priority scoring, queue management, work ordering"
@@ -266,5 +243,28 @@ proposed_ratifications:
         name: "LEL confidence integration"
         description: "When LEL pattern confidence > 0.8, risk field may be adjusted automatically with logging."
         status: "PROPOSED — awaiting LEL integration in Phase B"
+
+metadata:
+  ratification_required_before_phase_a: 3
+  proposed_pending_count: 3
+  active_enforced_count: 4
+  designed_not_enforced_count: 1
+  next_review: "Upon Yariv ratification of Phase A"
+
+proposed_ratifications:
+  - spine_constraint_id: "CS-GOAL-001-PROPOSED-1"
+    description: "Code enforcement equivalence: rules must read from registry"
+    proposed_by: "CDS session 2026-07-08"
+    severity: "HIGH"
+
+  - spine_constraint_id: "CS-CREATION-001-PROPOSED-1"
+    description: "Arm contradiction resolution: block at creation, escalate to Governor"
+    proposed_by: "CDS session 2026-07-08"
+    severity: "CRITICAL"
+
+  - spine_constraint_id: "CS-AI-BEHAVIOR-001-PROPOSED-1"
+    description: "Agent demotion policy: automatic on false_positive_rate > 0.2"
+    proposed_by: "CDS session 2026-07-08"
+    severity: "MEDIUM"
 
 write_gate: "CORESPINE-WRITE-GATE: before adding, verify (1) corespine_id unique, (2) no spine constraint duplicates, (3) enforcement_code exists or marked PENDING"

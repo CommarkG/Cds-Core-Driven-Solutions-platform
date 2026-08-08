@@ -2,7 +2,7 @@
 vocabulary_id: VOCABULARY-GRID
 version: 1.0
 created: 2026-07-08T10:05:00Z
-last_updated: 2026-07-08T10:05:00Z
+last_updated: 2026-08-08T07:00:00Z
 authority: "CDS (from CSPS semantic anchoring schema + falsification_test field)"
 purpose: "Single source of truth for all vocabulary terms and their corespine governance"
 schema_source: "CSPS production semantic anchoring (five fields) + CDS falsification_test (sixth field)"
@@ -167,13 +167,94 @@ terms:
     enforcement_hook: "pre-tool-corespine-hook.sh: after every hook update, a falsification test must show the hook still works. Test with operations that should block and operations that should pass."
     falsification_test: "For this term itself: Add falsification_test field to a spine constraint. Run the test. It must either prove the constraint is enforced or prove it is not. There is no middle ground. Show the test output."
 
+  - id: "VOCAB-011"
+    term: "RATIFICATION"
+    corespine_context: "CS-GOAL-001"
+    definition: "The formal act by which the Governor approves an artifact, constraint, or decision as locked and authoritative. Ratification is not review, endorsement, or acknowledgment — it is the constitutional moment that changes an artifact's status from PROPOSED to LOCKED and makes it enforceable. Requires explicit Governor signature with GOV-ID."
+    usage_boundaries: |
+      CANNOT mean: reviewed, approved informally, or agreed-upon in conversation.
+      CANNOT be: performed by AI or delegated without Governor explicit authority grant.
+      CANNOT be: retroactive (ratification applies from the date signed, not earlier).
+      CANNOT be: claimed without a RATIFICATION record file with Governor signature.
+    inheritance_chain: |
+      Inherits from: CS-GOAL-001 (every ratified artifact traces back to a ratified goal).
+      Parent concept: Constitutional state-change mechanism.
+      Inherited by: Every RATIFIED corespine, locked schema, and approved PCR.
+    enforcement_hook: "pre-tool-corespine-hook.sh: create_ratification_record is a protected operation. Only allowed when a pending artifact exists and Governor identity is confirmed."
+    falsification_test: "Attempt to mark an artifact as RATIFIED without creating a RATIFICATION-[ID].yaml with a dated Governor signature. The pre-ratification gate must block the status change and emit: 'Ratification requires signed RATIFICATION-[ID].yaml. Status change blocked.'"
+
+  - id: "VOCAB-012"
+    term: "GOVERNOR"
+    corespine_context: "CS-GOAL-001"
+    definition: "The single human authority with constitutional power to ratify corespines, lock schemas, approve PCRs, and resolve escalated governance conflicts. The Governor is the terminal decision-maker whose signature converts PROPOSED to LOCKED. Currently: Yariv Fink. Governor authority cannot be delegated to AI."
+    usage_boundaries: |
+      CANNOT mean: any human reviewer or approver.
+      CANNOT be: replaced by AI consensus or team vote.
+      CANNOT be: bypassed for urgent situations — urgency routes to Governor faster, not around Governor.
+      CANNOT ratify: anything without explicit GOV-[YEAR]-[TYPE]-[SEQUENCE] ID on record.
+    inheritance_chain: |
+      Inherits from: CS-GOAL-001 (goal governance is Governor-anchored).
+      Parent concept: Human constitutional authority.
+      Inherited by: Every governance artifact that requires ratification or resolution.
+    enforcement_hook: "pre-tool-corespine-hook.sh: escalate_to_governor is an allowed operation. AI cannot impersonate Governor or self-ratify. Governor signature field must be non-null for any LOCKED artifact."
+    falsification_test: "Attempt to create a RATIFICATION record with governor_signed_by: 'AI' or governor_signed_by: null. Gate must reject: 'Governor field must contain a named human authority. AI signature is invalid.' Show the blocking output."
+
+  - id: "VOCAB-013"
+    term: "VIOLATED"
+    corespine_context: "CS-CREATION-001"
+    definition: "The status of a spine constraint or governance rule when a contrary action has occurred or is detected at gate. VIOLATED is a system state — it is observable, logged, and requires resolution. A violated constraint does not self-heal by description of what should happen; it requires a fix-and-verify cycle."
+    usage_boundaries: |
+      CANNOT mean: the rule was unclear or the intention was good.
+      CANNOT be: self-cleared by the system without a resolution record.
+      CANNOT be: ignored pending future enforcement — VIOLATED triggers immediate escalation.
+      CANNOT be: conflated with PROPOSED (a proposed constraint cannot be VIOLATED — it has no enforcement).
+    inheritance_chain: |
+      Inherits from: CS-CREATION-001 (creation constraints produce VIOLATED status when breached).
+      Parent concept: Constraint enforcement outcome.
+      Inherited by: ZF audit findings, RESOLUTION-LIBRARY entries, WEEKLY-FINDINGS-QUEUE items.
+    enforcement_hook: "pre-tool-corespine-hook.sh: when a spine constraint check fails, the output state is VIOLATED. Logged to audit trail. Creates a finding in WEEKLY-FINDINGS-QUEUE.yaml automatically (Phase B implementation)."
+    falsification_test: "Trigger a known constraint violation (e.g., write file without schema_position). Gate must block and log: 'VIOLATED: CS-CREATION-001-C4 — governance write missing schema_position.' Show the VIOLATED status in the audit log."
+
+  - id: "VOCAB-014"
+    term: "INHERITED"
+    corespine_context: "CS-CREATION-001"
+    definition: "The relationship by which an element takes on all spine constraints of its governing corespine without restating them. Inheritance is automatic and transitive — if a corespine inherits from another, the element inherits all constraints from both. Nothing inherited can be overridden at the arm level; it can only be extended."
+    usage_boundaries: |
+      CANNOT mean: copied (copying creates drift; inheritance means constraint is read from source at runtime).
+      CANNOT be: selective (you inherit all spine constraints or none — partial inheritance is not valid).
+      CANNOT be: overridden: at element level (override is a spine change requiring Governor ratification).
+      CANNOT be: declared without citing the parent corespine.
+    inheritance_chain: |
+      Inherits from: CS-CREATION-001 (the creation protocol defines inheritance as a mandatory declaration).
+      Parent concept: Constraint propagation mechanism.
+      Inherited by: Every arm and every element in the platform.
+    enforcement_hook: "pre-tool-corespine-hook.sh CHECK 1: Does this element declare its governing corespine? That declaration activates inheritance. Missing declaration = unwitnessed write. Hook blocks."
+    falsification_test: "Create an element that declares corespine: CS-THRESHOLD-001. Attempt an operation blocked by CS-THRESHOLD-001 spine constraints. Block must occur without the element restating the constraint. The constraint is inherited from the registry at runtime."
+
+  - id: "VOCAB-015"
+    term: "QUALIFIED"
+    corespine_context: "CS-AI-BEHAVIOR-001"
+    definition: "A governance claim or artifact is QUALIFIED when it meets the minimum requirements to advance to the next verification stage: it has a corespine declaration, a schema_position, a falsification_test, and no open VIOLATED findings. QUALIFIED is a gate output, not a self-declaration. An artifact declares itself; the gate qualifies it."
+    usage_boundaries: |
+      CANNOT mean: approved, ratified, or verified (those are subsequent states after QUALIFIED).
+      CANNOT be: self-asserted by the artifact or the session that produced it.
+      CANNOT be: shortcut — each qualification criterion must be met independently.
+      CANNOT be: permanent — a QUALIFIED artifact that acquires new violations returns to PENDING.
+    inheritance_chain: |
+      Inherits from: CS-AI-BEHAVIOR-001 (AI behavior governance prevents self-qualification).
+      Parent concept: Gate output state for pre-ratification review.
+      Inherited by: Every artifact before it enters the ratification queue.
+    enforcement_hook: "pre-tool-corespine-hook.sh: qualification check fires before any create_ratification_record operation. Checks: (1) corespine declared, (2) schema_position present, (3) falsification_test present, (4) no open VIOLATED findings. All must pass. Partial pass = not QUALIFIED."
+    falsification_test: "Submit an artifact with 3 of 4 qualification criteria met (missing falsification_test). Gate must output: 'NOT QUALIFIED: falsification_test missing. All 4 criteria required.' Show the specific missing criterion in the output."
+
 metadata:
-  total_terms: 10
+  total_terms: 15
   schema_fields: 6
   corespine_coverage:
-    CS-CREATION-001: 4 terms (CORESPINE, SPINE, ARM, FALSIFICATION TEST)
-    CS-AI-BEHAVIOR-001: 3 terms (TELL vs RULE, SYMBIOTIC PROTOCOL, LAYER DECLARATION)
+    CS-CREATION-001: 6 terms (CORESPINE, SPINE, ARM, FALSIFICATION TEST, VIOLATED, INHERITED)
+    CS-AI-BEHAVIOR-001: 4 terms (TELL vs RULE, SYMBIOTIC PROTOCOL, LAYER DECLARATION, QUALIFIED)
     CS-THRESHOLD-001: 2 terms (THRESHOLD, CLASSIFICATION RECORD)
-    CS-GOAL-001: 1 term (GOAL)
-  next_terms_queued: "RATIFICATION, GOVERNOR, VIOLATED, INHERITED, QUALIFIED"
+    CS-GOAL-001: 3 terms (GOAL, RATIFICATION, GOVERNOR)
+  next_terms_queued: "none — all queued terms added 2026-08-08"
+  last_vocabulary_update: "2026-08-08 — 5 terms added (VOCAB-011 through VOCAB-015)"
   write_gate: "VOCABULARY-WRITE-GATE: before adding, verify (1) term_id unique, (2) corespine_context exists in CORESPINE-REGISTRY.yaml, (3) falsification_test is executable"

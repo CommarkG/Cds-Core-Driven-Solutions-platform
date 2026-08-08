@@ -2,28 +2,29 @@
 document_id: SCHEMA-DASHBOARD
 version: 1.0
 created: 2026-07-08T19:30:00Z
-last_updated: 2026-07-08T19:30:00Z
+last_updated: 2026-08-08T07:00:00Z
 authority: CDS Platform (data view from VOCABULARY-GRID.yaml)
 purpose: "Real-time visibility into schema vocabulary state: term coverage, governance binding, enforcement proof"
 data_source: "memory/VOCABULARY-GRID.yaml (single source of truth)"
 
 schema_summary:
-  total_terms: 10
+  total_terms: 15
   total_schema_fields: 6
-  measurement_timestamp: 2026-07-08T10:05:00Z
+  measurement_timestamp: 2026-08-08T07:00:00Z
   status: "VERIFIED — 100% corespine coverage, 100% falsification tests present"
+  terms_added_2026_08_08: "VOCAB-011 (RATIFICATION), VOCAB-012 (GOVERNOR), VOCAB-013 (VIOLATED), VOCAB-014 (INHERITED), VOCAB-015 (QUALIFIED)"
 
 vocabulary_inventory:
   by_corespine:
     CS-CREATION-001:
-      count: 4
-      terms: ["CORESPINE", "SPINE", "ARM", "FALSIFICATION TEST"]
+      count: 6
+      terms: ["CORESPINE", "SPINE", "ARM", "FALSIFICATION TEST", "VIOLATED", "INHERITED"]
       coverage: 100%
       enforcement_gateway: "pre-tool-corespine-hook.sh"
 
     CS-AI-BEHAVIOR-001:
-      count: 3
-      terms: ["TELL vs RULE", "SYMBIOTIC PROTOCOL", "LAYER DECLARATION"]
+      count: 4
+      terms: ["TELL vs RULE", "SYMBIOTIC PROTOCOL", "LAYER DECLARATION", "QUALIFIED"]
       coverage: 100%
       enforcement_gateway: "threshold/src/gate/rules.ts (RULE-LAYER-DECLARATION)"
 
@@ -34,18 +35,18 @@ vocabulary_inventory:
       enforcement_gateway: "threshold/src/gate/rules.ts (RULE-CLASS, RULE-QUAR)"
 
     CS-GOAL-001:
-      count: 1
-      terms: ["GOAL"]
+      count: 3
+      terms: ["GOAL", "RATIFICATION", "GOVERNOR"]
       coverage: 100%
       enforcement_gateway: "threshold/src/gate/rules.ts (RULE-GOAL)"
 
 completeness_metrics:
-  terms_with_schema_position: 10/10 (100%)
-  terms_with_corespine_context: 10/10 (100%)
-  terms_with_falsification_test: 10/10 (100%)
-  terms_with_usage_boundaries: 10/10 (100%)
-  terms_with_inheritance_chain: 10/10 (100%)
-  terms_with_enforcement_hook_reference: 10/10 (100%)
+  terms_with_schema_position: 15/15 (100%)
+  terms_with_corespine_context: 15/15 (100%)
+  terms_with_falsification_test: 15/15 (100%)
+  terms_with_usage_boundaries: 15/15 (100%)
+  terms_with_inheritance_chain: 15/15 (100%)
+  terms_with_enforcement_hook_reference: 15/15 (100%)
 
 schema_binding_proof:
   - term_id: VOCAB-001
@@ -108,36 +109,68 @@ schema_binding_proof:
     enforcement_visible: true
     proof: "Every constraint must have concrete test; tested in pre-tool-corespine-hook.sh"
 
+  - term_id: VOCAB-011
+    term: RATIFICATION
+    governed_by: CS-GOAL-001
+    enforcement_visible: true
+    proof: "create_ratification.sh validates Governor signature before LOCKED status is assigned"
+
+  - term_id: VOCAB-012
+    term: GOVERNOR
+    governed_by: CS-GOAL-001
+    enforcement_visible: true
+    proof: "RULE-GOAL validates governor_signed_by field; AI signature is blocked"
+
+  - term_id: VOCAB-013
+    term: VIOLATED
+    governed_by: CS-CREATION-001
+    enforcement_visible: true
+    proof: "pre-tool-corespine-hook.sh emits VIOLATED status when spine constraint check fails"
+
+  - term_id: VOCAB-014
+    term: INHERITED
+    governed_by: CS-CREATION-001
+    enforcement_visible: true
+    proof: "pre-tool-corespine-hook.sh CHECK 1 enforces corespine declaration; inheritance is activated by declaration"
+
+  - term_id: VOCAB-015
+    term: QUALIFIED
+    governed_by: CS-AI-BEHAVIOR-001
+    enforcement_visible: true
+    proof: "pre-tool-corespine-hook.sh qualification check runs before create_ratification_record; all 4 criteria required"
+
 coverage_validation:
   - check: "Every term has governance corespine"
     result: PASS
-    count: 10/10
+    count: 15/15
 
   - check: "Every term has falsification test"
     result: PASS
-    count: 10/10
+    count: 15/15
 
   - check: "Every term has enforcement hook reference"
     result: PASS
-    count: 10/10
+    count: 15/15
 
   - check: "Every corespine has at least one term"
-    result: PASS
-    count: 4/4 corespines with terms
+    result: PARTIAL
+    count: 4/5 corespines with terms
+    gap_note: "CS-PE-001 (Priority Engine) has no vocabulary terms. Domain: priority scoring, queue management, work ordering. Terms PRIORITY-SCORE, QUEUE-POSITION needed in next batch."
 
   - check: "All term IDs unique"
     result: PASS
-    count: 10 unique IDs
+    count: 15 unique IDs
 
   - check: "All corespine references exist in CORESPINE-REGISTRY.yaml"
     result: PASS
-    references_verified: "CS-CREATION-001, CS-AI-BEHAVIOR-001, CS-THRESHOLD-001, CS-GOAL-001 all exist"
+    references_verified: "CS-CREATION-001, CS-AI-BEHAVIOR-001, CS-THRESHOLD-001, CS-GOAL-001, CS-PE-001 all exist"
 
 next_queue:
-  queued_terms: ["RATIFICATION", "GOVERNOR", "VIOLATED", "INHERITED", "QUALIFIED"]
-  queued_count: 5
+  queued_terms: []
+  queued_count: 0
   projected_total_after_queue: 15 terms
-  priority_next: "RATIFICATION (needed for corespine ratification tracking)"
+  note: "All queued terms added 2026-08-08 (VOCAB-011 through VOCAB-015). Queue cleared."
+  priority_next: "Identify next vocabulary candidates from Phase B implementation work"
 
 health_status:
   schema_completeness: GREEN (100%)

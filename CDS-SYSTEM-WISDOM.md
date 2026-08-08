@@ -252,16 +252,56 @@ must return zero.
 
 ---
 
+## WISDOM-012 — RESOLUTION NOTES ARE NOT QUEUES
+
+**Principle:** A "next step" written inside a resolution record, ratification note, or finding
+resolution_reference is documentation — not a commitment and not a queue entry.
+Documentation of a next step is a TELL. A finding in WEEKLY-FINDINGS-QUEUE.yaml is a RULE —
+it has a status, a batch assignment, and must be processed on a schedule.
+A next step that exists only in prose will not execute itself, and no gate will notice when
+it hasn't been done.
+
+**The rule:** Every resolution record with a "next steps", "downstream effects", or
+"remaining actions" section must spawn corresponding FND-[YYYYMMDD]-[seq] entries in
+WEEKLY-FINDINGS-QUEUE.yaml before the original finding is marked RESOLVED.
+The session that resolves a finding owns the queue entries for its next steps.
+
+**Mechanical enforcement:**
+- Pre-RESOLVED check: if resolution_reference text contains "next steps" or "downstream effects",
+  query WEEKLY-FINDINGS-QUEUE.yaml for linked FND entries. If none found → RESOLVED is blocked.
+- At session-start scan: grep all resolution_reference fields for "next steps" language.
+  Confirm each has a corresponding PENDING or RESOLVED finding. Missing entry = new finding.
+- This wisdom applies retroactively: all existing resolution records with outstanding next steps
+  are findings (FND-20260808-003 was discovered this way — RATIFICATION-SYSTEM-A-SCHEMAS-LOCK.yaml
+  listed "update wiring_state to CURRENT" as a next step that was never queued).
+
+**Falsification test:** Add a resolution_reference containing "next steps: update X" without
+creating a corresponding WEEKLY-FINDINGS-QUEUE finding. The pre-RESOLVED check must block the
+status change: "BLOCKED: resolution_reference contains 'next steps' language but no corresponding
+FND-[ID] entry found in WEEKLY-FINDINGS-QUEUE.yaml. Queue the next step before marking RESOLVED."
+
+**Extraction note (2026-08-08):** This principle was extracted from FND-20260808-003 —
+RATIFICATION-SYSTEM-A-SCHEMAS-LOCK.yaml had explicit "Next steps: Update wiring_state to CURRENT"
+language that generated no queue entry. The 12-day gap between ratification (2026-07-27) and
+discovery (2026-08-08) is the cost of a TELL masquerading as a commitment.
+
+**Status:** PROPOSED — requires Governor ratification before becoming HARDWIRED.
+Extracted by weekly evolution session WEEK-2026-32 (2026-08-08).
+
+---
+
 ## WISDOM HEALTH
 
 ```
-Total wisdom principles:  11
+Total wisdom principles:  12 (11 ratified, 1 proposed pending ratification)
 Principles with mechanical enforcement (fully active):    9
 Principles with mechanical enforcement (partially active): 2
   WISDOM-010: branch protection = Phase B (not yet built)
   WISDOM-011: deep-root protocol always-loaded; hook automation = Phase B
-Principles with falsification tests:    11 / 11
-WISDOM HEALTH: 82% active enforcement (11/11 declared, 9/11 fully active)
+Principles proposed, pending ratification:              1
+  WISDOM-012: resolution notes vs queues — proposed 2026-08-08
+Principles with falsification tests:    12 / 12
+WISDOM HEALTH: 75% fully active (9/12), 83% declared with enforcement
 ```
 
 ---
@@ -282,3 +322,4 @@ Rate limit: maximum 2 new wisdom principles per session (prevents inflation).
 
 ---
 Version 1.0 — 9 principles — ratified 2026-07-25 | Governor: Yariv Fink
+Version 1.1 — 12 principles (11 ratified + 1 proposed) — updated 2026-08-08
