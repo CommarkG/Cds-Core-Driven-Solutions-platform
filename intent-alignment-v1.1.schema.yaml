@@ -3,8 +3,16 @@ schema_id: "SCHEMA-INTENT-ALIGNMENT-001"
 name: "IntentAlignmentSchema"
 version: "1.1.0"
 status: "LOCKED — Governor signed 2026-07-27 (GOV-20260727-002)"
+wiring_state: CURRENT
+ratification_state: RATIFIED
+ratification_record: "memory/RATIFICATION-SYSTEM-A-SCHEMAS-LOCK.yaml"
+gov_id: "GOV-20260727-002"
+schema_position: CDS.SCHEMA.INTENT_ALIGNMENT.V1_1
+corespine: CS-GOAL-001
+wiring_date: "2026-08-15"
+wiring_reference: "FND-20260815-002 — propagation step completed"
 created: "2026-07-07"
-last_updated: "2026-07-07"
+last_updated: "2026-08-15"
 depth_level: 1
 correction_note: "v1.1 removes self-declared 'OPUS-AUDIT-APPROVED' status and embedded verdict text from v1.0. Field count corrected from claimed 7 to actual 9 (created_at/created_by were omitted from the prior count)."
 

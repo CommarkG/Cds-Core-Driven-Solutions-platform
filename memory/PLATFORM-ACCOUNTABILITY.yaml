@@ -1,15 +1,16 @@
 ---
 document_id: PLATFORM-ACCOUNTABILITY
-version: 1.0
+version: 1.1
 created: 2026-07-08T19:00:00Z
-last_updated: 2026-07-08T19:00:00Z
+last_updated: 2026-08-15T07:00:00Z
+update_reference: "Weekly evolution WEEK-2026-33 (FND-20260815-001)"
 authority: CDS (self-reporting platform state)
 ---
 
 platform_accountability:
-  last_updated: 2026-07-08T19:00:00Z
-  session: 2026-07-08
-  phase: Phase D — Build Order (STEPS 1-5)
+  last_updated: 2026-08-15T07:00:00Z
+  session: 2026-08-15 (weekly evolution — WEEK-2026-33)
+  phase: Phase B — Implementation (authorized GOV-20260727-001)
 
   intents:
     - id: INTENT-LOOP-CLOSURE
@@ -157,12 +158,12 @@ platform_accountability:
       created: 2026-07-08T19:35:00Z
       status: COMPLETE
       metrics:
-        corespines_total: 4
-        ratified: 1
+        corespines_total: 5
+        ratified: 3
         partially_ratified: 1
-        pending_ratification: 2
+        pending_ratification: 1
         proposed_constraints_pending: 3
-        enforcement_status: "1 GREEN (100%), 1 YELLOW (40%), 2 YELLOW (pending)"
+        enforcement_status: "1 GREEN (100%), 1 YELLOW (40%), 3 YELLOW (pending/partial)"
 
     - step_id: STEP-8
       name: "Template Dashboard"
@@ -175,6 +176,48 @@ platform_accountability:
         applications_successful: 0
         escalations_open: 1
         template_readiness: "OPERATIONAL (format guidance needed)"
+
+    - step_id: PHASE-A-CLOSE
+      name: "Phase A → Phase B Transition"
+      artifact: "memory/RATIFICATION-PHASE-A-TO-B.yaml"
+      created: 2026-07-27T00:00:00Z
+      status: COMPLETE
+      gov_id: GOV-20260727-001
+      metrics:
+        gate_items_passed: 6
+        challenge_cycle: COMPLETE
+        phase_b_authorized: true
+
+    - step_id: SYSTEM-A-SCHEMA-LOCK
+      name: "System A Schema Lock (4 Depth-1 schemas)"
+      artifact: "memory/RATIFICATION-SYSTEM-A-SCHEMAS-LOCK.yaml"
+      created: 2026-07-27T00:00:00Z
+      status: COMPLETE
+      gov_id: GOV-20260727-002
+      metrics:
+        schemas_locked: 4
+        schemas: [decision-node-v1.1, execution-mode-v1.1, agent-definition-v1.1, intent-alignment-v1.1]
+        wiring_state_propagated: "2026-08-15 (FND-20260815-002)"
+
+    - step_id: WEEKLY-ENGINE-LAUNCH
+      name: "Weekly Evolution Engine — First Automated Session"
+      artifact: "WEEKLY-EVOLUTION-REPORT-2026-33.md"
+      created: 2026-08-15T07:00:00Z
+      status: COMPLETE
+      metrics:
+        findings_resolved: 4
+        findings_deferred: 1
+        governor_items: 1
+        evolution_health: 100%
+
+  phase_b_status:
+    phase: "Phase B — Implementation"
+    authorized_by: "GOV-20260727-001"
+    authorized_date: "2026-07-27"
+    dependency_graph_code_layer: CURRENT
+    dependency_graph_governance_layer: PENDING_API_KEY
+    weekly_evolution_engine: ACTIVE
+    first_automated_session: "2026-08-15 (WEEK-2026-33)"
 
 metadata:
   rationale: "This file replaces session record browsing. Brain reads ONE file to understand platform state: what intents are active, which plans govern them, what phase each plan is in, how many gates passed, what proof the work is done. No narrative. Just data."

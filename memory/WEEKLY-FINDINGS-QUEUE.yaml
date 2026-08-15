@@ -2,20 +2,20 @@
 document_id: WEEKLY-FINDINGS-QUEUE
 version: 1.1
 created: 2026-07-25
-updated_at: 2026-07-26
+updated_at: 2026-08-15
 authority: CDS (Governor oversight)
 purpose: "Permanent accumulator for all platform findings. Feeds weekly evolution sessions."
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
-  total_findings: 9
+  total_findings: 14
   pending: 0
   batched: 0
-  resolved: 9
-  deferred: 0
+  resolved: 13
+  deferred: 1
   queue_status: HEALTHY
-  last_session_scan: "2026-07-27"
-  last_weekly_session: null
-  next_weekly_session: "2026-08-01 (Saturday)"
+  last_session_scan: "2026-08-15"
+  last_weekly_session: "2026-08-15 (WEEK-2026-33 — first automated session)"
+  next_weekly_session: "2026-08-22 (Saturday)"
 ---
 
 # Weekly Findings Queue
@@ -180,21 +180,111 @@ findings:
       Graphify Mode B added to CDS-GRAPHIFY-MANDATORY-PROTOCOL.md (GOV authorization 2026-07-27).
     note: "CISEM improvement item 3. Code layer complete. Governance layer auto-runs 2026-08-01 (weekly agent)."
 
-## BATCH PLAN (updated 2026-07-26)
+## SESSION 2026-08-15 FINDINGS (WEEK-2026-33 automated session scan)
+
+  - finding_id: FND-20260815-001
+    category: STALE
+    description: "PLATFORM-ACCOUNTABILITY.yaml last_updated is 2026-07-08 — 38 days stale. Phase A closure, Phase B start, 9 resolved findings, 4 new wisdom principles, schema locks, new protocols all occurred with no accountability update."
+    affected_artifacts:
+      - "memory/PLATFORM-ACCOUNTABILITY.yaml"
+    pe_score: 38.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-33"
+    status: RESOLVED
+    resolved_date: "2026-08-15"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-08-15"
+    resolution_reference: "memory/PLATFORM-ACCOUNTABILITY.yaml updated 2026-08-15 — last_updated, session, phase, and Phase B state current."
+
+  - finding_id: FND-20260815-002
+    category: PROPAGATION
+    description: "System A schema lock (GOV-20260727-002) noted 'Update wiring_state to CURRENT' as required downstream effect. None of the 4 locked schemas have a wiring_state field — propagation step was never completed."
+    affected_artifacts:
+      - "decision-node-v1.1.schema.yaml"
+      - "execution-mode-v1.1.schema.yaml"
+      - "agent-definition-v1.1.schema.yaml"
+      - "intent-alignment-v1.1.schema.yaml"
+    pe_score: 32.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-33"
+    status: RESOLVED
+    resolved_date: "2026-08-15"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-08-15"
+    resolution_reference: "wiring_state: CURRENT added to all 4 System A schemas 2026-08-15."
+
+  - finding_id: FND-20260815-003
+    category: STALE
+    description: "CORESPINE-REGISTRY.yaml has CS-PE-001 (a RATIFIED corespine) listed inside the proposed_ratifications array — structural anomaly. Ratified corespines belong in the corespines array only."
+    affected_artifacts:
+      - "memory/CORESPINE-REGISTRY.yaml"
+    pe_score: 25.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-33"
+    status: RESOLVED
+    resolved_date: "2026-08-15"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-08-15"
+    resolution_reference: "memory/CORESPINE-REGISTRY.yaml restructured 2026-08-15 — CS-PE-001 moved from proposed_ratifications to corespines array."
+
+  - finding_id: FND-20260815-004
+    category: STALE
+    description: "dependency-graph.yaml governance_layer_status PENDING_API_KEY since 2026-07-27. Weekly engine Phase 0 requires graphify Mode B each Saturday. Three Saturday sessions elapsed without governance layer extraction."
+    affected_artifacts:
+      - "dependency-graph.yaml"
+    pe_score: 20.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-33"
+    status: DEFERRED
+    deferred_reason: "Requires ANTHROPIC_API_KEY in cloud agent environment — Governor decision on key provisioning needed."
+    governor_brief: "Graphify Mode B (governance document graph extraction) requires ANTHROPIC_API_KEY to be available in the cloud agent's environment. Currently the key is absent. Options: (1) provision key to cloud agent environment, (2) change Phase 0 to run Mode B only in human sessions, (3) defer governance graph until Phase B build provides an alternative. Recommend option 1 for full engine compliance."
+    propagation_required: false
+    propagation_verified: null
+    added_session: "2026-08-15"
+    resolution_reference: null
+
+  - finding_id: FND-20260815-005
+    category: VIOLATION
+    description: "Engine falsification test failure: two scheduled Saturday sessions (WEEK-2026-31: 2026-08-01, WEEK-2026-32: 2026-08-08) produced no WEEKLY-EVOLUTION-REPORT files and no commits. last_weekly_session remained null. Engine was not running."
+    affected_artifacts:
+      - "memory/WEEKLY-FINDINGS-QUEUE.yaml"
+      - "WEEKLY-EVOLUTION-REPORT-2026-31.md (missing)"
+      - "WEEKLY-EVOLUTION-REPORT-2026-32.md (missing)"
+    pe_score: 35.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-33"
+    status: RESOLVED
+    resolved_date: "2026-08-15"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-08-15"
+    resolution_reference: "WEEKLY-EVOLUTION-REPORT-2026-31.md + WEEKLY-EVOLUTION-REPORT-2026-32.md created 2026-08-15 as missed-session records. Engine state updated. First live session: WEEK-2026-33 (2026-08-15)."
+
+## BATCH PLAN (updated 2026-08-15)
 
   WEEK-2026-31 (2026-08-01):
     findings_resolved: [FND-20260725-002, FND-20260725-007, FND-20260725-004, FND-20260725-001]
     findings_pending: [FND-20260725-003, FND-20260725-006, FND-20260726-001]
     resolved_by_session_2026-07-26: 4
     remaining_pending_count: 3
-    estimated_session_time: 20 min (3 findings remain)
+    note: "Session did not fire — cloud trigger not yet active. All findings RESOLVED by prior human sessions."
 
   WEEK-2026-32 (2026-08-08):
     findings: [FND-20260725-005]
     count: 1
-    note: "System A schema lock — Governor decision required."
+    note: "Session did not fire — cloud trigger not yet active. Finding resolved by prior human session 2026-07-27."
 
   PHASE-B-INIT (first Phase B session):
     findings: [FND-20260726-002]
     count: 1
-    note: "Dependency graph — first deliverable of Phase B, before other build work."
+    note: "Dependency graph code layer created 2026-07-27. Governance layer pending API key (FND-20260815-004 DEFERRED)."
+
+  WEEK-2026-33 (2026-08-15) — FIRST AUTOMATED SESSION:
+    findings_processed: [FND-20260815-001, FND-20260815-002, FND-20260815-003, FND-20260815-005]
+    findings_deferred: [FND-20260815-004]
+    count_resolved: 4
+    count_deferred: 1
+    governor_items: [FND-20260815-004]
