@@ -2,20 +2,20 @@
 document_id: WEEKLY-FINDINGS-QUEUE
 version: 1.1
 created: 2026-07-25
-updated_at: 2026-07-26
+updated_at: 2026-08-29
 authority: CDS (Governor oversight)
 purpose: "Permanent accumulator for all platform findings. Feeds weekly evolution sessions."
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
-  total_findings: 9
-  pending: 0
+  total_findings: 14
+  pending: 1
   batched: 0
-  resolved: 9
+  resolved: 13
   deferred: 0
   queue_status: HEALTHY
-  last_session_scan: "2026-07-27"
-  last_weekly_session: null
-  next_weekly_session: "2026-08-01 (Saturday)"
+  last_session_scan: "2026-08-29"
+  last_weekly_session: "2026-08-29 (WEEK-2026-35)"
+  next_weekly_session: "2026-09-05 (Saturday)"
 ---
 
 # Weekly Findings Queue
@@ -180,21 +180,106 @@ findings:
       Graphify Mode B added to CDS-GRAPHIFY-MANDATORY-PROTOCOL.md (GOV authorization 2026-07-27).
     note: "CISEM improvement item 3. Code layer complete. Governance layer auto-runs 2026-08-01 (weekly agent)."
 
-## BATCH PLAN (updated 2026-07-26)
+## SESSION 2026-08-29 FINDINGS (WEEK-2026-35 — first weekly evolution session)
 
-  WEEK-2026-31 (2026-08-01):
-    findings_resolved: [FND-20260725-002, FND-20260725-007, FND-20260725-004, FND-20260725-001]
-    findings_pending: [FND-20260725-003, FND-20260725-006, FND-20260726-001]
-    resolved_by_session_2026-07-26: 4
-    remaining_pending_count: 3
-    estimated_session_time: 20 min (3 findings remain)
+  - finding_id: FND-20260829-001
+    category: STALE
+    description: "Weekly evolution engine falsification tests 1–4 all failing: updated_at stale (2026-07-26), last_weekly_session: null, no WEEKLY-EVOLUTION-REPORT-*.md exists for any week. Engine was created 2026-07-25 and has never executed a weekly session."
+    affected_artifacts:
+      - "memory/WEEKLY-FINDINGS-QUEUE.yaml"
+      - "WEEKLY-EVOLUTION-REPORT-2026-35.md (creating this session)"
+    pe_score: 50.0
+    severity: CRITICAL
+    batch_assignment: "WEEK-2026-35"
+    status: RESOLVED
+    resolved_date: "2026-08-29"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-08-29"
+    resolution_reference: "This weekly session (WEEK-2026-35) IS the resolution. WEEKLY-EVOLUTION-REPORT-2026-35.md written. WEEKLY-FINDINGS-QUEUE.yaml updated_at and last_weekly_session updated. Engine now has first run on record."
 
-  WEEK-2026-32 (2026-08-08):
-    findings: [FND-20260725-005]
+  - finding_id: FND-20260829-002
+    category: STALE
+    description: "PLATFORM-ACCOUNTABILITY.yaml last_updated is 2026-07-08 — stale for 52 days. Platform state accountability file is not being maintained between sessions."
+    affected_artifacts:
+      - "memory/PLATFORM-ACCOUNTABILITY.yaml"
+    pe_score: 30.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-35"
+    status: RESOLVED
+    resolved_date: "2026-08-29"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-08-29"
+    resolution_reference: "memory/PLATFORM-ACCOUNTABILITY.yaml: last_updated and session fields updated to 2026-08-29. Evolution session note added. WEEK-2026-35."
+
+  - finding_id: FND-20260829-003
+    category: VIOLATION
+    description: "CS-PE-001 (RATIFIED corespine, ratified 2026-07-15) is positioned inside the proposed_ratifications array of CORESPINE-REGISTRY.yaml instead of the corespines array. A ratified corespine mis-filed under proposed items misrepresents governance state."
+    affected_artifacts:
+      - "memory/CORESPINE-REGISTRY.yaml"
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 25.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-35"
+    status: RESOLVED
+    resolved_date: "2026-08-29"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-08-29"
+    resolution_reference: "memory/CORESPINE-REGISTRY.yaml: CS-PE-001 full entry moved from proposed_ratifications to corespines array. metadata.total_corespines noted as 5. metadata.last_updated updated to 2026-08-29. Propagation: CORESPINE-DASHBOARD.yaml already shows 5 corespines (no count change needed). PAT-005 already documents this observation. WEEK-2026-35."
+
+  - finding_id: FND-20260829-004
+    category: STALE
+    description: "CORESPINE-DASHBOARD.yaml header last_updated field shows 2026-07-08T19:35:00Z and measurement_timestamp shows 2026-07-26T00:00:00Z despite the dashboard content being updated 2026-07-26. Header metadata was not updated when content was updated — PAT-005 (derived index drift) pattern confirmed."
+    affected_artifacts:
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 20.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-35"
+    status: RESOLVED
+    resolved_date: "2026-08-29"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-08-29"
+    resolution_reference: "memory/CORESPINE-DASHBOARD.yaml: last_updated updated to 2026-08-29T07:00:00Z, measurement_timestamp updated to 2026-08-29T07:00:00Z. WEEK-2026-35."
+
+  - finding_id: FND-20260829-005
+    category: PROPAGATION
+    description: "All 5 PAT-*-SPEC.yaml files (PAT-001 through PAT-005) have check_status: DEFINED — no pattern has been ratified or wired for active mechanical enforcement. ARCHIVE HEALTH = 0% ACTIVE. This requires Phase B implementation work beyond the scope of a weekly evolution session."
+    affected_artifacts:
+      - "memory/PAT-001-SPEC.yaml"
+      - "memory/PAT-002-SPEC.yaml"
+      - "memory/PAT-003-SPEC.yaml"
+      - "memory/PAT-004-SPEC.yaml"
+      - "memory/PAT-005-SPEC.yaml"
+    pe_score: 22.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-35"
+    status: PENDING
+    resolved_date: null
+    propagation_required: true
+    propagation_verified: null
+    added_session: "2026-08-29"
+    resolution_reference: null
+    governor_brief: |
+      ARCHIVE HEALTH is 0% ACTIVE. All 5 pattern specs are in DEFINED state.
+      Wiring requires: (1) Governor ratification of each check spec, (2) Phase B
+      implementation of mechanical gates (pre-ratification hooks). Decision needed:
+      (a) Begin ratification of PAT-001 check spec as Phase A work?
+      (b) Defer all pattern activation to Phase B build sprint?
+      Recommend: ratify PAT-001 and PAT-002 check specs now (documentation work only,
+      no code needed for ratification). Builds can wire them in Phase B.
+
+## BATCH PLAN (updated 2026-08-29)
+
+  WEEK-2026-35 (2026-08-29 — executed):
+    findings_resolved: [FND-20260829-001, FND-20260829-002, FND-20260829-003, FND-20260829-004]
+    findings_pending: [FND-20260829-005]
+    resolved_count: 4
+    pending_governor_decision: 1
+
+  WEEK-2026-36 (2026-09-05):
+    findings: [FND-20260829-005]
     count: 1
-    note: "System A schema lock — Governor decision required."
-
-  PHASE-B-INIT (first Phase B session):
-    findings: [FND-20260726-002]
-    count: 1
-    note: "Dependency graph — first deliverable of Phase B, before other build work."
+    note: "Pending Governor decision on ARCHIVE HEALTH / pattern activation path."

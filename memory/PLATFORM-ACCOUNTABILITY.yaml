@@ -7,9 +7,10 @@ authority: CDS (self-reporting platform state)
 ---
 
 platform_accountability:
-  last_updated: 2026-07-08T19:00:00Z
-  session: 2026-07-08
-  phase: Phase D — Build Order (STEPS 1-5)
+  last_updated: 2026-08-29T07:00:00Z
+  session: "2026-08-29 (WEEK-2026-35 weekly evolution session)"
+  phase: Phase A → B transition (weekly evolution engine active)
+  evolution_session_note: "First weekly evolution session ran 2026-08-29. 4 findings resolved (FND-20260829-001 through FND-20260829-004). 1 finding pending Governor decision (FND-20260829-005: ARCHIVE HEALTH 0%, all PAT specs DEFINED not ACTIVE). CORESPINE-REGISTRY.yaml structural fix applied: CS-PE-001 moved to corespines array."
 
   intents:
     - id: INTENT-LOOP-CLOSURE
