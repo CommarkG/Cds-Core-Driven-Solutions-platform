@@ -2,14 +2,27 @@
 document_id: PLATFORM-ACCOUNTABILITY
 version: 1.0
 created: 2026-07-08T19:00:00Z
-last_updated: 2026-07-08T19:00:00Z
+last_updated: 2026-09-05T07:00:00Z
 authority: CDS (self-reporting platform state)
 ---
 
 platform_accountability:
-  last_updated: 2026-07-08T19:00:00Z
-  session: 2026-07-08
-  phase: Phase D — Build Order (STEPS 1-5)
+  last_updated: 2026-09-05T07:00:00Z
+  session: 2026-09-05 (weekly evolution session WEEK-2026-36)
+  phase: Phase B — Build (authorized 2026-07-27 GOV-20260727-001)
+  phase_a_completed: 2026-07-27
+  phase_a_ratification: "RATIFICATION-PHASE-A-TO-B.yaml (GOV-20260727-001)"
+  current_metrics:
+    wisdom_principles: 11
+    corespines_total: 5
+    corespines_ratified: 3
+    findings_total: 14
+    findings_resolved: 12
+    findings_pending_governor: 1
+    archive_health: "0% ACTIVE (5 PAT specs written, no mechanical hooks built yet — Phase B)"
+    evolution_health: "100% (12/12 resolved findings with propagation_verified=true)"
+  weekly_evolution_engine_status: "ACTIVE — first automated session WEEK-2026-36 (2026-09-05)"
+  phase_a_history_note: "Phase A work below — preserved as audit record. Phase B build authorized."
 
   intents:
     - id: INTENT-LOOP-CLOSURE
@@ -178,5 +191,10 @@ platform_accountability:
 
 metadata:
   rationale: "This file replaces session record browsing. Brain reads ONE file to understand platform state: what intents are active, which plans govern them, what phase each plan is in, how many gates passed, what proof the work is done. No narrative. Just data."
-  next_update: "After Yariv ratification decisions on CS-GOAL-001, CS-CREATION-001, CS-AI-BEHAVIOR-001-PROPOSED-1. Then after MECHANICAL-CLAIM-WITHOUT-TEST format guidance received."
-  blocking_items: "STEPS 1-8 COMPLETE. Blocking items for next session: (1) Yariv ratification on 3 corespines, (2) Brain format guidance on MECHANICAL-CLAIM-WITHOUT-TEST template."
+  next_update: "After Governor decision on Graphify Mode B alternative (FND-20260905-004). After Phase B build begins in earnest."
+  blocking_items: |
+    Phase B blockers:
+    (1) Governor decision needed — Graphify Mode B governance layer (FND-20260905-004): ANTHROPIC_API_KEY not available in cloud agent environment.
+    (2) CS-CREATION-001 ratification still PENDING (impacts creation enforcement).
+    (3) CS-AI-BEHAVIOR-001 reasoning_trace validation not built.
+    Phase A blockers: CLEARED (Phase A ratified 2026-07-27 GOV-20260727-001).
