@@ -1,15 +1,20 @@
 ---
 document_id: PLATFORM-ACCOUNTABILITY
-version: 1.0
+version: 1.1
 created: 2026-07-08T19:00:00Z
-last_updated: 2026-07-08T19:00:00Z
+last_updated: 2026-09-12T07:00:00Z
 authority: CDS (self-reporting platform state)
+schema_position: CDS.SYSTEM.ACCOUNTABILITY
+corespine: CS-PE-001
 ---
 
 platform_accountability:
-  last_updated: 2026-07-08T19:00:00Z
-  session: 2026-07-08
-  phase: Phase D — Build Order (STEPS 1-5)
+  last_updated: 2026-09-12T07:00:00Z
+  session: 2026-09-12
+  phase: Phase B — Code Build (Active since 2026-07-27 per GOV-20260727-001)
+  phase_b_ratification: "memory/RATIFICATION-PHASE-A-TO-B.yaml (GOV-20260727-001)"
+  corespines_total: 5
+  note_stale_data: "Intents, plans, and progress sections below reflect Phase A state (2026-07-08). Phase B accountability update is FND-20260912-002 resolution — full Phase B accountability update requires Governor session."
 
   intents:
     - id: INTENT-LOOP-CLOSURE

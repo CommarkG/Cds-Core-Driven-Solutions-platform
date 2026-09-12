@@ -1,0 +1,44 @@
+---
+document_id: PLATFORM-STATUS
+version: 0.1
+created: 2026-09-12T07:00:00Z
+last_updated: 2026-09-12T07:00:00Z
+authority: CDS (auto-maintained — updated by weekly evolution engine)
+schema_position: CDS.SYSTEM.PLATFORM_STATUS
+corespine: CS-PE-001
+purpose: "Real-time platform health status. Required by PE-CONFIG.yaml registry.platform_status_path. PE halts if this file is unreachable."
+resolution_reference: "FND-20260912-007 — created 2026-09-12 to resolve orphan reference in PE-CONFIG"
+---
+
+# Platform Status
+
+## Current Phase
+
+phase: Phase B — Code Build
+phase_since: 2026-07-27
+phase_ratification: "memory/RATIFICATION-PHASE-A-TO-B.yaml (GOV-20260727-001)"
+
+## Overall Health
+
+platform_health:
+  phase: Phase B
+  corespines_total: 5
+  corespines_ratified: 3
+  corespines_pending: 1
+  corespines_partial: 1
+  evolution_engine_status: ACTIVE
+  last_weekly_session: "2026-09-12"
+  queue_depth: 7
+  queue_health: PROCESSING
+
+## Gate Status
+
+gates:
+  phase_a_gate: PASSED — 2026-07-27 (GOV-20260727-001)
+  phase_b_gate: PENDING
+  cs_creation_001_ratification: OVERDUE (>9 weeks pending)
+
+## Update Protocol
+
+update_trigger: "This file is updated by each weekly evolution session and by major gate events."
+next_update: "WEEK-2026-38 weekly session"

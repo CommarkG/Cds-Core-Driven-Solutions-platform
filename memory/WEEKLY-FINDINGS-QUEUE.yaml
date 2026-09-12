@@ -1,21 +1,23 @@
 ---
 document_id: WEEKLY-FINDINGS-QUEUE
-version: 1.1
+version: 1.2
 created: 2026-07-25
-updated_at: 2026-07-26
+updated_at: 2026-09-12
 authority: CDS (Governor oversight)
 purpose: "Permanent accumulator for all platform findings. Feeds weekly evolution sessions."
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
-  total_findings: 9
-  pending: 0
+  total_findings: 16
+  pending: 4
   batched: 0
-  resolved: 9
+  resolved: 12
   deferred: 0
-  queue_status: HEALTHY
-  last_session_scan: "2026-07-27"
-  last_weekly_session: null
-  next_weekly_session: "2026-08-01 (Saturday)"
+  queue_status: PROCESSING
+  last_session_scan: "2026-09-12"
+  last_weekly_session: "2026-09-12 (WEEK-2026-37)"
+  next_weekly_session: "2026-09-19 (Saturday)"
+  governor_items_pending: 4
+  engine_gap_note: "No weekly sessions ran 2026-08-01 through 2026-09-05 (7 weeks). First session of record is this one (2026-09-12). See FND-20260912-001."
 ---
 
 # Weekly Findings Queue
@@ -198,3 +200,133 @@ findings:
     findings: [FND-20260726-002]
     count: 1
     note: "Dependency graph — first deliverable of Phase B, before other build work."
+
+## SESSION 2026-09-12 FINDINGS (WEEK-2026-37 scan — 7 weeks since last session)
+
+  - finding_id: FND-20260912-001
+    category: VIOLATION
+    description: "Evolution engine has not run for 7 weeks (2026-08-01 through 2026-09-05). WEEKLY-FINDINGS-QUEUE.yaml last_weekly_session was null. Engine falsification tests 3 and 4 are failing: no findings moved PENDING→RESOLVED and no weekly reports exist for WEEK-31 through WEEK-36."
+    affected_artifacts:
+      - "memory/WEEKLY-FINDINGS-QUEUE.yaml"
+      - "CDS-WEEKLY-EVOLUTION-ENGINE.md"
+    pe_score: 45.0
+    severity: CRITICAL
+    batch_assignment: "WEEK-2026-37"
+    status: PENDING
+    resolved_date: null
+    propagation_required: true
+    propagation_verified: null
+    added_session: "2026-09-12"
+    resolution_reference: null
+    governor_brief: "Evolution engine failed to run for 7 consecutive Saturday sessions. Root cause unknown — was the cloud agent schedule properly set up? This session is the first run. Recommend: (1) confirm cloud agent schedule is active; (2) decide whether missed sessions need catch-up processing or can be acknowledged and moved forward from here."
+
+  - finding_id: FND-20260912-002
+    category: STALE
+    description: "PLATFORM-ACCOUNTABILITY.yaml last_updated was 2026-07-08, 10 weeks out of date. Still referenced Phase D as current phase (Phase B began 2026-07-27). Corespines count showed 4 (now 5)."
+    affected_artifacts:
+      - "memory/PLATFORM-ACCOUNTABILITY.yaml"
+    pe_score: 32.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-37"
+    status: RESOLVED
+    resolved_date: "2026-09-12"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-09-12"
+    resolution_reference: "memory/PLATFORM-ACCOUNTABILITY.yaml — last_updated set to 2026-09-12, phase updated to Phase B, corespines_total updated to 5, schema_position and corespine fields added. Full accountability content refresh is a Governor session item."
+
+  - finding_id: FND-20260912-003
+    category: STALE
+    description: "dependency-graph.yaml governance layer (Mode B) has been PENDING_API_KEY since 2026-07-27 (7 weeks). Was scheduled to auto-run 2026-08-01 but never ran. wiring_state is stuck at WIRED; should advance to CURRENT once governance layer is populated."
+    affected_artifacts:
+      - "dependency-graph.yaml"
+      - "CDS-GRAPHIFY-MANDATORY-PROTOCOL.md"
+    pe_score: 28.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-38"
+    status: PENDING
+    resolved_date: null
+    propagation_required: false
+    propagation_verified: null
+    added_session: "2026-09-12"
+    resolution_reference: null
+    governor_brief: "Graphify Mode B (governance layer extraction) requires ANTHROPIC_API_KEY and never ran. Options: (1) provide API key in cloud agent environment and run Mode B; (2) explicitly defer Mode B to Phase B milestone; (3) acknowledge governance layer as Phase B deliverable. Recommend Governor decision before WEEK-2026-38 session."
+
+  - finding_id: FND-20260912-004
+    category: STALE
+    description: "CS-CREATION-001 (Creation Definition Corespine) has been in PENDING ratification state since 2026-07-08 — over 9 weeks. Queue health rule: no finding stays PENDING more than 3 weekly sessions without Governor disposition. This blocks creation protocol enforcement and is a pre-Phase-B prerequisite."
+    affected_artifacts:
+      - "memory/CORESPINE-REGISTRY.yaml"
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 38.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-37"
+    status: PENDING
+    resolved_date: null
+    propagation_required: true
+    propagation_verified: null
+    added_session: "2026-09-12"
+    resolution_reference: null
+    governor_brief: "CS-CREATION-001 has been pending ratification for 9+ weeks, violating the queue health rule (max 3 sessions without disposition). It was listed as a Phase B prerequisite. Decision needed: (1) ratify CS-CREATION-001 — this triggers enforcement build; (2) explicitly defer to a later phase with documented reason and timeline; (3) modify/split the corespine before ratification."
+
+  - finding_id: FND-20260912-005
+    category: STALE
+    description: "CORESPINE-DASHBOARD.yaml document-level last_updated field was 2026-07-08T19:35:00Z while measurement_timestamp showed 2026-07-26T00:00:00Z — the document header drifted from its own content update timestamp (FND-20260725-002 resolved 2026-07-26 but didn't update the header)."
+    affected_artifacts:
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 22.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-37"
+    status: RESOLVED
+    resolved_date: "2026-09-12"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-09-12"
+    resolution_reference: "memory/CORESPINE-DASHBOARD.yaml — last_updated and measurement_timestamp both updated to 2026-09-12T07:00:00Z. 2026-09-12."
+
+  - finding_id: FND-20260912-006
+    category: VIOLATION
+    description: "93 of 106 governance .md files and additional .yaml files are missing required corespine and schema_position fields in their YAML frontmatter, violating CS-CREATION-001-C4 and WISDOM-005. These pre-date the CS-CREATION-001-C4 constraint (wire_date: 2026-07-26)."
+    affected_artifacts:
+      - "~93 .md files in /root of repo (CDS-*, ELEMENT-*, ETSC-*, COMPACTION-*, POST-COMPACTION-*, etc.)"
+      - "memory/CORESPINE-REGISTRY.yaml (CS-CREATION-001-C4)"
+    pe_score: 18.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-38"
+    status: PENDING
+    resolved_date: null
+    propagation_required: true
+    propagation_verified: null
+    added_session: "2026-09-12"
+    resolution_reference: null
+    governor_brief: "93+ governance files predate the CS-CREATION-001-C4 constraint (2026-07-26) and lack required corespine/schema_position fields. Decision needed on remediation strategy: (1) bulk retrofit — add minimal fields to all 93 files (automated pass); (2) grandfather pre-constraint files — new files enforce, old files retrofitted only during active revision; (3) phased retrofit — highest-referenced files first. This is a Phase B candidate task."
+
+  - finding_id: FND-20260912-007
+    category: ORPHAN
+    description: "PE-CONFIG.yaml registry section references memory/PLATFORM-STATUS.yaml as platform_status_path with halt_if_unreachable: true, but the file did not exist. When PE runs in Phase B, it would halt immediately on startup."
+    affected_artifacts:
+      - "memory/PE-CONFIG.yaml"
+      - "memory/PLATFORM-STATUS.yaml"
+    pe_score: 25.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-37"
+    status: RESOLVED
+    resolved_date: "2026-09-12"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-09-12"
+    resolution_reference: "memory/PLATFORM-STATUS.yaml created 2026-09-12 — stub file with current phase, health summary, and gate status. PE will no longer halt on this reference. File will be auto-maintained by weekly evolution engine going forward."
+
+## BATCH PLAN (updated 2026-09-12)
+
+  WEEK-2026-37 (2026-09-12 — THIS SESSION):
+    findings_scanned: 7
+    findings_resolved: [FND-20260912-002, FND-20260912-005, FND-20260912-007]
+    findings_governor_pending: [FND-20260912-001, FND-20260912-004]
+    findings_deferred_next: [FND-20260912-003, FND-20260912-006]
+    governor_items: 4 total (FND-20260912-001, FND-20260912-003, FND-20260912-004, FND-20260912-006)
+
+  WEEK-2026-38 (2026-09-19):
+    findings: [FND-20260912-003, FND-20260912-006]
+    count: 2
+    note: "Pending Governor decisions. If Governor resolves FND-20260912-004 this week, add to WEEK-38 processing."
