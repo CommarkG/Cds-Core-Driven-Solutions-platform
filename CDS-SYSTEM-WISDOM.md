@@ -252,16 +252,42 @@ must return zero.
 
 ---
 
+## WISDOM-012 — DECLARATION IS NOT EXECUTION
+
+**Principle:** Declaring that automation runs is not evidence that it runs.
+A trigger ratified on paper but never confirmed to fire is indistinguishable from
+no trigger at all — until the silence is noticed weeks later.
+Every automated process must produce an observable artifact on each execution.
+The absence of that artifact is the falsification test.
+
+**Mechanical enforcement:**
+- Weekly evolution engine produces WEEKLY-EVOLUTION-REPORT-[YYYY]-[WW].md on every run.
+- If no such report exists for 2+ consecutive weeks, the trigger is not running → WARN to Governor.
+- Cloud agent prompt must confirm branch creation and commit as execution proof before ending.
+- The weekly report file on disk is the only valid completion declaration for a scheduled run.
+
+**Falsification test:** Check existence of WEEKLY-EVOLUTION-REPORT-[YYYY]-[WW].md for each
+week since engine ratification (2026-07-25). Any gap of more than one week with no file =
+trigger not running = WARN. First verified execution: 2026-09-19 (WEEK-2026-38).
+
+**Governor note (2026-09-19 — extracted from first weekly evolution session):**
+> "The engine was ratified 2026-07-25 and configured to run every Saturday.
+> Zero sessions ran between 2026-07-25 and 2026-09-19 — eight weeks of silent non-execution.
+> Declaration without execution proof is an assumption, not governance."
+
+---
+
 ## WISDOM HEALTH
 
 ```
-Total wisdom principles:  11
+Total wisdom principles:  12
 Principles with mechanical enforcement (fully active):    9
-Principles with mechanical enforcement (partially active): 2
+Principles with mechanical enforcement (partially active): 3
   WISDOM-010: branch protection = Phase B (not yet built)
   WISDOM-011: deep-root protocol always-loaded; hook automation = Phase B
-Principles with falsification tests:    11 / 11
-WISDOM HEALTH: 82% active enforcement (11/11 declared, 9/11 fully active)
+  WISDOM-012: weekly report file = execution proof (active); Governor ratification pending
+Principles with falsification tests:    12 / 12
+WISDOM HEALTH: 75% active enforcement (12/12 declared, 9/12 fully active)
 ```
 
 ---
@@ -281,4 +307,5 @@ Submit to Governor for ratification as part of the next session's work package.
 Rate limit: maximum 2 new wisdom principles per session (prevents inflation).
 
 ---
-Version 1.0 — 9 principles — ratified 2026-07-25 | Governor: Yariv Fink
+Version 1.2 — 12 principles — ratified 2026-07-25, updated 2026-09-19 | Governor: Yariv Fink
+WISDOM-012 pending Governor ratification | "The platform improves permanently. Not per session. Permanently."

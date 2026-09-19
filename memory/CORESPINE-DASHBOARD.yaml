@@ -2,7 +2,7 @@
 document_id: CORESPINE-DASHBOARD
 version: 1.0
 created: 2026-07-08T19:35:00Z
-last_updated: 2026-07-08T19:35:00Z
+last_updated: 2026-09-19T07:00:00Z
 authority: CDS Platform (data view from CORESPINE-REGISTRY.yaml)
 purpose: "Real-time visibility into corespine governance state: ratification status, enforcement coverage, proposed constraints, blocking items"
 data_source: "memory/CORESPINE-REGISTRY.yaml (single source of truth)"
@@ -13,7 +13,8 @@ corespine_inventory_summary:
   partially_ratified: 1
   pending_ratification: 1
   proposed_constraints_pending: 3
-  measurement_timestamp: 2026-07-26T00:00:00Z
+  measurement_timestamp: 2026-09-19T07:00:00Z
+  note: "2026-09-19 — CS-PE-001 structural placement fixed in registry (FND-20260919-002). CS-CREATION-001 constraint count corrected from 1 to 4 (FND-20260919-003)."
 
 corespine_status_breakdown:
 
@@ -52,16 +53,21 @@ corespine_status_breakdown:
     name: "Creation Definition Corespine"
     ratification_state: PENDING
     domain: "any act of creation"
-    enforcement_score: "0% (design phase)"
-    spine_constraints_count: 1
-    active_constraints: 1
+    enforcement_score: "partial (C3+C4 active via protocol; C1 design phase; PROPOSED-1 pending)"
+    spine_constraints_count: 4
+    active_constraints: 3
     proposed_constraints: 1
     allowed_operations: [Read, Write, Edit, Bash, Glob, Grep]
     blocked_operations: [create_element_without_corespine_declaration, fork_corespine]
     hook_implementation: "pre-tool-corespine-hook.sh (design pattern active)"
     enforcement_code: "scripts/pre-tool-corespine-hook.sh (to be built Phase B)"
     blocking_item: "Awaiting ratification before Phase B (build order)"
+    active_constraints_detail:
+      - "C1: ZF check before creation (design phase)"
+      - "C3: Graphify mandatory at external system creation (ACTIVE — 2026-07-25)"
+      - "C4: Governance artifact must declare schema_position+corespine at Write time (ACTIVE — 2026-07-26)"
     proposal_pending: "CS-CREATION-001-PROPOSED-1: Arm contradiction resolution (block at creation, escalate to Governor)"
+    note_updated: "2026-09-19 — FND-20260919-003: dashboard was stale; C3+C4 added to registry 2026-07-25/26 but not reflected here"
 
   CS-THRESHOLD-001:
     name: "Threshold Enforcement Corespine"

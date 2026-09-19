@@ -1,21 +1,22 @@
 ---
 document_id: WEEKLY-FINDINGS-QUEUE
-version: 1.1
+version: 1.2
 created: 2026-07-25
-updated_at: 2026-07-26
+updated_at: 2026-09-19
 authority: CDS (Governor oversight)
 purpose: "Permanent accumulator for all platform findings. Feeds weekly evolution sessions."
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
-  total_findings: 9
+  total_findings: 14
   pending: 0
   batched: 0
-  resolved: 9
+  resolved: 14
   deferred: 0
   queue_status: HEALTHY
-  last_session_scan: "2026-07-27"
-  last_weekly_session: null
-  next_weekly_session: "2026-08-01 (Saturday)"
+  last_session_scan: "2026-09-19"
+  last_weekly_session: "2026-09-19 (WEEK-2026-38 — first ever run)"
+  next_weekly_session: "2026-09-26 (Saturday)"
+  governor_brief: "WISDOM-012 added pending Governor ratification. See WEEKLY-EVOLUTION-REPORT-2026-38.md."
 ---
 
 # Weekly Findings Queue
@@ -198,3 +199,96 @@ findings:
     findings: [FND-20260726-002]
     count: 1
     note: "Dependency graph — first deliverable of Phase B, before other build work."
+
+## SESSION 2026-09-19 FINDINGS (WEEK-2026-38 — first weekly evolution session)
+
+  - finding_id: FND-20260919-001
+    category: STALE
+    description: "Weekly evolution engine has never run. last_weekly_session: null in queue despite engine being ratified 2026-07-25 and scheduled every Saturday. All 5 engine falsification tests were failing. 8+ weeks of silent non-execution."
+    affected_artifacts:
+      - "memory/WEEKLY-FINDINGS-QUEUE.yaml"
+      - "CDS-WEEKLY-EVOLUTION-ENGINE.md"
+    pe_score: 45.0
+    severity: CRITICAL
+    batch_assignment: "WEEK-2026-38"
+    status: RESOLVED
+    resolved_date: "2026-09-19"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-09-19"
+    resolution_reference: "WEEKLY-EVOLUTION-REPORT-2026-38.md — this session IS the first run. Queue updated_at and last_weekly_session set. WISDOM-012 extracted (declaration ≠ execution)."
+
+  - finding_id: FND-20260919-002
+    category: STALE
+    description: "CS-PE-001 is placed inside the proposed_ratifications block in CORESPINE-REGISTRY.yaml instead of the corespines array. FND-20260725-002 resolution claimed entry was added but structural placement was wrong."
+    affected_artifacts:
+      - "memory/CORESPINE-REGISTRY.yaml"
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 35.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-38"
+    status: RESOLVED
+    resolved_date: "2026-09-19"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-09-19"
+    resolution_reference: "memory/CORESPINE-REGISTRY.yaml — CS-PE-001 block moved from proposed_ratifications to corespines array. metadata.last_structural_fix note added. 2026-09-19."
+
+  - finding_id: FND-20260919-003
+    category: STALE
+    description: "CORESPINE-DASHBOARD.yaml CS-CREATION-001 shows spine_constraints_count: 1 but registry has 4 constraints (C1, PROPOSED-1, C3, C4 — C3 and C4 added 2026-07-25/26 after dashboard was last updated)."
+    affected_artifacts:
+      - "memory/CORESPINE-DASHBOARD.yaml"
+      - "memory/CORESPINE-REGISTRY.yaml"
+    pe_score: 25.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-38"
+    status: RESOLVED
+    resolved_date: "2026-09-19"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-09-19"
+    resolution_reference: "memory/CORESPINE-DASHBOARD.yaml — CS-CREATION-001 spine_constraints_count updated 1→4, active_constraints 1→3, constraint detail added, last_updated and measurement_timestamp refreshed. 2026-09-19."
+
+  - finding_id: FND-20260919-004
+    category: STALE
+    description: "CDS-SYSTEM-WISDOM.md footer says 'Version 1.0 — 9 principles' but document contains 11 principles (WISDOM-010 and WISDOM-011 were added after version was set). WISDOM HEALTH block is correct but footer is wrong."
+    affected_artifacts:
+      - "CDS-SYSTEM-WISDOM.md"
+    pe_score: 15.0
+    severity: LOW
+    batch_assignment: "WEEK-2026-38"
+    status: RESOLVED
+    resolved_date: "2026-09-19"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-09-19"
+    resolution_reference: "CDS-SYSTEM-WISDOM.md — version updated to 1.2, principle count updated to 12 (includes WISDOM-012), WISDOM HEALTH block updated, footer corrected. 2026-09-19."
+
+  - finding_id: FND-20260919-005
+    category: STALE
+    description: "PLATFORM-ACCOUNTABILITY.yaml last_updated stuck at 2026-07-08T19:00:00Z — not updated in 11 weeks despite multiple significant platform changes (corespines added, schemas locked, patterns created, wisdom added)."
+    affected_artifacts:
+      - "memory/PLATFORM-ACCOUNTABILITY.yaml"
+    pe_score: 22.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-38"
+    status: RESOLVED
+    resolved_date: "2026-09-19"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-09-19"
+    resolution_reference: "memory/PLATFORM-ACCOUNTABILITY.yaml — version bumped to 1.1, last_updated set to 2026-09-19T07:00:00Z, governor_brief note added. Full content refresh deferred — Governor review needed for accurate Phase B status. 2026-09-19."
+
+## BATCH PLAN (updated 2026-09-19)
+
+  WEEK-2026-38 (2026-09-19 — first evolution session):
+    findings_resolved: [FND-20260919-001, FND-20260919-002, FND-20260919-003, FND-20260919-004, FND-20260919-005]
+    count: 5
+    wisdom_extracted: [WISDOM-012 — pending Governor ratification]
+    note: "First-ever weekly evolution session run. Engine was silent 8 weeks."
+
+  WEEK-2026-39 (2026-09-26):
+    findings_pending: []
+    count: 0
+    note: "Queue is clear. Session-start scan may add new findings."

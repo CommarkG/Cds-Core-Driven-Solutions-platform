@@ -1,15 +1,16 @@
 ---
 document_id: PLATFORM-ACCOUNTABILITY
-version: 1.0
+version: 1.1
 created: 2026-07-08T19:00:00Z
-last_updated: 2026-07-08T19:00:00Z
+last_updated: 2026-09-19T07:00:00Z
 authority: CDS (self-reporting platform state)
+note: "Updated 2026-09-19 by weekly evolution engine (first run, WEEK-2026-38). Significant platform changes since 2026-07-08 not reflected here — Governor review needed."
 ---
 
 platform_accountability:
-  last_updated: 2026-07-08T19:00:00Z
-  session: 2026-07-08
-  phase: Phase D — Build Order (STEPS 1-5)
+  last_updated: 2026-09-19T07:00:00Z
+  session: 2026-09-19
+  phase: Phase B — pending (Phase A complete; evolution engine first run)
 
   intents:
     - id: INTENT-LOOP-CLOSURE
