@@ -2,7 +2,7 @@
 registry_id: CORESPINE-REGISTRY
 version: 1.1
 created: 2026-07-08
-last_updated: 2026-07-20
+last_updated: 2026-09-26
 authority: "Brain (CDS Governor oversight via Yariv)"
 purpose: "Single source of truth for all corespines and their spine constraints"
 hook_design: "All corespines enforced via pre-tool-corespine-hook.sh on EVERY tool call (reads, writes, searches, creates)"
@@ -142,6 +142,69 @@ corespines:
         hard_coded_check: "RULE-QUAR enforces QUARANTINE status on external paths"
         status: "ACTIVE"
 
+  - id: "CS-PE-001"
+    name: "Priority Engine Governance Corespine"
+    domain: "priority scoring, queue management, work ordering"
+    ratification_state: "RATIFIED"
+    ratification_date: "2026-07-15"
+    ratified_by: "Yariv Fink (Governor)"
+    ratification_record: "memory/RATIFICATION-CS-PE-001.yaml"
+    governance_element_id: "GE-PE-001"
+    platform_element_schema: "CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml"
+    trunk_position: "T-PLATFORM/EXECUTION/PRIORITY-ENGINE"
+    hook_scope: "ALL_QUEUE_OPERATIONS"
+    hook_file: "scripts/pre-pe-scoring-hook.sh"
+    enforcement_code: "pe/src/scoring-engine.ts (Phase B build)"
+    enforcement_score: 0%
+    honest_status: "Corespine ratified. PE-CONFIG.yaml created. Implementation (scoring-engine.ts, queue-manager.ts) pending Phase B build."
+    allowed_operations:
+      - read_action_metadata
+      - query_corespine_registry
+      - query_platform_goal
+      - query_platform_status
+      - query_pe_config
+      - calculate_score
+      - modify_queue_position
+      - log_queue_change
+      - escalate_to_governor
+    blocked_operations:
+      - modify_formula_coefficients_without_approval
+      - bypass_ratification_check
+      - reorder_queue_without_logging
+      - hide_trust_modifier_from_metadata
+      - continue_when_registry_unreachable
+    spine_constraints:
+      - constraint_id: "CS-PE-001-C1"
+        name: "Formula reads from config, not hardcoded"
+        description: "All formula coefficients must be read from PE-CONFIG.yaml at runtime."
+        hard_coded_check: "RULE-PE-FORMULA: grep scoring engine for hardcoded numeric coefficient values — must find zero"
+        falsification_test: "Change decay_rate in PE-CONFIG.yaml. Confirm next cycle uses new rate without code deployment."
+        status: "ACTIVE"
+      - constraint_id: "CS-PE-001-C2"
+        name: "Score calculation is deterministic"
+        description: "Identical input parameters must produce bit-identical output scores."
+        hard_coded_check: "RULE-PE-DETERMINISM: automated test runs same input 1000 times, verifies identical output"
+        falsification_test: "Run PE scoring on fixed input set 10 times. All 10 outputs must match byte-for-byte."
+        status: "ACTIVE"
+      - constraint_id: "CS-PE-001-C3"
+        name: "Every queue change is logged"
+        description: "Queue position changes must be logged with: action_id, old_position, new_position, reason, timestamp."
+        hard_coded_check: "RULE-PE-AUDIT: queue operations fail if audit log is unreachable"
+        falsification_test: "Promote action in queue. Verify audit log contains all required fields."
+        status: "ACTIVE"
+      - constraint_id: "CS-PE-001-C4"
+        name: "PE halts when CORESPINE-REGISTRY unreachable"
+        description: "If CORESPINE-REGISTRY.yaml is unreachable, PE must HALT and escalate. No default-allow."
+        hard_coded_check: "RULE-PE-HALT: PE startup check pings registry; failure triggers halt protocol"
+        falsification_test: "Make CORESPINE-REGISTRY unreachable. PE must halt and log HALT message."
+        status: "ACTIVE"
+    proposed_constraints:
+      - constraint_id: "CS-PE-001-PROPOSED-1"
+        name: "LEL confidence integration"
+        description: "When LEL pattern confidence > 0.8, risk field may be adjusted automatically with logging."
+        status: "PROPOSED — awaiting LEL integration in Phase B"
+    registry_fix_note: "Moved from proposed_ratifications to corespines array 2026-09-26 (FND-20260926-003). Was incorrectly positioned in wrong section despite RATIFIED status."
+
   - id: "CS-AI-BEHAVIOR-001"
     name: "AI Behavior Corespine"
     domain: "all AI reasoning and output"
@@ -204,67 +267,5 @@ proposed_ratifications:
     description: "Agent demotion policy: automatic on false_positive_rate > 0.2"
     proposed_by: "CDS session 2026-07-08"
     severity: "MEDIUM"
-
-  - id: "CS-PE-001"
-    name: "Priority Engine Governance Corespine"
-    domain: "priority scoring, queue management, work ordering"
-    ratification_state: "RATIFIED"
-    ratification_date: "2026-07-15"
-    ratified_by: "Yariv Fink (Governor)"
-    ratification_record: "memory/RATIFICATION-CS-PE-001.yaml"
-    governance_element_id: "GE-PE-001"
-    platform_element_schema: "CANONICAL-PLATFORM-ELEMENT-SCHEMA.yaml"
-    trunk_position: "T-PLATFORM/EXECUTION/PRIORITY-ENGINE"
-    hook_scope: "ALL_QUEUE_OPERATIONS"
-    hook_file: "scripts/pre-pe-scoring-hook.sh"
-    enforcement_code: "pe/src/scoring-engine.ts (Phase B build)"
-    enforcement_score: 0%
-    honest_status: "Corespine ratified. PE-CONFIG.yaml created. Implementation (scoring-engine.ts, queue-manager.ts) pending Phase B build."
-    allowed_operations:
-      - read_action_metadata
-      - query_corespine_registry
-      - query_platform_goal
-      - query_platform_status
-      - query_pe_config
-      - calculate_score
-      - modify_queue_position
-      - log_queue_change
-      - escalate_to_governor
-    blocked_operations:
-      - modify_formula_coefficients_without_approval
-      - bypass_ratification_check
-      - reorder_queue_without_logging
-      - hide_trust_modifier_from_metadata
-      - continue_when_registry_unreachable
-    spine_constraints:
-      - constraint_id: "CS-PE-001-C1"
-        name: "Formula reads from config, not hardcoded"
-        description: "All formula coefficients must be read from PE-CONFIG.yaml at runtime."
-        hard_coded_check: "RULE-PE-FORMULA: grep scoring engine for hardcoded numeric coefficient values — must find zero"
-        falsification_test: "Change decay_rate in PE-CONFIG.yaml. Confirm next cycle uses new rate without code deployment."
-        status: "ACTIVE"
-      - constraint_id: "CS-PE-001-C2"
-        name: "Score calculation is deterministic"
-        description: "Identical input parameters must produce bit-identical output scores."
-        hard_coded_check: "RULE-PE-DETERMINISM: automated test runs same input 1000 times, verifies identical output"
-        falsification_test: "Run PE scoring on fixed input set 10 times. All 10 outputs must match byte-for-byte."
-        status: "ACTIVE"
-      - constraint_id: "CS-PE-001-C3"
-        name: "Every queue change is logged"
-        description: "Queue position changes must be logged with: action_id, old_position, new_position, reason, timestamp."
-        hard_coded_check: "RULE-PE-AUDIT: queue operations fail if audit log is unreachable"
-        falsification_test: "Promote action in queue. Verify audit log contains all required fields."
-        status: "ACTIVE"
-      - constraint_id: "CS-PE-001-C4"
-        name: "PE halts when CORESPINE-REGISTRY unreachable"
-        description: "If CORESPINE-REGISTRY.yaml is unreachable, PE must HALT and escalate. No default-allow."
-        hard_coded_check: "RULE-PE-HALT: PE startup check pings registry; failure triggers halt protocol"
-        falsification_test: "Make CORESPINE-REGISTRY unreachable. PE must halt and log HALT message."
-        status: "ACTIVE"
-    proposed_constraints:
-      - constraint_id: "CS-PE-001-PROPOSED-1"
-        name: "LEL confidence integration"
-        description: "When LEL pattern confidence > 0.8, risk field may be adjusted automatically with logging."
-        status: "PROPOSED — awaiting LEL integration in Phase B"
 
 write_gate: "CORESPINE-WRITE-GATE: before adding, verify (1) corespine_id unique, (2) no spine constraint duplicates, (3) enforcement_code exists or marked PENDING"

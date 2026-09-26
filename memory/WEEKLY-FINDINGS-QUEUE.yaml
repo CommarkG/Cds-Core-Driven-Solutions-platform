@@ -2,20 +2,20 @@
 document_id: WEEKLY-FINDINGS-QUEUE
 version: 1.1
 created: 2026-07-25
-updated_at: 2026-07-26
+updated_at: 2026-09-26
 authority: CDS (Governor oversight)
 purpose: "Permanent accumulator for all platform findings. Feeds weekly evolution sessions."
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
-  total_findings: 9
-  pending: 0
+  total_findings: 14
+  pending: 2
   batched: 0
-  resolved: 9
+  resolved: 12
   deferred: 0
   queue_status: HEALTHY
-  last_session_scan: "2026-07-27"
-  last_weekly_session: null
-  next_weekly_session: "2026-08-01 (Saturday)"
+  last_session_scan: "2026-09-26"
+  last_weekly_session: "2026-09-26 (WEEK-2026-39 — first formal weekly session)"
+  next_weekly_session: "2026-10-03 (Saturday)"
 ---
 
 # Weekly Findings Queue
@@ -180,7 +180,92 @@ findings:
       Graphify Mode B added to CDS-GRAPHIFY-MANDATORY-PROTOCOL.md (GOV authorization 2026-07-27).
     note: "CISEM improvement item 3. Code layer complete. Governance layer auto-runs 2026-08-01 (weekly agent)."
 
-## BATCH PLAN (updated 2026-07-26)
+## SESSION 2026-09-26 FINDINGS (WEEK-2026-39 — first formal weekly evolution session)
+
+  - finding_id: FND-20260926-001
+    category: STALE
+    description: "WEEKLY-FINDINGS-QUEUE.yaml updated_at was 2026-07-26 (2 months stale) and last_weekly_session was null — evolution engine falsification test failure: no formal weekly session had ever run."
+    affected_artifacts:
+      - "memory/WEEKLY-FINDINGS-QUEUE.yaml"
+    pe_score: 38.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-39"
+    status: RESOLVED
+    resolved_date: "2026-09-26"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-09-26"
+    resolution_reference: "memory/WEEKLY-FINDINGS-QUEUE.yaml updated 2026-09-26: updated_at, last_weekly_session, next_weekly_session, queue_health all corrected. WEEK-2026-39 is the first formal weekly session."
+
+  - finding_id: FND-20260926-002
+    category: STALE
+    description: "CORESPINE-DASHBOARD.yaml showed CS-CREATION-001 with spine_constraints_count=1 and active_constraints=1, but CORESPINE-REGISTRY shows 4 constraints (3 ACTIVE: C1, C3, C4; 1 PROPOSED: PROPOSED-1). Dashboard was 2 months stale."
+    affected_artifacts:
+      - "memory/CORESPINE-DASHBOARD.yaml"
+      - "memory/CORESPINE-REGISTRY.yaml"
+    pe_score: 30.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-39"
+    status: RESOLVED
+    resolved_date: "2026-09-26"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-09-26"
+    resolution_reference: "memory/CORESPINE-DASHBOARD.yaml updated 2026-09-26: CS-CREATION-001 spine_constraints_count corrected to 4, active_constraints to 3, timestamps refreshed. Active constraints now documented (C1, C3, C4)."
+
+  - finding_id: FND-20260926-003
+    category: ORPHAN
+    description: "CS-PE-001 (a fully RATIFIED corespine) was nested inside the proposed_ratifications block in CORESPINE-REGISTRY.yaml instead of the corespines array. This made a ratified corespine appear structurally as a pending proposal."
+    affected_artifacts:
+      - "memory/CORESPINE-REGISTRY.yaml"
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 32.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-39"
+    status: RESOLVED
+    resolved_date: "2026-09-26"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-09-26"
+    resolution_reference: "memory/CORESPINE-REGISTRY.yaml updated 2026-09-26: CS-PE-001 moved from proposed_ratifications to corespines array. Duplicate entry removed from proposed_ratifications. Registry now has 5 corespines in main array as intended."
+
+  - finding_id: FND-20260926-004
+    category: PROPAGATION
+    description: "dependency-graph.yaml Layer 2 (governance docs, ~396 files) has been PENDING_API_KEY since 2026-07-27. Mode B run was scheduled 2026-08-01 but never executed. Graphify-out/ directory does not exist. Governance dependency graph is uncharted."
+    affected_artifacts:
+      - "dependency-graph.yaml"
+    pe_score: 25.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-40"
+    status: PENDING
+    resolved_date: null
+    propagation_required: false
+    propagation_verified: null
+    added_session: "2026-09-26"
+    resolution_reference: null
+    governor_brief: "Mode B graphify requires ANTHROPIC_API_KEY in the cloud agent shell environment. Not available in this session. Governor decision needed: (1) provide API key to cloud agent environment so Mode B runs automatically, or (2) accept that governance layer remains uncharted until Phase B. Recommend option 1 — governance cross-references are the most valuable use of graphify."
+
+  - finding_id: FND-20260926-005
+    category: PATTERN
+    description: "All 5 PAT specs (PAT-001 through PAT-005) have check_status: DEFINED but none have check_status: ACTIVE. ARCHIVE HEALTH = 0% active enforcement. PAT hooks require Phase B implementation. Has been in this state since 2026-07-26 (FND-20260725-004 marked PARTIAL pending Phase B)."
+    affected_artifacts:
+      - "memory/PAT-001-SPEC.yaml"
+      - "memory/PAT-002-SPEC.yaml"
+      - "memory/PAT-003-SPEC.yaml"
+      - "memory/PAT-004-SPEC.yaml"
+      - "memory/PAT-005-SPEC.yaml"
+    pe_score: 22.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-40"
+    status: PENDING
+    resolved_date: null
+    propagation_required: false
+    propagation_verified: null
+    added_session: "2026-09-26"
+    resolution_reference: null
+    governor_brief: "All 5 pattern checks are DEFINED but not yet implemented as running enforcement. ARCHIVE HEALTH remains 0% active. This is the expected state for Phase A (pre-build) but Phase B has not formally started. Governor decision needed: (1) authorize Phase B start so PAT hooks can be built, or (2) accept that ARCHIVE HEALTH stays 0% until Phase B gate opens."
+
+## BATCH PLAN (updated 2026-09-26)
 
   WEEK-2026-31 (2026-08-01):
     findings_resolved: [FND-20260725-002, FND-20260725-007, FND-20260725-004, FND-20260725-001]
@@ -198,3 +283,15 @@ findings:
     findings: [FND-20260726-002]
     count: 1
     note: "Dependency graph — first deliverable of Phase B, before other build work."
+
+  WEEK-2026-39 (2026-09-26 — FIRST FORMAL WEEKLY SESSION):
+    findings_processed: [FND-20260926-001, FND-20260926-002, FND-20260926-003]
+    findings_resolved_count: 3
+    findings_added_count: 5
+    governor_briefs: [FND-20260926-004, FND-20260926-005]
+    session_note: "First formal weekly evolution session. Queue was empty (all 9 prior findings RESOLVED). Session-start scan generated 5 new findings. 3 resolved in-session. 2 deferred to Governor."
+
+  WEEK-2026-40 (2026-10-03):
+    findings: [FND-20260926-004, FND-20260926-005]
+    count: 2
+    note: "Both require Governor decision before resolution. Pending briefs included in findings above."
