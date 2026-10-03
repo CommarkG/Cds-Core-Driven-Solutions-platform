@@ -7,9 +7,9 @@ authority: CDS (self-reporting platform state)
 ---
 
 platform_accountability:
-  last_updated: 2026-07-08T19:00:00Z
-  session: 2026-07-08
-  phase: Phase D — Build Order (STEPS 1-5)
+  last_updated: 2026-10-03T07:13:00Z
+  session: 2026-10-03 (Weekly Evolution Session WEEK-2026-40 — first session since 2026-07-27)
+  phase: Phase B — Build (Phase A→B ratified 2026-07-27 GOV-20260727-001)
 
   intents:
     - id: INTENT-LOOP-CLOSURE

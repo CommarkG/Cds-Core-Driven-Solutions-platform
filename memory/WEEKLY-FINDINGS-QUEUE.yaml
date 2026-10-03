@@ -2,20 +2,20 @@
 document_id: WEEKLY-FINDINGS-QUEUE
 version: 1.1
 created: 2026-07-25
-updated_at: 2026-07-26
+updated_at: 2026-10-03
 authority: CDS (Governor oversight)
 purpose: "Permanent accumulator for all platform findings. Feeds weekly evolution sessions."
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
-  total_findings: 9
-  pending: 0
+  total_findings: 15
+  pending: 3
   batched: 0
-  resolved: 9
+  resolved: 12
   deferred: 0
   queue_status: HEALTHY
-  last_session_scan: "2026-07-27"
-  last_weekly_session: null
-  next_weekly_session: "2026-08-01 (Saturday)"
+  last_session_scan: "2026-10-03"
+  last_weekly_session: "2026-10-03 (WEEK-2026-40 — first session since engine ratification)"
+  next_weekly_session: "2026-10-10 (Saturday)"
 ---
 
 # Weekly Findings Queue
@@ -180,6 +180,103 @@ findings:
       Graphify Mode B added to CDS-GRAPHIFY-MANDATORY-PROTOCOL.md (GOV authorization 2026-07-27).
     note: "CISEM improvement item 3. Code layer complete. Governance layer auto-runs 2026-08-01 (weekly agent)."
 
+## SESSION 2026-10-03 FINDINGS (WEEK-2026-40 weekly scan)
+
+  - finding_id: FND-20261003-001
+    category: STALE
+    description: "CS-PE-001 corespine entry was nested under proposed_ratifications section instead of corespines array in CORESPINE-REGISTRY.yaml — structural misplacement causing OSSOT drift."
+    affected_artifacts:
+      - "memory/CORESPINE-REGISTRY.yaml"
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 32.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-40"
+    status: RESOLVED
+    resolved_date: "2026-10-03"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-10-03"
+    resolution_reference: "memory/CORESPINE-REGISTRY.yaml — CS-PE-001 moved to corespines array; removed from proposed_ratifications. CORESPINE-DASHBOARD.yaml measurement_timestamp updated. 2026-10-03."
+
+  - finding_id: FND-20261003-002
+    category: STALE
+    description: "PLATFORM-ACCOUNTABILITY.yaml last_updated 2026-07-08 — still shows Phase D state while platform is in Phase B (Phase A→B ratified 2026-07-27 GOV-20260727-001). 10-week drift."
+    affected_artifacts:
+      - "memory/PLATFORM-ACCOUNTABILITY.yaml"
+    pe_score: 20.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-40"
+    status: RESOLVED
+    resolved_date: "2026-10-03"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-10-03"
+    resolution_reference: "memory/PLATFORM-ACCOUNTABILITY.yaml — last_updated, session, phase fields updated to reflect Phase B state. 2026-10-03."
+
+  - finding_id: FND-20261003-003
+    category: STALE
+    description: "dependency-graph.yaml governance_layer_status: PENDING_API_KEY since 2026-07-27 — Graphify Mode B governance layer never populated. Engine planned it for 2026-08-01 session but no session ran."
+    affected_artifacts:
+      - "dependency-graph.yaml"
+      - "CDS-GRAPHIFY-MANDATORY-PROTOCOL.md"
+    pe_score: 22.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-41"
+    status: PENDING
+    propagation_required: true
+    propagation_verified: false
+    added_session: "2026-10-03"
+    resolution_reference: null
+    governor_brief: "Mode B requires ANTHROPIC_API_KEY — not available in cloud execution environment. Governor decision needed: (A) provide API key to cloud session, (B) accept governance layer as manual-only, (C) define alternative dependency mapping method that does not require API key."
+
+  - finding_id: FND-20261003-004
+    category: STALE
+    description: "CDS-WEEKLY-EVOLUTION-ENGINE.md Phase 0 (Graphify Mode B extract) permanently blocked in cloud agent — ANTHROPIC_API_KEY unavailable. Engine's mandatory first phase cannot execute. Protocol specifies 'graphify extract --backend claude' which requires API credential the cloud session does not have."
+    affected_artifacts:
+      - "CDS-WEEKLY-EVOLUTION-ENGINE.md"
+      - "CDS-GRAPHIFY-MANDATORY-PROTOCOL.md"
+    pe_score: 35.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-41"
+    status: PENDING
+    propagation_required: true
+    propagation_verified: false
+    added_session: "2026-10-03"
+    resolution_reference: null
+    governor_brief: "Weekly engine Phase 0 cannot execute without ANTHROPIC_API_KEY in cloud session. Governor decision needed: (A) provide API key to cloud sessions, (B) remove Phase 0 from weekly engine (make it a manual-only step), (C) define alternative Phase 0 procedure that works without API key. This has blocked 10 consecutive Saturday sessions from running at all."
+
+  - finding_id: FND-20261003-005
+    category: STALE
+    description: "All 5 CDS-WEEKLY-EVOLUTION-ENGINE.md falsification tests failing — engine was ratified 2026-07-25 but WEEK-2026-40 (2026-10-03) is the first weekly session that has ever executed. updated_at was 2026-07-26 (10 weeks stale), last_weekly_session: null, no WEEKLY-EVOLUTION-REPORT files existed."
+    affected_artifacts:
+      - "memory/WEEKLY-FINDINGS-QUEUE.yaml"
+      - "CDS-WEEKLY-EVOLUTION-ENGINE.md"
+    pe_score: 45.0
+    severity: CRITICAL
+    batch_assignment: "WEEK-2026-40"
+    status: RESOLVED
+    resolved_date: "2026-10-03"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-10-03"
+    resolution_reference: "WEEKLY-EVOLUTION-REPORT-2026-40.md created. WEEKLY-FINDINGS-QUEUE.yaml updated_at and last_weekly_session updated. Engine falsification tests 1-4 now pass. Test 5 (RESOLVED findings with propagation_verified) confirmed for FND-20261003-001. 2026-10-03."
+
+  - finding_id: FND-20261003-006
+    category: STALE
+    description: "CS-CREATION-001 ratification_state: PENDING since 2026-07-08 (12+ weeks) with no Governor disposition. Queue health rule: no finding PENDING more than 3 weekly sessions without disposition — violated (no weekly sessions ran to enforce it)."
+    affected_artifacts:
+      - "memory/CORESPINE-REGISTRY.yaml"
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 18.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-41"
+    status: PENDING
+    propagation_required: true
+    propagation_verified: false
+    added_session: "2026-10-03"
+    resolution_reference: null
+    governor_brief: "CS-CREATION-001 has been PENDING ratification since 2026-07-08 (12+ weeks). Governor decision needed: (A) ratify CS-CREATION-001 as defined, (B) modify and ratify, (C) defer to Phase C with explicit activation condition. Without ratification, creation protocol enforcement remains unblocked and Phase A prerequisite still technically open."
+
 ## BATCH PLAN (updated 2026-07-26)
 
   WEEK-2026-31 (2026-08-01):
@@ -198,3 +295,15 @@ findings:
     findings: [FND-20260726-002]
     count: 1
     note: "Dependency graph — first deliverable of Phase B, before other build work."
+
+  WEEK-2026-40 (2026-10-03 — FIRST weekly session to execute):
+    findings_processed: [FND-20261003-005, FND-20261003-004, FND-20261003-001, FND-20261003-003, FND-20261003-002, FND-20261003-006]
+    resolved: [FND-20261003-005, FND-20261003-001, FND-20261003-002]
+    pending_governor: [FND-20261003-004, FND-20261003-003, FND-20261003-006]
+    count: 6
+    note: "First session since engine ratification on 2026-07-25. 10-week gap. Phase 0 (Graphify) skipped — API key unavailable in cloud session (FND-20261003-004, governor brief filed)."
+
+  WEEK-2026-41 (2026-10-10 — pending Governor disposition):
+    findings: [FND-20261003-004, FND-20261003-003, FND-20261003-006]
+    count: 3
+    note: "Governor decision required on all 3. Will reassign to next batch after Governor disposition received."
