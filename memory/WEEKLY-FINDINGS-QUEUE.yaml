@@ -1,21 +1,22 @@
 ---
 document_id: WEEKLY-FINDINGS-QUEUE
-version: 1.1
+version: 1.2
 created: 2026-07-25
-updated_at: 2026-07-26
+updated_at: 2026-10-10
 authority: CDS (Governor oversight)
 purpose: "Permanent accumulator for all platform findings. Feeds weekly evolution sessions."
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
-  total_findings: 9
-  pending: 0
+  total_findings: 15
+  pending: 1
   batched: 0
-  resolved: 9
+  resolved: 14
   deferred: 0
   queue_status: HEALTHY
-  last_session_scan: "2026-07-27"
-  last_weekly_session: null
-  next_weekly_session: "2026-08-01 (Saturday)"
+  last_session_scan: "2026-10-10"
+  last_weekly_session: "2026-10-10"
+  next_weekly_session: "2026-10-17 (Saturday)"
+  session_note: "WEEK-2026-41 — first automated weekly session. 6 new findings added. 5 resolved this session (FND-20261010-001/002/004/005/006). FND-20261010-003 PENDING — Governor decision required."
 ---
 
 # Weekly Findings Queue
@@ -198,3 +199,109 @@ findings:
     findings: [FND-20260726-002]
     count: 1
     note: "Dependency graph — first deliverable of Phase B, before other build work."
+
+  WEEK-2026-41 (2026-10-10 — first automated weekly session):
+    findings_added: [FND-20261010-001, FND-20261010-002, FND-20261010-003, FND-20261010-004, FND-20261010-005, FND-20261010-006]
+    findings_resolved: [FND-20261010-001, FND-20261010-002, FND-20261010-004, FND-20261010-005, FND-20261010-006]
+    findings_pending_governor: [FND-20261010-003]
+    count: 6 added, 5 resolved, 1 pending Governor
+    note: "CS-PE-001 misplacement fixed. RESOLUTION-LIBRARY recurrence_count field added. WISDOM footer corrected. CORESPINE-DASHBOARD refreshed. Graphify/Mode B escalated to Governor."
+
+## SESSION 2026-10-10 FINDINGS (WEEK-2026-41 automated session)
+
+findings:
+
+  - finding_id: FND-20261010-001
+    category: STALE
+    description: "CS-PE-001 corespine entry was in proposed_ratifications section of CORESPINE-REGISTRY.yaml instead of the corespines array — a structural placement error present since the entry was created."
+    affected_artifacts:
+      - "memory/CORESPINE-REGISTRY.yaml"
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 30.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-41"
+    status: RESOLVED
+    resolved_date: "2026-10-10"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-10-10"
+    resolution_reference: "memory/CORESPINE-REGISTRY.yaml — CS-PE-001 moved to corespines array; metadata.total_corespines: 5 confirmed. memory/CORESPINE-DASHBOARD.yaml — last_updated + measurement_timestamp refreshed. 2026-10-10."
+
+  - finding_id: FND-20261010-002
+    category: OPTIMIZATION
+    description: "RESOLUTION-LIBRARY.yaml uses 'times_applied' field but WISDOM-004, CDS-SYSTEM-WISDOM.md, and CDS-WEEKLY-EVOLUTION-ENGINE.md all reference 'recurrence_count' — field name mismatch prevents automated PAT spec escalation from working."
+    affected_artifacts:
+      - "memory/RESOLUTION-LIBRARY.yaml"
+      - "CDS-SYSTEM-WISDOM.md"
+      - "CDS-WEEKLY-EVOLUTION-ENGINE.md"
+    pe_score: 28.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-41"
+    status: RESOLVED
+    resolved_date: "2026-10-10"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-10-10"
+    resolution_reference: "memory/RESOLUTION-LIBRARY.yaml — recurrence_count field added to all 4 pattern entries (initial values: MECHANICAL-CLAIM 1, others 0). field_note added to metadata. CDS-WEEKLY-EVOLUTION-ENGINE.md and CDS-SYSTEM-WISDOM.md already use the correct field name — no change needed. 2026-10-10."
+
+  - finding_id: FND-20261010-003
+    category: PROPAGATION
+    description: "graphify-out/ directory does not exist; dependency-graph.yaml governance layer has been PENDING_API_KEY since 2026-07-27 (10+ weeks). Graphify Mode B governance layer extraction never ran as scheduled."
+    affected_artifacts:
+      - "dependency-graph.yaml"
+      - "graphify-out/ (absent)"
+      - "CDS-GRAPHIFY-MANDATORY-PROTOCOL.md"
+    pe_score: 22.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-41"
+    status: PENDING
+    governor_brief: "Graphify Mode B (governance layer extraction) was scheduled for 2026-08-01 but has not run. It requires ANTHROPIC_API_KEY in the cloud agent environment. Decision needed: (1) provide API key in cloud agent env vars so Mode B can run automatically each Saturday, OR (2) acknowledge that governance layer is deferred to Phase B manual run, OR (3) remove Mode B from weekly automated protocol and keep it as a manual Phase B gate. Current state: dependency-graph.yaml code layer is CURRENT from 2026-07-27 but governance layer shows PENDING_API_KEY."
+    propagation_required: false
+    propagation_verified: null
+    added_session: "2026-10-10"
+    resolution_reference: null
+
+  - finding_id: FND-20261010-004
+    category: STALE
+    description: "WEEKLY-FINDINGS-QUEUE.yaml showed last_weekly_session: null and next_weekly_session: '2026-08-01 (Saturday)' — administrative fields stale since first creation, reflecting that no weekly session had ever run."
+    affected_artifacts:
+      - "memory/WEEKLY-FINDINGS-QUEUE.yaml"
+    pe_score: 20.0
+    severity: LOW
+    batch_assignment: "WEEK-2026-41"
+    status: RESOLVED
+    resolved_date: "2026-10-10"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-10-10"
+    resolution_reference: "memory/WEEKLY-FINDINGS-QUEUE.yaml — last_weekly_session: 2026-10-10, next_weekly_session: 2026-10-17, updated_at: 2026-10-10. 2026-10-10."
+
+  - finding_id: FND-20261010-005
+    category: STALE
+    description: "CORESPINE-DASHBOARD.yaml last_updated field showed 2026-07-08T19:35:00Z (creation date) despite being updated on 2026-07-26 as part of FND-20260725-002 resolution."
+    affected_artifacts:
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 18.0
+    severity: LOW
+    batch_assignment: "WEEK-2026-41"
+    status: RESOLVED
+    resolved_date: "2026-10-10"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-10-10"
+    resolution_reference: "memory/CORESPINE-DASHBOARD.yaml — version 1.0→1.1, last_updated and measurement_timestamp updated to 2026-10-10. 2026-10-10."
+
+  - finding_id: FND-20261010-006
+    category: STALE
+    description: "CDS-SYSTEM-WISDOM.md footer reads 'Version 1.0 — 9 principles — ratified 2026-07-25' but the document contains 11 principles (WISDOM-010 and WISDOM-011 added after initial ratification)."
+    affected_artifacts:
+      - "CDS-SYSTEM-WISDOM.md"
+    pe_score: 15.0
+    severity: LOW
+    batch_assignment: "WEEK-2026-41"
+    status: RESOLVED
+    resolved_date: "2026-10-10"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-10-10"
+    resolution_reference: "CDS-SYSTEM-WISDOM.md — footer updated to 'Version 1.2 — 11 principles' with addition dates for WISDOM-010 (2026-07-26) and WISDOM-011 (2026-07-27). WISDOM HEALTH block updated with last_updated date. 2026-10-10."

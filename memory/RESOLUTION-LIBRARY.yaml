@@ -11,6 +11,7 @@ resolution_templates:
     pattern_name: "Mechanical claim lacks falsification test"
     confidence_score: 0.7
     sessions_confirmed: 2
+    recurrence_count: 1
     status: ACTIVE
 
     resolution_action: "Add falsification_test field describing concrete blocking action"
@@ -34,6 +35,7 @@ resolution_templates:
     pattern_name: "Hardwired claim lacks proof of execution"
     confidence_score: 0.7
     sessions_confirmed: 2
+    recurrence_count: 0
     status: ACTIVE
 
     resolution_action: "Add proof_of_execution field showing gate actually ran"
@@ -55,6 +57,7 @@ resolution_templates:
     pattern_name: "Structural claim lacks enforcement mechanism"
     confidence_score: 0.7
     sessions_confirmed: 2
+    recurrence_count: 0
     status: ACTIVE
 
     resolution_action: "Add enforcement_code field pointing to specific file and line where mechanism is enforced"
@@ -76,6 +79,7 @@ resolution_templates:
     pattern_name: "Impossible/must-claim lacks enforcement"
     confidence_score: 0.7
     sessions_confirmed: 2
+    recurrence_count: 0
     status: ACTIVE
 
     resolution_action: "Either (1) build the enforcement that makes the claim true, or (2) relabel claim as TELL not RULE"
@@ -100,3 +104,4 @@ metadata:
   template_growth_rule: "When CDS escalates a new violation type, Brain's response becomes a new template entry. This entry is added to RESOLUTION-LIBRARY.yaml before any other work. The library grows from operational experience."
   verification_gate: "No finding closes (moves from DETECTED to RESOLVED or PREVENTED) without matching resolution_template here"
   next_review: "Weekly by Opus synthesis. Track times_applied and success_rate to identify template patterns that work vs. those that need Brain redesign"
+  field_note: "recurrence_count field added to all patterns 2026-10-10 (FND-20261010-002). This is the canonical field referenced by WISDOM-004 and CDS-WEEKLY-EVOLUTION-ENGINE.md for PAT spec escalation. times_applied tracks template usage; recurrence_count tracks problem pattern observations across sessions."

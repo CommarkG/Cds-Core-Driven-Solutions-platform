@@ -262,6 +262,7 @@ Principles with mechanical enforcement (partially active): 2
   WISDOM-011: deep-root protocol always-loaded; hook automation = Phase B
 Principles with falsification tests:    11 / 11
 WISDOM HEALTH: 82% active enforcement (11/11 declared, 9/11 fully active)
+Last updated: 2026-10-10 (footer version corrected — FND-20261010-005)
 ```
 
 ---
@@ -281,4 +282,4 @@ Submit to Governor for ratification as part of the next session's work package.
 Rate limit: maximum 2 new wisdom principles per session (prevents inflation).
 
 ---
-Version 1.0 — 9 principles — ratified 2026-07-25 | Governor: Yariv Fink
+Version 1.2 — 11 principles — original ratification 2026-07-25 | WISDOM-010 added 2026-07-26 | WISDOM-011 added 2026-07-27 | Governor: Yariv Fink
