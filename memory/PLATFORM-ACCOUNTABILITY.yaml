@@ -1,15 +1,54 @@
 ---
 document_id: PLATFORM-ACCOUNTABILITY
-version: 1.0
+version: 1.1
 created: 2026-07-08T19:00:00Z
-last_updated: 2026-07-08T19:00:00Z
+last_updated: 2026-10-17T00:00:00Z
 authority: CDS (self-reporting platform state)
 ---
 
 platform_accountability:
-  last_updated: 2026-07-08T19:00:00Z
-  session: 2026-07-08
-  phase: Phase D — Build Order (STEPS 1-5)
+  last_updated: 2026-10-17T00:00:00Z
+  session: 2026-10-17 (WEEK-2026-42 weekly evolution)
+  phase: Phase A COMPLETE — Phase B PENDING
+
+  phase_summary:
+    phase_a_completed: "2026-07-27"
+    phase_a_completion_record: "memory/RATIFICATION-PHASE-A-TO-B.yaml"
+    phase_b_status: "PENDING — dependency graph code layer complete, governance layer pending first Mode B run"
+    current_activity: "Weekly evolution engine running (first execution 2026-10-17 after 11-week gap)"
+
+  governance_milestones_since_2026_07_08:
+    - "CS-PE-001 ratified 2026-07-15 (memory/RATIFICATION-CS-PE-001.yaml)"
+    - "CS-GOAL-001 ratified 2026-07-25 (memory/RATIFICATION-CS-GOAL-001.yaml)"
+    - "CDS-WEEKLY-EVOLUTION-ENGINE.md ratified 2026-07-25 (Governor: Yariv Fink)"
+    - "PAT-004-SPEC.yaml + PAT-005-SPEC.yaml written 2026-07-26 (FND-20260725-001 resolved)"
+    - "CORESPINE-DASHBOARD.yaml updated to 5 corespines including CS-PE-001 (FND-20260725-002 resolved)"
+    - "System A schemas (4) locked 2026-07-27 (GOV-20260727-002 — FND-20260725-005 resolved)"
+    - "WISDOM-009 through WISDOM-011 added to CDS-SYSTEM-WISDOM.md"
+    - "WISDOM-010 (branch isolation) implemented in cloud agent prompt"
+    - "Weekly evolution engine first execution 2026-10-17 (WEEK-2026-42)"
+    - "CS-PE-001 structural placement corrected in CORESPINE-REGISTRY.yaml (FND-20261017-003)"
+
+  archive_health:
+    total_patterns: 5
+    active_checks: 0
+    defined_checks: 5
+    archive_health_pct: "0% ACTIVE / 100% DEFINED"
+    note: "All PAT specs are DEFINED. ACTIVE status requires Phase B hook wiring. Governor brief pending (FND-20261017-004)."
+
+  evolution_health:
+    total_resolved_findings: 14
+    resolved_with_propagation_required: 8
+    resolved_with_propagation_verified: 8
+    evolution_health_pct: "100% (8/8 verified)"
+    queue_depth: 1
+    queue_status: "RECOVERING — first session after 11-week gap"
+
+  wisdom_health:
+    total_principles: 12
+    fully_active: 9
+    partially_active: 2
+    note: "WISDOM-012 added 2026-10-17 (automation silence is not proof of success)"
 
   intents:
     - id: INTENT-LOOP-CLOSURE

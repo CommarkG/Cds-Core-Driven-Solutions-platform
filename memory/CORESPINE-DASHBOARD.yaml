@@ -1,8 +1,8 @@
 ---
 document_id: CORESPINE-DASHBOARD
-version: 1.0
+version: 1.1
 created: 2026-07-08T19:35:00Z
-last_updated: 2026-07-08T19:35:00Z
+last_updated: 2026-10-17T00:00:00Z
 authority: CDS Platform (data view from CORESPINE-REGISTRY.yaml)
 purpose: "Real-time visibility into corespine governance state: ratification status, enforcement coverage, proposed constraints, blocking items"
 data_source: "memory/CORESPINE-REGISTRY.yaml (single source of truth)"
@@ -12,8 +12,9 @@ corespine_inventory_summary:
   ratified: 3
   partially_ratified: 1
   pending_ratification: 1
-  proposed_constraints_pending: 3
-  measurement_timestamp: 2026-07-26T00:00:00Z
+  proposed_constraints_pending: 4
+  measurement_timestamp: 2026-10-17T00:00:00Z
+  structural_note: "CS-PE-001 placement corrected 2026-10-17 (FND-20261017-003) — moved from proposed_ratifications to corespines array in registry."
 
 corespine_status_breakdown:
 

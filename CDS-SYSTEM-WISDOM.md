@@ -252,16 +252,49 @@ must return zero.
 
 ---
 
+## WISDOM-012 — AUTOMATION SILENCE IS NOT PROOF OF SUCCESS
+
+**Principle:** A scheduled automation that does not error is indistinguishable from one
+that never ran — unless it produces a dated artifact on every execution. Silence is not
+green. Silence is unknown. The absence of a failure report does not mean the system ran;
+it may mean the system never reached the point where a failure could be reported.
+Every automated pipeline needs a heartbeat artifact — a dated, named file — that proves
+execution happened. When that artifact is missing, the automation is UNVERIFIED, not HEALTHY.
+
+**The rule:** Every weekly evolution session must produce WEEKLY-EVOLUTION-REPORT-[YYYY]-[WW].md
+as its first committed output. The queue's `last_weekly_session` and `updated_at` fields must
+match the session date. If session-start scan finds these fields stale by more than 8 days
+(one missed Saturday), the engine is UNVERIFIED and the Governor must be notified.
+
+**Mechanical enforcement:**
+- `memory/WEEKLY-FINDINGS-QUEUE.yaml updated_at` is checked against today's date at every session open
+- If `updated_at` is more than 8 days stale → FND-[DATE]-001 category VIOLATION created automatically
+- Weekly session commit includes report file as mandatory artifact before any other changes are pushed
+- `last_weekly_session: null` in queue_health is a falsification failure condition
+
+**Falsification test:** Set `last_weekly_session: null` and `updated_at` to a date 2+ weeks ago.
+The next session-start scan must generate a VIOLATION finding and notify the Governor.
+If it does not → engine monitoring is not running.
+
+**Governor note (2026-10-17 — extracted from WEEK-2026-42 recovery session):**
+> Evolution engine was silent from 2026-07-27 through 2026-10-17 (11 weeks).
+> No report files existed. No violation finding was generated. No notification sent.
+> Root cause: no heartbeat monitoring against the report artifact.
+> This wisdom is extracted to prevent future silent engine gaps.
+
+---
+
 ## WISDOM HEALTH
 
 ```
-Total wisdom principles:  11
+Total wisdom principles:  12
 Principles with mechanical enforcement (fully active):    9
-Principles with mechanical enforcement (partially active): 2
+Principles with mechanical enforcement (partially active): 3
   WISDOM-010: branch protection = Phase B (not yet built)
   WISDOM-011: deep-root protocol always-loaded; hook automation = Phase B
-Principles with falsification tests:    11 / 11
-WISDOM HEALTH: 82% active enforcement (11/11 declared, 9/11 fully active)
+  WISDOM-012: session-start staleness check = defined; automated gate = Phase B
+Principles with falsification tests:    12 / 12
+WISDOM HEALTH: 75% active enforcement (12/12 declared, 9/12 fully active)
 ```
 
 ---
@@ -281,4 +314,5 @@ Submit to Governor for ratification as part of the next session's work package.
 Rate limit: maximum 2 new wisdom principles per session (prevents inflation).
 
 ---
-Version 1.0 — 9 principles — ratified 2026-07-25 | Governor: Yariv Fink
+Version 1.1 — 12 principles — ratified 2026-07-25 | Governor: Yariv Fink
+WISDOM-012 added 2026-10-17 (extracted from WEEK-2026-42 recovery session)
