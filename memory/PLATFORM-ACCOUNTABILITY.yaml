@@ -1,15 +1,16 @@
 ---
 document_id: PLATFORM-ACCOUNTABILITY
-version: 1.0
+version: 1.1
 created: 2026-07-08T19:00:00Z
-last_updated: 2026-07-08T19:00:00Z
+last_updated: 2026-10-24T07:00:00Z
 authority: CDS (self-reporting platform state)
+evolution_note: "Updated by first weekly evolution session WEEK-2026-43. Prior version was 108 days stale. Full intent re-assessment below."
 ---
 
 platform_accountability:
-  last_updated: 2026-07-08T19:00:00Z
-  session: 2026-07-08
-  phase: Phase D — Build Order (STEPS 1-5)
+  last_updated: 2026-10-24T07:00:00Z
+  session: 2026-10-24 (weekly evolution session WEEK-2026-43 — first run)
+  phase: Phase A complete (governance layer ratified 2026-07-27); Phase B pending Governor activation
 
   intents:
     - id: INTENT-LOOP-CLOSURE
@@ -179,4 +180,4 @@ platform_accountability:
 metadata:
   rationale: "This file replaces session record browsing. Brain reads ONE file to understand platform state: what intents are active, which plans govern them, what phase each plan is in, how many gates passed, what proof the work is done. No narrative. Just data."
   next_update: "After Yariv ratification decisions on CS-GOAL-001, CS-CREATION-001, CS-AI-BEHAVIOR-001-PROPOSED-1. Then after MECHANICAL-CLAIM-WITHOUT-TEST format guidance received."
-  blocking_items: "STEPS 1-8 COMPLETE. Blocking items for next session: (1) Yariv ratification on 3 corespines, (2) Brain format guidance on MECHANICAL-CLAIM-WITHOUT-TEST template."
+  blocking_items: "Phase A governance complete as of 2026-07-27. Phase B blocked on: (1) Governor ratification of 3 proposed corespine constraints (pending 13+ weeks — FND-20261024-004), (2) Graphify Mode B requires ANTHROPIC_API_KEY (FND-20261024-002). 5 corespines ratified. RATIFICATION-PHASE-A-TO-B.yaml documents Phase A→B checklist."

@@ -252,16 +252,48 @@ must return zero.
 
 ---
 
+## WISDOM-012 — RATIFICATION IS NOT COMMISSIONING *(CANDIDATE — awaiting Governor ratification)*
+
+**Principle:** A scheduled system ratified on paper but never executed in production is not a
+running system — it is an untested design. The gap between ratification and first successful
+execution is operationally invisible unless the system produces verifiable output on its first run.
+Every automated system requires a commissioning run that generates Governor-reviewable artifacts
+before the system is declared operational.
+
+**The rule:** Any ratified automated or scheduled system (cloud agent, weekly session, hook,
+pipeline) must produce a dated output artifact on its first run. Until that artifact exists,
+the system's status is RATIFIED-PENDING-COMMISSIONING, not ACTIVE. The output artifact is the
+commissioning proof — not the ratification record.
+
+**Mechanical enforcement:**
+- `memory/WEEKLY-FINDINGS-QUEUE.yaml` field `last_weekly_session` tracks first run date
+- A `last_weekly_session: null` entry after the scheduled start date triggers a STALE finding
+  in the next session-start scan (Category 2 — stale status)
+- Every automated system document must declare a `commissioning_proof` field pointing to the
+  first output artifact; null = not commissioned = STALE at next scan
+
+**Falsification test:** Ratify a scheduled system. Do not run it. After one week, session-start
+scan must flag `last_weekly_session: null` as STALE. If the STALE finding is not generated,
+the commissioning enforcement is not working.
+
+**Extracted from:** WEEK-2026-43 finding FND-20261024-001 — weekly evolution engine ratified
+2026-07-25 but first run was 2026-10-24 (91 days). No STALE alert fired during that gap.
+Prevention: commissioning_proof field + session-start scan check.
+
+---
+
 ## WISDOM HEALTH
 
 ```
-Total wisdom principles:  11
+Total wisdom principles:  12 (11 ratified + 1 candidate awaiting Governor ratification)
 Principles with mechanical enforcement (fully active):    9
 Principles with mechanical enforcement (partially active): 2
   WISDOM-010: branch protection = Phase B (not yet built)
   WISDOM-011: deep-root protocol always-loaded; hook automation = Phase B
-Principles with falsification tests:    11 / 11
-WISDOM HEALTH: 82% active enforcement (11/11 declared, 9/11 fully active)
+Candidates pending ratification: 1
+  WISDOM-012: RATIFICATION IS NOT COMMISSIONING (extracted WEEK-2026-43)
+Principles with falsification tests:    12 / 12
+WISDOM HEALTH: 75% active enforcement (12 declared, 9 fully active, 2 partial, 1 candidate)
 ```
 
 ---
@@ -282,3 +314,4 @@ Rate limit: maximum 2 new wisdom principles per session (prevents inflation).
 
 ---
 Version 1.0 — 9 principles — ratified 2026-07-25 | Governor: Yariv Fink
+Version 1.1 — 12 principles (11 ratified + 1 candidate) — updated WEEK-2026-43 | CDS Evolution Engine

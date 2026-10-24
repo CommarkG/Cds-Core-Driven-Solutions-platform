@@ -1,21 +1,24 @@
 ---
 document_id: WEEKLY-FINDINGS-QUEUE
-version: 1.1
+version: 1.2
 created: 2026-07-25
-updated_at: 2026-07-26
+updated_at: 2026-10-24
 authority: CDS (Governor oversight)
 purpose: "Permanent accumulator for all platform findings. Feeds weekly evolution sessions."
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
-  total_findings: 9
-  pending: 0
+  total_findings: 15
+  pending: 1
   batched: 0
-  resolved: 9
-  deferred: 0
+  resolved: 12
+  deferred: 1
+  governor_pending: 2
   queue_status: HEALTHY
-  last_session_scan: "2026-07-27"
-  last_weekly_session: null
-  next_weekly_session: "2026-08-01 (Saturday)"
+  last_session_scan: "2026-10-24"
+  last_weekly_session: "2026-10-24 (WEEK-2026-43 — first run)"
+  next_weekly_session: "2026-11-01 (Saturday)"
+  governor_items_flagged: 2
+  governor_items: ["FND-20261024-004", "FND-20261024-002"]
 ---
 
 # Weekly Findings Queue
@@ -180,21 +183,116 @@ findings:
       Graphify Mode B added to CDS-GRAPHIFY-MANDATORY-PROTOCOL.md (GOV authorization 2026-07-27).
     note: "CISEM improvement item 3. Code layer complete. Governance layer auto-runs 2026-08-01 (weekly agent)."
 
-## BATCH PLAN (updated 2026-07-26)
+## SESSION 2026-10-24 FINDINGS (WEEK-2026-43 session-start scan)
 
-  WEEK-2026-31 (2026-08-01):
-    findings_resolved: [FND-20260725-002, FND-20260725-007, FND-20260725-004, FND-20260725-001]
-    findings_pending: [FND-20260725-003, FND-20260725-006, FND-20260726-001]
-    resolved_by_session_2026-07-26: 4
-    remaining_pending_count: 3
-    estimated_session_time: 20 min (3 findings remain)
+  - finding_id: FND-20261024-001
+    category: STALE
+    description: "Weekly evolution engine ratified 2026-07-25 but last_weekly_session was null — no weekly session had ever run. Engine commissioning not verified. 91 days gap between ratification and first execution."
+    affected_artifacts:
+      - "memory/WEEKLY-FINDINGS-QUEUE.yaml"
+      - "CDS-WEEKLY-EVOLUTION-ENGINE.md"
+    pe_score: 45.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-43"
+    status: RESOLVED
+    resolved_date: "2026-10-24"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-10-24"
+    resolution_reference: "WEEKLY-EVOLUTION-REPORT-2026-43.md — first weekly session run. WISDOM-012 candidate extracted: RATIFICATION IS NOT COMMISSIONING. Queue updated: last_weekly_session set to 2026-10-24."
 
-  WEEK-2026-32 (2026-08-08):
-    findings: [FND-20260725-005]
-    count: 1
-    note: "System A schema lock — Governor decision required."
+  - finding_id: FND-20261024-002
+    category: STALE
+    description: "dependency-graph.yaml governance_layer_status is PENDING_API_KEY since 2026-07-27. Mode B (governance doc graph) promised for 2026-08-01 weekly agent but never ran. ANTHROPIC_API_KEY required — not confirmed available in cloud session environment."
+    affected_artifacts:
+      - "dependency-graph.yaml"
+    pe_score: 30.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-43"
+    status: PENDING
+    resolved_date: null
+    propagation_required: false
+    propagation_verified: null
+    added_session: "2026-10-24"
+    resolution_reference: null
+    governor_brief: "Decision required: (1) Confirm ANTHROPIC_API_KEY availability in cloud session env, OR (2) Authorize alternative approach (manual governance layer mapping), OR (3) Accept PENDING_API_KEY as indefinite status. Currently governance propagation audit relies on manual grep rather than graph query."
 
-  PHASE-B-INIT (first Phase B session):
-    findings: [FND-20260726-002]
-    count: 1
-    note: "Dependency graph — first deliverable of Phase B, before other build work."
+  - finding_id: FND-20261024-003
+    category: STALE
+    description: "memory/PLATFORM-ACCOUNTABILITY.yaml last_updated was 2026-07-08 — 108 days stale. Multiple intents still IN_PROGRESS from Phase D context that has since resolved. Phase descriptor was also wrong (Phase D vs Phase A)."
+    affected_artifacts:
+      - "memory/PLATFORM-ACCOUNTABILITY.yaml"
+    pe_score: 22.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-43"
+    status: RESOLVED
+    resolved_date: "2026-10-24"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-10-24"
+    resolution_reference: "memory/PLATFORM-ACCOUNTABILITY.yaml — version 1.1, last_updated set to 2026-10-24, phase corrected to Phase A complete / Phase B pending, blocking_items updated to reflect current state."
+
+  - finding_id: FND-20261024-004
+    category: STALE
+    description: "3 PROPOSED_PENDING_RATIFICATION corespine constraints (CS-GOAL-001-PROPOSED-1, CS-CREATION-001-PROPOSED-1, CS-AI-BEHAVIOR-001-PROPOSED-1) have waited 13+ weeks without Governor disposition. Exceeds engine rule (max 3 sessions without disposition)."
+    affected_artifacts:
+      - "memory/CORESPINE-REGISTRY.yaml"
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 35.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-43"
+    status: PENDING
+    resolved_date: null
+    propagation_required: true
+    propagation_verified: null
+    added_session: "2026-10-24"
+    resolution_reference: null
+    governor_brief: "3 proposed corespine constraints have been PROPOSED_PENDING_RATIFICATION since 2026-07-08 (13+ weeks). Engine rule: no finding waits >3 sessions without disposition. Governor must: ratify, modify, or formally defer each. (1) CS-GOAL-001-PROPOSED-1: code enforcement equivalence, severity HIGH. (2) CS-CREATION-001-PROPOSED-1: arm contradiction resolution, severity CRITICAL. (3) CS-AI-BEHAVIOR-001-PROPOSED-1: agent demotion policy, severity MEDIUM. Governor briefs added to each entry in CORESPINE-REGISTRY.yaml."
+
+  - finding_id: FND-20261024-005
+    category: STRUCTURAL
+    description: "CS-PE-001 (RATIFIED corespine) was placed under proposed_ratifications array in CORESPINE-REGISTRY.yaml instead of the corespines array. OSSOT structural error — single source of truth for registry had CS-PE-001 categorized as a proposal instead of a ratified constraint."
+    affected_artifacts:
+      - "memory/CORESPINE-REGISTRY.yaml"
+    pe_score: 28.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-43"
+    status: RESOLVED
+    resolved_date: "2026-10-24"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-10-24"
+    resolution_reference: "memory/CORESPINE-REGISTRY.yaml v1.2 — CS-PE-001 moved to corespines array (end of array, after CS-AI-BEHAVIOR-001). proposed_ratifications now contains only 3 proposed constraints. metadata updated: active_enforced_count 4→5, designed_not_enforced_count 1→2, last_updated 2026-10-24. Propagation check: CORESPINE-DASHBOARD.yaml already showed correct count (5); no change needed there."
+
+  - finding_id: FND-20261024-006
+    category: STALE
+    description: "WISDOM-010 and WISDOM-011 both partially active for 13+ weeks with no progression. Both require Phase B — which has not started. WISDOM HEALTH report has not been updated to reflect that 2 of 11 principles remain partially active indefinitely pending Phase B."
+    affected_artifacts:
+      - "CDS-SYSTEM-WISDOM.md"
+    pe_score: 18.0
+    severity: LOW
+    batch_assignment: "WEEK-2026-43"
+    status: DEFERRED
+    resolved_date: null
+    propagation_required: false
+    propagation_verified: null
+    added_session: "2026-10-24"
+    resolution_reference: null
+    deferred_reason: "Phase B prerequisite. Both WISDOM-010 (branch protection) and WISDOM-011 (hook automation) require Phase B build. Deferred until Phase B activation. WISDOM HEALTH updated in WEEK-2026-43 to reflect candidate WISDOM-012 added."
+
+## BATCH PLAN (updated 2026-10-24)
+
+  WEEK-2026-43 (2026-10-24) — FIRST WEEKLY SESSION:
+    findings_processed: [FND-20261024-001, FND-20261024-005, FND-20261024-003]
+    findings_governor_brief: [FND-20261024-004, FND-20261024-002]
+    findings_deferred: [FND-20261024-006]
+    resolved_count: 3
+    governor_items: 2
+    deferred_count: 1
+    wisdom_extracted: ["WISDOM-012 candidate — RATIFICATION IS NOT COMMISSIONING"]
+    structural_fixes: ["CS-PE-001 moved to correct array in CORESPINE-REGISTRY.yaml"]
+    report: "WEEKLY-EVOLUTION-REPORT-2026-43.md"
+
+  WEEK-2026-44 (2026-11-01) — NEXT SESSION:
+    findings_pending: [FND-20261024-002, FND-20261024-004]
+    note: "Both require Governor response before resolution. If no Governor response, re-brief and defer to WEEK-2026-45."
