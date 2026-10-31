@@ -2,7 +2,7 @@
 document_id: CORESPINE-DASHBOARD
 version: 1.0
 created: 2026-07-08T19:35:00Z
-last_updated: 2026-07-08T19:35:00Z
+last_updated: 2026-07-26T00:00:00Z
 authority: CDS Platform (data view from CORESPINE-REGISTRY.yaml)
 purpose: "Real-time visibility into corespine governance state: ratification status, enforcement coverage, proposed constraints, blocking items"
 data_source: "memory/CORESPINE-REGISTRY.yaml (single source of truth)"
@@ -113,11 +113,12 @@ enforcement_landscape:
     - CS-CREATION-001 (awaiting ratification — Phase B prerequisite)
 
 ratification_required_before_phase_a:
-  count: 3
+  count: 2
   items:
-    - CS-GOAL-001
     - CS-CREATION-001
     - CS-AI-BEHAVIOR-001 (completion of reasoning_trace validation)
+  resolved_items:
+    - CS-GOAL-001 (RATIFIED 2026-07-25 — removed from blocking list FND-20261031-008)
 
 proposed_constraints_pending_yariv:
   - spine_constraint_id: CS-GOAL-001-PROPOSED-1
@@ -145,10 +146,6 @@ health_status:
   proposed_constraints: ORANGE (3 pending — blocks Phase A activation)
 
 blocking_items:
-  - name: "Yariv ratification of CS-GOAL-001"
-    impact: "Blocks Phase A goal governance"
-    decision_needed: BINARY (now or during Phase A)
-
   - name: "Yariv ratification of CS-CREATION-001"
     impact: "Blocks creation protocol enforcement"
     decision_needed: BINARY (now or during Phase A)

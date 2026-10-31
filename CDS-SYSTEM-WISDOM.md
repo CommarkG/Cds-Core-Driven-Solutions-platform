@@ -252,16 +252,75 @@ must return zero.
 
 ---
 
+## WISDOM-012 — STRUCTURAL POSITION IS A GOVERNANCE FACT
+
+**Status: PROPOSED — pending Governor ratification (extracted WEEK-2026-44)**
+
+**Principle:** A registry entry in the wrong structural section corrupts all downstream queries
+even when its field values are correct. An element can have accurate id, name, ratification_state,
+and every required field — and still be invisible to any system that queries the correct section.
+Structural position is not cosmetic formatting; it is the address by which the registry resolves
+lookups. An element at the wrong address is an orphan in every architectural sense.
+
+**The rule:** Registry validation must check structural position in addition to field values.
+An element flagged RATIFIED in `proposed_ratifications` is a structural orphan regardless of
+its ratification_state value. The section key is a governance declaration.
+
+**Mechanical enforcement (proposed):**
+- CORESPINE-REGISTRY validation checks: is this entry's ratification_state consistent with its
+  parent section key? RATIFIED in proposed_ratifications = structural violation.
+- Registry scan (weekly session Layer 1) includes: grep for entries with `ratification_state: RATIFIED`
+  that are NOT under the `corespines:` key.
+- Falsification criteria: zero RATIFIED entries under any non-corespines section key.
+
+**Falsification test:** Grep CORESPINE-REGISTRY.yaml for blocks where `id:` appears under
+`proposed_ratifications:` key. Count must be zero. Any non-zero count = structural orphan.
+
+---
+
+## WISDOM-013 — ENGINE HEALTH REQUIRES EXECUTION EVIDENCE
+
+**Status: PROPOSED — pending Governor ratification (extracted WEEK-2026-44)**
+
+**Principle:** An automated governance engine that has no output artifact for longer than its
+declared interval is not running — regardless of its ratification status, scheduled trigger
+configuration, or documentation. Declaring that an engine is active is not evidence it ran.
+The only valid health signal for a periodic automated process is an output artifact with a
+verified timestamp newer than [engine_interval × 1.5].
+
+**The rule:** Every automated CDS process must produce a datestamped output artifact on every run.
+The absence of that artifact for > [declared_interval × 1.5] days is a CRITICAL engine failure,
+not a WARN. Weekly evolution sessions: WEEKLY-EVOLUTION-REPORT-[YYYY]-[WW].md must exist.
+If it does not, the engine is DOWN — not degraded, not slow, not paused. DOWN.
+
+**Observed in session:** No WEEKLY-EVOLUTION-REPORT-*.md files existed on 2026-10-31, despite
+the engine being ratified on 2026-07-25. Dormancy: 96 days. No commits between 2026-07-27
+and 2026-10-31. The falsification test (updated_at < 7 days) was failing silently.
+
+**Mechanical enforcement (proposed):**
+- Session-start scan (Layer 1) checks: does WEEKLY-EVOLUTION-REPORT-[LAST_WEEK].md exist?
+  If not → CRITICAL finding added to queue automatically, no waiting for weekly session.
+- Governor notification when engine dormancy exceeds 14 days.
+- No engine status is trusted without an artifact. Documents asserting "engine is active" without
+  a current artifact are WIKI, not governance.
+
+**Falsification test:** Check for WEEKLY-EVOLUTION-REPORT-[date minus 7 days].md.
+If that file does not exist, the engine has not run. No other evidence overrides this absence.
+
+---
+
 ## WISDOM HEALTH
 
 ```
-Total wisdom principles:  11
+Total wisdom principles:  13 (11 ratified + 2 proposed pending Governor ratification)
+Ratified principles:      11
+Proposed (unratified):     2 (WISDOM-012, WISDOM-013 — WEEK-2026-44)
 Principles with mechanical enforcement (fully active):    9
 Principles with mechanical enforcement (partially active): 2
   WISDOM-010: branch protection = Phase B (not yet built)
   WISDOM-011: deep-root protocol always-loaded; hook automation = Phase B
-Principles with falsification tests:    11 / 11
-WISDOM HEALTH: 82% active enforcement (11/11 declared, 9/11 fully active)
+Principles with falsification tests:    11 / 11 (ratified) + 2 / 2 (proposed)
+WISDOM HEALTH: 82% active enforcement (11/11 ratified declared, 9/11 fully active)
 ```
 
 ---
@@ -281,4 +340,4 @@ Submit to Governor for ratification as part of the next session's work package.
 Rate limit: maximum 2 new wisdom principles per session (prevents inflation).
 
 ---
-Version 1.0 — 9 principles — ratified 2026-07-25 | Governor: Yariv Fink
+Version 1.0 — 11 principles — ratified 2026-07-25 (WISDOM-001–009) | WISDOM-010–011 added 2026-07-26/27 | Governor: Yariv Fink

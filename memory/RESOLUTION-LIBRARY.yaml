@@ -100,3 +100,4 @@ metadata:
   template_growth_rule: "When CDS escalates a new violation type, Brain's response becomes a new template entry. This entry is added to RESOLUTION-LIBRARY.yaml before any other work. The library grows from operational experience."
   verification_gate: "No finding closes (moves from DETECTED to RESOLVED or PREVENTED) without matching resolution_template here"
   next_review: "Weekly by Opus synthesis. Track times_applied and success_rate to identify template patterns that work vs. those that need Brain redesign"
+  recurrence_count_note: "The field 'sessions_confirmed' in each pattern entry is the recurrence_count equivalent referenced by CDS-WEEKLY-EVOLUTION-ENGINE.md Layer 2. When sessions_confirmed >= 3, the pattern escalates to PAT-[SEQ]-SPEC.yaml per WISDOM-004. (FND-20261031-007 — WEEK-2026-44 evolution session)"
