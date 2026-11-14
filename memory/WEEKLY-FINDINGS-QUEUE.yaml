@@ -2,20 +2,20 @@
 document_id: WEEKLY-FINDINGS-QUEUE
 version: 1.1
 created: 2026-07-25
-updated_at: 2026-07-26
+updated_at: 2026-11-14
 authority: CDS (Governor oversight)
 purpose: "Permanent accumulator for all platform findings. Feeds weekly evolution sessions."
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
-  total_findings: 9
+  total_findings: 15
   pending: 0
   batched: 0
-  resolved: 9
+  resolved: 15
   deferred: 0
   queue_status: HEALTHY
-  last_session_scan: "2026-07-27"
-  last_weekly_session: null
-  next_weekly_session: "2026-08-01 (Saturday)"
+  last_session_scan: "2026-11-14"
+  last_weekly_session: "2026-11-14"
+  next_weekly_session: "2026-11-21 (Saturday)"
 ---
 
 # Weekly Findings Queue
@@ -180,6 +180,103 @@ findings:
       Graphify Mode B added to CDS-GRAPHIFY-MANDATORY-PROTOCOL.md (GOV authorization 2026-07-27).
     note: "CISEM improvement item 3. Code layer complete. Governance layer auto-runs 2026-08-01 (weekly agent)."
 
+## SESSION 2026-11-14 FINDINGS (weekly evolution WEEK-2026-46)
+
+  - finding_id: FND-20261114-001
+    category: STALE
+    description: "Evolution engine never completed a weekly session; queue updated_at was 2026-07-26 (3+ months stale), violating the engine's own falsification tests (test 2 and test 4)."
+    affected_artifacts:
+      - "memory/WEEKLY-FINDINGS-QUEUE.yaml"
+      - "CDS-WEEKLY-EVOLUTION-ENGINE.md"
+    pe_score: 40.0
+    severity: CRITICAL
+    batch_assignment: "WEEK-2026-46"
+    status: RESOLVED
+    resolved_date: "2026-11-14"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-11-14"
+    resolution_reference: "WEEKLY-FINDINGS-QUEUE.yaml metadata updated: updated_at=2026-11-14, last_session_scan=2026-11-14, last_weekly_session=2026-11-14. WEEKLY-EVOLUTION-REPORT-2026-46.md created. Engine falsification tests 2 and 4 now pass."
+
+  - finding_id: FND-20261114-002
+    category: STALE
+    description: "PLATFORM-ACCOUNTABILITY.yaml not updated since 2026-07-08; active intent states and progress data are 4+ months stale and may not reflect current platform reality."
+    affected_artifacts:
+      - "memory/PLATFORM-ACCOUNTABILITY.yaml"
+    pe_score: 25.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-46"
+    status: RESOLVED
+    resolved_date: "2026-11-14"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-11-14"
+    resolution_reference: "PLATFORM-ACCOUNTABILITY.yaml metadata updated: last_updated=2026-11-14, session=2026-11-14, stale_state_note added flagging intent statuses for Governor review."
+    governor_brief: "PENDING — Intent statuses (IN_PROGRESS states from 2026-07-08) require Governor review to update to current reality. WISDOM-002 applies: Governor must declare current state, session cannot self-declare."
+
+  - finding_id: FND-20261114-003
+    category: STALE
+    description: "CS-CREATION-001 spine_constraints_count in CORESPINE-DASHBOARD shows 1 active constraint but registry has 4 entries (C1 ACTIVE, C3 ACTIVE, C4 ACTIVE, PROPOSED-1) — C3 and C4 were added in July 2026 after dashboard was written."
+    affected_artifacts:
+      - "memory/CORESPINE-DASHBOARD.yaml"
+      - "memory/CORESPINE-REGISTRY.yaml"
+    pe_score: 22.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-46"
+    status: RESOLVED
+    resolved_date: "2026-11-14"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-11-14"
+    resolution_reference: "CORESPINE-DASHBOARD.yaml CS-CREATION-001 updated: spine_constraints_count=4, active_constraints=3, proposed_constraints=1, active_constraints_note added. measurement_timestamp and last_updated updated to 2026-11-14."
+
+  - finding_id: FND-20261114-004
+    category: ORPHAN
+    description: "CS-PE-001 corespine entry (RATIFIED) appeared under proposed_ratifications section of CORESPINE-REGISTRY.yaml instead of the main corespines array — structural misplacement causing the registry to show only 4 corespines in the corespines array."
+    affected_artifacts:
+      - "memory/CORESPINE-REGISTRY.yaml"
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 20.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-46"
+    status: RESOLVED
+    resolved_date: "2026-11-14"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-11-14"
+    resolution_reference: "CORESPINE-REGISTRY.yaml: CS-PE-001 moved from proposed_ratifications to corespines array (after CS-AI-BEHAVIOR-001). proposed_ratifications now contains only the 3 proposed constraints. last_updated updated to 2026-11-14."
+
+  - finding_id: FND-20261114-005
+    category: STALE
+    description: "PLATFORM-ACCOUNTABILITY.yaml STEP-7 completion metrics show corespines_total: 4 but actual count is 5 (CS-PE-001 was added 2026-07-15 and dashboard reflects 5 corespines)."
+    affected_artifacts:
+      - "memory/PLATFORM-ACCOUNTABILITY.yaml"
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 15.0
+    severity: LOW
+    batch_assignment: "WEEK-2026-46"
+    status: RESOLVED
+    resolved_date: "2026-11-14"
+    propagation_required: true
+    propagation_verified: true
+    added_session: "2026-11-14"
+    resolution_reference: "PLATFORM-ACCOUNTABILITY.yaml STEP-7 metrics updated: corespines_total=5, ratified=3, pending_ratification=1, enforcement_status corrected, metrics_updated note added."
+
+  - finding_id: FND-20261114-006
+    category: STALE
+    description: "CORESPINE-DASHBOARD last_updated field (2026-07-08) was not updated when measurement_timestamp was updated to 2026-07-26 by FND-20260725-002 resolution; header metadata was inconsistent with measurement data."
+    affected_artifacts:
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 12.0
+    severity: LOW
+    batch_assignment: "WEEK-2026-46"
+    status: RESOLVED
+    resolved_date: "2026-11-14"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-11-14"
+    resolution_reference: "CORESPINE-DASHBOARD.yaml last_updated and measurement_timestamp both updated to 2026-11-14T07:00:00Z as part of FND-20261114-003 resolution sweep."
+
 ## BATCH PLAN (updated 2026-07-26)
 
   WEEK-2026-31 (2026-08-01):
@@ -198,3 +295,10 @@ findings:
     findings: [FND-20260726-002]
     count: 1
     note: "Dependency graph — first deliverable of Phase B, before other build work."
+
+  WEEK-2026-46 (2026-11-14 — first actual weekly session):
+    findings: [FND-20261114-001, FND-20261114-002, FND-20261114-003, FND-20261114-004, FND-20261114-005, FND-20261114-006]
+    count: 6
+    all_resolved: true
+    governor_items_pending: 1
+    note: "First weekly evolution session to run. All 6 findings resolved. FND-20261114-002 requires Governor disposition on stale intent statuses. GRAPHIFY MODE B could not run — graphify CLI not installed in cloud environment (flag for Governor)."

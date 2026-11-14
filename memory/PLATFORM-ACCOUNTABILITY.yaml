@@ -7,9 +7,10 @@ authority: CDS (self-reporting platform state)
 ---
 
 platform_accountability:
-  last_updated: 2026-07-08T19:00:00Z
-  session: 2026-07-08
+  last_updated: 2026-11-14T07:00:00Z
+  session: 2026-11-14
   phase: Phase D — Build Order (STEPS 1-5)
+  stale_state_note: "Intent statuses below reflect state as of 2026-07-08. 16 weeks have elapsed. Governor review required to update INTENT_* statuses to current reality."
 
   intents:
     - id: INTENT-LOOP-CLOSURE
@@ -157,12 +158,13 @@ platform_accountability:
       created: 2026-07-08T19:35:00Z
       status: COMPLETE
       metrics:
-        corespines_total: 4
-        ratified: 1
+        corespines_total: 5
+        ratified: 3
         partially_ratified: 1
-        pending_ratification: 2
+        pending_ratification: 1
         proposed_constraints_pending: 3
-        enforcement_status: "1 GREEN (100%), 1 YELLOW (40%), 2 YELLOW (pending)"
+        enforcement_status: "1 GREEN (100%), 1 YELLOW (40%), 2 YELLOW (pending — 0% Phase B), 1 PENDING"
+        metrics_updated: "2026-11-14 — corrected from initial 4 to 5 (CS-PE-001 added 2026-07-15)"
 
     - step_id: STEP-8
       name: "Template Dashboard"
