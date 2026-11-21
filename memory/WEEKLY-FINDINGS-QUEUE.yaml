@@ -2,20 +2,20 @@
 document_id: WEEKLY-FINDINGS-QUEUE
 version: 1.1
 created: 2026-07-25
-updated_at: 2026-07-26
+updated_at: 2026-11-21
 authority: CDS (Governor oversight)
 purpose: "Permanent accumulator for all platform findings. Feeds weekly evolution sessions."
 engine_reference: CDS-WEEKLY-EVOLUTION-ENGINE.md
 queue_health:
-  total_findings: 9
-  pending: 0
+  total_findings: 13
+  pending: 1
   batched: 0
-  resolved: 9
+  resolved: 12
   deferred: 0
   queue_status: HEALTHY
-  last_session_scan: "2026-07-27"
-  last_weekly_session: null
-  next_weekly_session: "2026-08-01 (Saturday)"
+  last_session_scan: "2026-11-21"
+  last_weekly_session: "2026-11-21 (WEEK-2026-47 — first automated session)"
+  next_weekly_session: "2026-11-28 (Saturday, WEEK-2026-48)"
 ---
 
 # Weekly Findings Queue
@@ -198,3 +198,85 @@ findings:
     findings: [FND-20260726-002]
     count: 1
     note: "Dependency graph — first deliverable of Phase B, before other build work."
+
+## SESSION 2026-11-21 FINDINGS (WEEK-2026-47 — First Automated Weekly Session)
+
+  - finding_id: FND-20261121-001
+    category: STALE
+    description: "CORESPINE-DASHBOARD.yaml ratification_required_before_phase_a section still listed CS-GOAL-001 (ratified 2026-07-25) and blocking_items still included Yariv ratification of CS-GOAL-001. Inventory counts correct but transition sections not updated — PAT-005 instance."
+    affected_artifacts:
+      - "memory/CORESPINE-DASHBOARD.yaml"
+    pe_score: 25.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-47"
+    status: RESOLVED
+    resolved_date: "2026-11-21"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-11-21"
+    resolution_reference: "memory/CORESPINE-DASHBOARD.yaml updated 2026-11-21 — removed CS-GOAL-001 from blocking items, renamed section, added phase_b_status block, updated measurement_timestamp. WEEKLY-EVOLUTION-REPORT-2026-47.md."
+
+  - finding_id: FND-20261121-002
+    category: STALE
+    description: "PLATFORM-ACCOUNTABILITY.yaml showed phase: Phase D (Build Order STEPS 1-5) and last_updated: 2026-07-08 despite Phase A completing and Phase B being authorized 2026-07-27 (GOV-20260727-001). 4+ months stale and misrepresenting current platform phase."
+    affected_artifacts:
+      - "memory/PLATFORM-ACCOUNTABILITY.yaml"
+    pe_score: 22.0
+    severity: HIGH
+    batch_assignment: "WEEK-2026-47"
+    status: RESOLVED
+    resolved_date: "2026-11-21"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-11-21"
+    resolution_reference: "memory/PLATFORM-ACCOUNTABILITY.yaml updated 2026-11-21 — phase updated to Phase B, last_updated corrected, Phase A completion noted. WEEKLY-EVOLUTION-REPORT-2026-47.md."
+
+  - finding_id: FND-20261121-003
+    category: PROPAGATION
+    description: "dependency-graph.yaml governance layer Mode B (graphify) has never run. governance_layer_status: PENDING_API_KEY since 2026-07-27. graphify-out/ directory does not exist. Requires ANTHROPIC_API_KEY unavailable to cloud agent."
+    affected_artifacts:
+      - "dependency-graph.yaml"
+      - "graphify-out/ (does not exist)"
+    pe_score: 15.0
+    severity: MEDIUM
+    batch_assignment: "WEEK-2026-47"
+    status: PENDING
+    resolved_date: null
+    propagation_required: true
+    propagation_verified: null
+    added_session: "2026-11-21"
+    resolution_reference: null
+    governor_brief: |
+      Governor decision required. Dependency graph governance layer has never been populated.
+      Options: (A) Provide ANTHROPIC_API_KEY as env var for weekly cloud agent.
+      (B) Designate manual Mode B run schedule (human session, quarterly).
+      (C) Accept governance layer as Phase B code deliverable — defer until Phase B builds it.
+      Current impact: propagation completeness relies on manual grepping. Not blocking Phase B.
+
+  - finding_id: FND-20261121-004
+    category: STALE
+    description: "WEEKLY-FINDINGS-QUEUE metadata fields (last_weekly_session: null, updated_at: 2026-07-26, next_weekly_session: 2026-08-01) had never been updated — engine has been dormant since initial setup (17 weeks)."
+    affected_artifacts:
+      - "memory/WEEKLY-FINDINGS-QUEUE.yaml"
+    pe_score: 10.0
+    severity: LOW
+    batch_assignment: "WEEK-2026-47"
+    status: RESOLVED
+    resolved_date: "2026-11-21"
+    propagation_required: false
+    propagation_verified: true
+    added_session: "2026-11-21"
+    resolution_reference: "memory/WEEKLY-FINDINGS-QUEUE.yaml metadata updated 2026-11-21 — last_weekly_session, updated_at, next_weekly_session all updated. WEEKLY-EVOLUTION-REPORT-2026-47.md."
+
+## BATCH PLAN (updated 2026-11-21)
+
+  WEEK-2026-47 (2026-11-21):
+    findings_added: [FND-20261121-001, FND-20261121-002, FND-20261121-003, FND-20261121-004]
+    findings_resolved: [FND-20261121-001, FND-20261121-002, FND-20261121-004]
+    findings_pending_governor: [FND-20261121-003]
+    session_note: "First automated weekly evolution session. All autonomously resolvable findings resolved."
+
+  WEEK-2026-48 (2026-11-28):
+    findings: [FND-20261121-003]
+    count: 1
+    note: "Governor decision on dependency graph governance layer — awaiting input."

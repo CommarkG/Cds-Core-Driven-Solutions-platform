@@ -13,7 +13,7 @@ corespine_inventory_summary:
   partially_ratified: 1
   pending_ratification: 1
   proposed_constraints_pending: 3
-  measurement_timestamp: 2026-07-26T00:00:00Z
+  measurement_timestamp: 2026-11-21T07:00:00Z
 
 corespine_status_breakdown:
 
@@ -112,12 +112,12 @@ enforcement_landscape:
   pending_ratification:
     - CS-CREATION-001 (awaiting ratification — Phase B prerequisite)
 
-ratification_required_before_phase_a:
-  count: 3
+ratification_required_before_phase_b_completion:
+  note: "Phase A completed 2026-07-27 (GOV-20260727-001). CS-GOAL-001 was ratified 2026-07-25 and no longer blocks."
+  count: 2
   items:
-    - CS-GOAL-001
     - CS-CREATION-001
-    - CS-AI-BEHAVIOR-001 (completion of reasoning_trace validation)
+    - CS-AI-BEHAVIOR-001 (completion of reasoning_trace validation — Phase B implementation)
 
 proposed_constraints_pending_yariv:
   - spine_constraint_id: CS-GOAL-001-PROPOSED-1
@@ -141,17 +141,13 @@ proposed_constraints_pending_yariv:
 health_status:
   full_enforcement: GREEN (CS-THRESHOLD-001)
   partial_enforcement: YELLOW (CS-AI-BEHAVIOR-001 — 60% gap documented)
-  pending_ratification: YELLOW (3 corespines awaiting governor decision)
-  proposed_constraints: ORANGE (3 pending — blocks Phase A activation)
+  pending_ratification: YELLOW (2 corespines awaiting governor decision — CS-GOAL-001 ratified 2026-07-25)
+  proposed_constraints: ORANGE (3 pending — Phase A complete, Phase B implementation active)
 
 blocking_items:
-  - name: "Yariv ratification of CS-GOAL-001"
-    impact: "Blocks Phase A goal governance"
-    decision_needed: BINARY (now or during Phase A)
-
   - name: "Yariv ratification of CS-CREATION-001"
-    impact: "Blocks creation protocol enforcement"
-    decision_needed: BINARY (now or during Phase A)
+    impact: "Blocks creation protocol enforcement (Phase B prerequisite)"
+    decision_needed: BINARY
 
   - name: "Yariv ratification of CS-AI-BEHAVIOR-001 proposed constraint (agent demotion)"
     impact: "Blocks Pattern demotion automation"
@@ -161,14 +157,21 @@ blocking_items:
     impact: "Completes AI behavior corespine"
     decision_needed: IMPLEMENTATION (Brain guides format)
 
-next_phase_trigger:
-  phase_a_ready_when: "All 3 ratifications approved + reasoning_trace validation complete"
-  blocking_count: 3 ratifications + 1 implementation task
-  phase_a_work_blocked_until: All above complete
+  resolved_items:
+    - name: "Yariv ratification of CS-GOAL-001"
+      resolved_date: "2026-07-25"
+      resolution: "Ratified — GOV-20260725-GOAL-001"
+
+phase_b_status:
+  phase_a_completed: "2026-07-27 (GOV-20260727-001)"
+  phase_b_authorized: "2026-07-27"
+  remaining_ratifications_for_phase_b: 2 (CS-CREATION-001, CS-AI-BEHAVIOR-001 completion)
+  blocking_count: 2 ratifications + 1 implementation task
 
 metadata:
   what_this_is: "A governance state dashboard. Shows what is ratified, what is partial, what is pending, what proposals are waiting for approval."
-  how_to_read: "Look at enforcement_landscape for current enforcement. Look at ratification_required_before_phase_a for blocking items. Look at proposed_constraints_pending_yariv for decisions needed."
+  how_to_read: "Look at enforcement_landscape for current enforcement. Look at ratification_required_before_phase_b_completion for blocking items. Look at proposed_constraints_pending_yariv for decisions needed."
   blocking_items_source: "CORESPINE-REGISTRY.yaml metadata section + honest_status fields"
   update_trigger: "Automatically re-generated whenever CORESPINE-REGISTRY.yaml ratification state or proposals change"
-  next_update: "After Yariv ratification decisions on CS-GOAL-001, CS-CREATION-001, CS-AI-BEHAVIOR-001-PROPOSED-1"
+  next_update: "After Yariv ratification decisions on CS-CREATION-001, CS-AI-BEHAVIOR-001-PROPOSED-1"
+  last_updated_by: "Weekly evolution session WEEK-2026-47 (2026-11-21) — FND-20261121-001"

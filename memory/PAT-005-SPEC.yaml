@@ -4,7 +4,7 @@ pattern_name: "Derived index not updated when source changes"
 severity: HIGH
 sessions_confirmed: 3
 first_observed: "2026-07-08"
-recurrence_count: 7
+recurrence_count: 9
 status: COMPLETE
 output_1_status: STORED
 output_2_status: DEFINED
